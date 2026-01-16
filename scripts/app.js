@@ -96,14 +96,13 @@ class CoinsCalculatorApp {
     }
 
     updatePouchTotal() {
-    const total = this.state.pouchValues.reduce((sum, value) => sum + value, 0);
-    this.state.totalCoins = total;
-    
-    // 更新显示（注意：现在totalCoins是div不是input）
-    this.elements.totalCoins.textContent = total;  // 改为.textContent
-    this.elements.totalDisplay.textContent = total;
-    
-    this.updateResults();
+        const total = this.state.pouchValues.reduce((sum, value) => sum + value, 0);
+        this.state.totalCoins = total;
+        
+        this.elements.totalCoins.textContent = total;
+        this.elements.totalDisplay.textContent = total;
+        
+        this.updateResults();
     }
 
     updatePlayerCount() {
@@ -133,7 +132,7 @@ class CoinsCalculatorApp {
         html += `
             <div class="player-header-row">
                 <span class="player-header-name">玩家名字 / Player Name</span>
-                <span class="player-header-roll">参与Roll点</span>
+                <span class="player-header-roll">Join Roll / 参与Roll点</span>
             </div>
             <div class="player-name-inputs-compact">
         `;
@@ -199,77 +198,61 @@ class CoinsCalculatorApp {
         });
     }
 
-   performRoll() {
-    try {
-        const players = [];
-        for (let i = 0; i < this.state.playerCount; i++) {
-            const name = this.state.playerNames[i] || `ign${i + 1}`;
-            players.push({
-                name: name,
-                checked: this.state.participants[i]
-            });
-        }
-        
-        const rollResults = this.rollManager.rollForPlayers(players);
-        const resultsHTML = this.rollManager.generateResultsHTML(rollResults);
-        this.elements.rollResults.innerHTML = resultsHTML;
-        
-        // === 修复：只更新参与Roll的玩家顺序，不覆盖已输入的名字 ===
-        
-        // 1. 获取参与Roll的玩家（按点数排序）
-        const sortedParticipants = rollResults.map(p => p.name);
-        
-        // 2. 获取不参与Roll的玩家（保持原顺序和名字）
-        const nonParticipants = [];
-        for (let i = 0; i < this.state.playerCount; i++) {
-            if (!this.state.participants[i]) {
-                nonParticipants.push({
-                    index: i,
-                    name: this.state.playerNames[i] || `ign${i + 1}`
+    performRoll() {
+        try {
+            const players = [];
+            for (let i = 0; i < this.state.playerCount; i++) {
+                const name = this.state.playerNames[i] || `ign${i + 1}`;
+                players.push({
+                    name: name,
+                    checked: this.state.participants[i]
                 });
             }
-        }
-        
-        // 3. 构建新顺序：参与者在前面，非参与者在后面
-        const newOrder = [];
-        
-        // 先放参与Roll的玩家（按点数排序）
-        sortedParticipants.forEach(name => {
-            newOrder.push(name);
-        });
-        
-        // 再放不参与Roll的玩家（保持原位置和名字）
-        nonParticipants.forEach(player => {
-            // 找到这个玩家原来的位置（通过名字匹配）
-            const originalIndex = this.state.playerNames.findIndex(n => n === player.name);
-            if (originalIndex !== -1) {
-                newOrder.push(this.state.playerNames[originalIndex]);
-            }
-        });
-        
-        // 4. 重要：只更新顺序，不改变已输入的名字！
-        // 如果玩家之前有输入名字，保持它；如果没有，使用排序后的名字
-        for (let i = 0; i < this.state.playerCount; i++) {
-            const currentName = this.state.playerNames[i];
-            const newName = newOrder[i];
             
-            // 只有当玩家原来没有输入名字（使用默认ign）时才更新
-            if (!currentName || currentName === `ign${i + 1}` || currentName.startsWith('ign')) {
-                this.state.playerNames[i] = newName;
+            const rollResults = this.rollManager.rollForPlayers(players);
+            const resultsHTML = this.rollManager.generateResultsHTML(rollResults);
+            this.elements.rollResults.innerHTML = resultsHTML;
+            
+            // === 修复的核心：不覆盖已输入的IGN ===
+            
+            // 1. 获取参与Roll的玩家（按点数排序）
+            const sortedParticipants = rollResults.map(p => p.name);
+            
+            // 2. 获取不参与Roll的玩家
+            const nonParticipants = [];
+            for (let i = 0; i < this.state.playerCount; i++) {
+                if (!this.state.participants[i]) {
+                    nonParticipants.push(this.state.playerNames[i] || `ign${i + 1}`);
+                }
             }
-            // 如果玩家已经输入了自定义名字，保持它不变
+            
+            // 3. 构建新顺序：参与者在前面，非参与者在后面
+            const newOrder = [...sortedParticipants, ...nonParticipants];
+            
+            // 4. 重要：只更新使用默认名的玩家
+            for (let i = 0; i < this.state.playerCount; i++) {
+                const currentName = this.state.playerNames[i];
+                const isUsingDefaultName = !currentName || 
+                                         currentName === `ign${i + 1}` || 
+                                         currentName.startsWith('ign');
+                
+                // 只有使用默认名的玩家才更新
+                if (isUsingDefaultName && newOrder[i]) {
+                    this.state.playerNames[i] = newOrder[i];
+                }
+                // 已输入自定义名字的玩家保持不变
+            }
+            
+            // 更新UI
+            this.updatePlayerNameInputs();
+            this.updateResults();
+            
+            this.showNotification('Roll点完成！玩家顺序已更新。', 'success');
+            
+        } catch (error) {
+            this.showNotification(error.message, 'error');
         }
-        
-        // 更新UI
-        this.updatePlayerNameInputs();
-        this.updateResults();
-        
-        this.showNotification('Roll点完成！玩家顺序已更新。', 'success');
-        
-    } catch (error) {
-        this.showNotification(error.message, 'error');
     }
-}
 
     updateResults() {
         const playerCount = this.state.playerCount;
@@ -340,6 +323,129 @@ class CoinsCalculatorApp {
         });
     }
 
+    // ========== 复制功能 ==========
+    copyResultsToClipboard() {
+        const playerCount = this.state.playerCount;
+        const total = this.state.totalCoins;
+        
+        const baseAllocation = this.calculator.calculateBaseAllocation(total, playerCount);
+        const actualGains = this.calculator.adjustAllocationSmartly(
+            total, 
+            playerCount, 
+            this.state.deductions.slice(0, playerCount)
+        );
+        
+        let copyText = '';
+        for (let i = 0; i < playerCount; i++) {
+            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
+            copyText += `${i+1}-${playerName}-${actualGains[i]}, `;
+        }
+        
+        // 移除最后的逗号和空格
+        copyText = copyText.replace(/, $/, '');
+        
+        // 复制到剪贴板
+        this.copyToClipboard(copyText);
+    }
+
+    copyToClipboard(text) {
+        // 方法1: 使用现代Clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.showNotification('Copied to clipboard / 已复制到剪贴板: ' + text, 'success');
+            }).catch(err => {
+                console.log('Clipboard API失败，使用备用方法:', err);
+                this.fallbackCopyText(text);
+            });
+        } else {
+            // 方法2: 备用方法
+            this.fallbackCopyText(text);
+        }
+    }
+
+    fallbackCopyText(text) {
+        try {
+            // 创建临时textarea元素
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '-9999px';
+            document.body.appendChild(textarea);
+            
+            // 选择文本
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // 移动端兼容
+            
+            // 执行复制
+            const successful = document.execCommand('copy');
+            
+            // 清理
+            document.body.removeChild(textarea);
+            
+            if (successful) {
+                this.showNotification('Copied to clipboard / 已复制到剪贴板: ' + text, 'success');
+            } else {
+                this.showManualCopyPrompt(text);
+            }
+        } catch (err) {
+            console.error('复制失败:', err);
+            this.showManualCopyPrompt(text);
+        }
+    }
+
+    showManualCopyPrompt(text) {
+        // 创建复制对话框
+        const prompt = document.createElement('div');
+        prompt.className = 'copy-prompt-overlay';
+        prompt.innerHTML = `
+            <div class="copy-prompt">
+                <h3>复制结果</h3>
+                <p>请手动选择并复制以下文本：</p>
+                <textarea id="copyTextArea" readonly style="width:100%; height:100px; margin:15px 0; padding:10px; border:2px solid #FF6B35; border-radius:8px; font-family: monospace;">${text}</textarea>
+                <div style="display:flex; gap:10px;">
+                    <button onclick="document.getElementById('copyTextArea').select();" style="flex:1; padding:10px; background:#f8f9fa; border:2px solid #e2e8f0; border-radius:8px;">
+                        选择文本
+                    </button>
+                    <button onclick="navigator.clipboard?navigator.clipboard.writeText('${text.replace(/'/g, "\\'")}').then(()=>alert('已复制')):alert('请手动复制'); this.parentElement.parentElement.parentElement.remove();" style="flex:1; padding:10px; background:#FF6B35; color:white; border:none; border-radius:8px;">
+                        复制
+                    </button>
+                    <button onclick="this.parentElement.parentElement.parentElement.remove();" style="flex:1; padding:10px; background:#6c757d; color:white; border:none; border-radius:8px;">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // 添加样式
+        const style = document.createElement('style');
+        style.textContent = `
+            .copy-prompt-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            }
+            .copy-prompt {
+                background: white;
+                padding: 25px;
+                border-radius: 15px;
+                max-width: 500px;
+                width: 90%;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            }
+        `;
+        
+        document.head.appendChild(style);
+        document.body.appendChild(prompt);
+    }
+
     // ========== 历史记录功能 ==========
     saveToHistory() {
         const timestamp = new Date().toLocaleString('zh-CN');
@@ -388,7 +494,7 @@ class CoinsCalculatorApp {
         // 更新显示
         this.updateHistoryDisplay();
         
-        this.showNotification('分配结果已保存到历史记录', 'success');
+        this.showNotification('Saved to history / 分配结果已保存到历史记录', 'success');
     }
 
     updateHistoryDisplay() {
@@ -429,41 +535,12 @@ class CoinsCalculatorApp {
     }
 
     clearHistory() {
-        if (confirm('确定要清空所有历史记录吗？此操作不可恢复。')) {
+        if (confirm('Clear all history? This cannot be undone. / 确定要清空所有历史记录吗？此操作不可恢复。')) {
             this.history = [];
             localStorage.removeItem('coinsHistory');
             this.updateHistoryDisplay();
-            this.showNotification('历史记录已清空', 'success');
+            this.showNotification('History cleared / 历史记录已清空', 'success');
         }
-    }
-
-    // ========== 复制功能 ==========
-    copyResultsToClipboard() {
-        const playerCount = this.state.playerCount;
-        const total = this.state.totalCoins;
-        
-        const baseAllocation = this.calculator.calculateBaseAllocation(total, playerCount);
-        const actualGains = this.calculator.adjustAllocationSmartly(
-            total, 
-            playerCount, 
-            this.state.deductions.slice(0, playerCount)
-        );
-        
-        let copyText = '';
-        for (let i = 0; i < playerCount; i++) {
-            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
-            copyText += `${i+1}-${playerName}-${actualGains[i]}, `;
-        }
-        
-        // 移除最后的逗号和空格
-        copyText = copyText.replace(/, $/, '');
-        
-        navigator.clipboard.writeText(copyText).then(() => {
-            this.showNotification('结果已复制到剪贴板: ' + copyText, 'success');
-        }).catch(err => {
-            console.error('复制失败:', err);
-            this.showNotification('复制失败，请手动选择文本复制', 'error');
-        });
     }
 
     copyHistoryToClipboard(index) {
