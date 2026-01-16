@@ -562,9 +562,6 @@ tbody tr:hover {
 .deselect-all-btn,
 .dual-buttons,
 .btn-roll,
-.btn-calculate {  /* 注意：没有 .btn-image-calculate */
-    display: none !important;
-}
 
 /* 空状态样式 */
 .empty-results {
@@ -575,109 +572,83 @@ tbody tr:hover {
 }
 /* ========== 新添加的样式 ========== */
 
-/* 按钮行布局 */
+/* ========== 按钮容器 ========== */
 .button-group-row {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 30px;
+    gap: 40px;
     margin: 30px auto;
     width: 100%;
 }
+
+/* ========== 两个按钮相同的样式 ========== */
 .btn-image-roll,
 .btn-image-calculate {
     display: block;
-    width: 200px;
-    height: auto;
+    width: 220px;
+    height: 170px;
     padding: 0;
     margin: 0;
     border: none;
     background: none;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
-/* 鼠标悬停效果 */
+/* 悬停效果 */
 .btn-image-roll:hover,
 .btn-image-calculate:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
 }
 
-/* 图片样式 */
+.btn-image-roll:active,
+.btn-image-calculate:active {
+    transform: translateY(-2px);
+}
+
+/* 图片样式 - 确保完全一致 */
 .roll-btn-img,
 .calculate-btn-img {
     width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 10px;
+    height: 100%;
     object-fit: contain;
+    display: block;
+    border-radius: 14px;
 }
 
-/* 大屏幕 */
-@media (min-width: 769px) {
-    .button-group-row {
-        flex-direction: row;
-        gap: 40px;
-    }
-}
-
-/* 平板 */
+/* ========== 响应式调整 ========== */
 @media (max-width: 768px) {
     .button-group-row {
-        flex-direction: row;
-        gap: 25px;
-    }
-    
-    .btn-image-roll,
-    .btn-image-calculate {
-        width: 180px;
-    }
-}
-
-/* 手机 */
-@media (max-width: 480px) {
-    .button-group-row {
-        flex-direction: column;
-        gap: 20px;
+        gap: 30px;
     }
     
     .btn-image-roll,
     .btn-image-calculate {
         width: 200px;
+        height: 155px;
     }
 }
-/* 计算按钮样式 */
-.btn-image-calculate {
-    display: block;
-    padding: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    width: 180px;
+
+@media (max-width: 480px) {
+    .button-group-row {
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    .btn-image-roll,
+    .btn-image-calculate {
+        width: 220px;
+        height: 170px;
+    }
 }
 
-.btn-image-calculate:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.calculate-btn-img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 10px;
-}
-
-/* 玩家名垂直布局 */
+/* ========== 玩家名垂直布局 ========== */
 .player-name-inputs-vertical {
     display: flex;
     flex-direction: column;
@@ -708,7 +679,7 @@ tbody tr:hover {
     outline: none;
 }
 
-/* 复选框紧挨着玩家名 */
+/* ========== 复选框紧挨着玩家名 ========== */
 .participant-checkbox-wrapper {
     display: flex;
     align-items: center;
@@ -729,7 +700,7 @@ tbody tr:hover {
     cursor: pointer;
 }
 
-/* 响应式调整 */
+/* ========== 响应式调整 ========== */
 @media (max-width: 768px) {
     .button-group-row {
         flex-direction: column;
@@ -747,3 +718,32 @@ tbody tr:hover {
         justify-content: space-between;
     }
 }
+
+/* ========== 删除重复和冲突的样式 ========== */
+/* 确保没有以下重复样式 */
+/*
+.btn-image-calculate {
+    display: block;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 180px;  <- 这个会覆盖上面的220px！
+}
+
+.btn-image-calculate:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.calculate-btn-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+}
+*/
