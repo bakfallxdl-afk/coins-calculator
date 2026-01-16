@@ -199,46 +199,83 @@ class CoinsCalculatorApp {
         });
     }
 
-    performRoll() {
-        try {
-            const players = [];
-            for (let i = 0; i < this.state.playerCount; i++) {
-                const name = this.state.playerNames[i] || `ign${i + 1}`;
-                players.push({
-                    name: name,
-                    checked: this.state.participants[i]
+    // 找到 performRoll() 方法，替换为这个版本
+performRoll() {
+    try {
+        const players = [];
+        for (let i = 0; i < this.state.playerCount; i++) {
+            const name = this.state.playerNames[i] || `ign${i + 1}`;
+            players.push({
+                index: i,  // 保存原始索引
+                name: name,
+                checked: this.state.participants[i]
+            });
+        }
+        
+        const rollResults = this.rollManager.rollForPlayers(players);
+        const resultsHTML = this.rollManager.generateResultsHTML(rollResults);
+        this.elements.rollResults.innerHTML = resultsHTML;
+        
+        // 修复：只按Roll点结果排序参与Roll的玩家，不参与的保持原位
+        const participantResults = rollResults.map(r => ({
+            name: r.name,
+            originalIndex: r.index,
+            rollResult: r.rollResult
+        }));
+        
+        // 按Roll点降序排序
+        participantResults.sort((a, b) => b.rollResult - a.rollResult);
+        
+        // 更新玩家顺序：参与Roll的按点数排序，不参与的保持原位置
+        const newOrder = [];
+        const usedIndices = new Set();
+        
+        // 先放参与Roll的玩家（按点数排序）
+        participantResults.forEach(player => {
+            newOrder.push({
+                name: player.name,
+                index: player.originalIndex,
+                isParticipant: true
+            });
+            usedIndices.add(player.originalIndex);
+        });
+        
+        // 再放不参与Roll的玩家（保持原顺序）
+        for (let i = 0; i < this.state.playerCount; i++) {
+            if (!usedIndices.has(i)) {
+                newOrder.push({
+                    name: this.state.playerNames[i] || `ign${i + 1}`,
+                    index: i,
+                    isParticipant: false
                 });
             }
-            
-            const rollResults = this.rollManager.rollForPlayers(players);
-            const resultsHTML = this.rollManager.generateResultsHTML(rollResults);
-            this.elements.rollResults.innerHTML = resultsHTML;
-            
-            // Roll点后按点数排序玩家名
-            const sortedNames = rollResults
-                .map(p => p.name)
-                .concat(this.state.playerNames.filter((name, index) => 
-                    !rollResults.some(r => r.name === name && this.state.participants[index])
-                ));
-            
-            // 更新玩家名 - 但保持用户已输入的值
-            for (let i = 0; i < sortedNames.length && i < this.state.playerCount; i++) {
-                // 只有当玩家原来没有输入名字时才更新
-                if (!this.state.playerNames[i] || this.state.playerNames[i].startsWith('ign')) {
-                    this.state.playerNames[i] = sortedNames[i];
-                }
-            }
-            
-            // 更新UI
-            this.updatePlayerNameInputs();
-            this.updateResults();
-            
-            this.showNotification('Roll点完成！玩家顺序已更新。', 'success');
-            
-        } catch (error) {
-            this.showNotification(error.message, 'error');
         }
+        
+        // 更新玩家名数组（保持索引对应关系）
+        const newPlayerNames = new Array(this.state.playerCount);
+        newOrder.forEach((player, newIndex) => {
+            newPlayerNames[newIndex] = player.name;
+        });
+        
+        this.state.playerNames = newPlayerNames;
+        
+        // 更新参与者状态（保持原参与者选择）
+        const newParticipants = new Array(this.state.playerCount);
+        newOrder.forEach((player, newIndex) => {
+            newParticipants[newIndex] = this.state.participants[player.index];
+        });
+        this.state.participants = newParticipants;
+        
+        // 更新UI
+        this.updatePlayerNameInputs();
+        this.updateResults();
+        
+        this.showNotification('Roll点完成！参与者已按点数排序。', 'success');
+        
+    } catch (error) {
+        this.showNotification(error.message, 'error');
     }
+}
 
     updateResults() {
         const playerCount = this.state.playerCount;
