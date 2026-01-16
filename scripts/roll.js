@@ -28,23 +28,29 @@ class RollManager {
      * 为玩家生成Roll点结果
      */
     rollForPlayers(players) {
-        const checkedPlayers = players.filter(player => player.checked);
-        
-        if (checkedPlayers.length === 0) {
-            throw new Error('请至少勾选一名参与Roll点的玩家！');
-        }
-
-        const usedNumbers = new Set();
-        const rollResults = checkedPlayers.map(player => {
-            const roll = this.generateRandomNumber(usedNumbers);
-            usedNumbers.add(roll);
-            return { ...player, rollResult: roll };
-        });
-
-        rollResults.sort((a, b) => b.rollResult - a.rollResult);
-        this.addToHistory(rollResults);
-        return rollResults;
+    const checkedPlayers = players.filter(player => player.checked);
+    
+    if (checkedPlayers.length === 0) {
+        throw new Error('请至少勾选一名参与Roll点的玩家！');
     }
+
+    const usedNumbers = new Set();
+    const rollResults = checkedPlayers.map(player => {
+        const roll = this.generateRandomNumber(usedNumbers);
+        usedNumbers.add(roll);
+        return { 
+            ...player, 
+            rollResult: roll,
+            originalIndex: player.index  // 保存原始索引
+        };
+    });
+
+    // 按点数降序排序
+    rollResults.sort((a, b) => b.rollResult - a.rollResult);
+    
+    this.addToHistory(rollResults);
+    return rollResults;
+}
 
     /**
      * 添加记录到历史
