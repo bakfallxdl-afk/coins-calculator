@@ -81,7 +81,14 @@
                     <label for="totalCoins">
                         <span class="en">Total Coins / 硬币总数:</span>
                     </label>
-                    <input type="number" id="totalCoins" value="0" min="0" readonly>
+                    <!-- 替换这个旧的输入框 -->
+                    <!-- <input type="number" id="totalCoins" value="0" min="0" readonly> -->
+
+                    <!-- 改为这个新的显示方式 -->
+                    <div class="coins-total-display">
+                        <span class="coins-total-label">硬币总数 / Total Coins</span>
+                        <div class="coins-total-value" id="totalCoins">0</div>
+                    </div>
                 </div>
                 
             </section>
