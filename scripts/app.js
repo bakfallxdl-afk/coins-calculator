@@ -9,10 +9,13 @@ class CoinsCalculatorApp {
             playerCount: 4,
             totalCoins: 0,
             pouchValues: [0, 0, 0, 0],
-            playerNames: ['', '', '', '', '', ''],
+            playerNames: ['', '', '', '', '', ''], // 初始为空
             deductions: [0, 0, 0, 0, 0, 0],
             participants: [true, true, true, true, false, false]
         };
+        
+        // 从localStorage加载历史记录
+        this.history = JSON.parse(localStorage.getItem('coinsHistory')) || [];
         
         this.init();
     }
@@ -23,6 +26,7 @@ class CoinsCalculatorApp {
         this.renderInitialState();
         this.updatePouchTotal();
         this.updateResults();
+        this.updateHistoryDisplay();
         console.log('Coins Calculator PWA 已启动');
     }
 
@@ -32,34 +36,36 @@ class CoinsCalculatorApp {
             totalCoins: document.getElementById('totalCoins'),
             calculateBtn: document.getElementById('calculate'),
             startRollBtn: document.getElementById('startRoll'),
-            quickButtons: document.querySelectorAll('.quick-btn'),
             resultsBody: document.getElementById('resultsBody'),
             totalDisplay: document.getElementById('totalDisplay'),
             remainderDisplay: document.getElementById('remainderDisplay'),
-            participantCheckboxes: document.getElementById('participantCheckboxes'),
             rollResults: document.getElementById('rollResults'),
             pouchInputs: document.querySelectorAll('.pouch-input'),
-            pouchTotal: document.getElementById('pouchTotal'),
             playerNameInputs: document.getElementById('playerNameInputs'),
-            saveSettingsBtn: document.getElementById('saveSettings'),
-            exportDataBtn: document.getElementById('exportData'),
-            importDataInput: document.getElementById('importData'),
-            saveCurrentBtn: document.getElementById('saveCurrent'),
+            copyResultsBtn: document.getElementById('copyResults'),
             clearHistoryBtn: document.getElementById('clearHistory'),
             historyList: document.getElementById('historyList')
         };
     }
 
     bindEvents() {
-        this.elements.calculateBtn.addEventListener('click', () => this.updateResults());
+        // 计算按钮事件
+        this.elements.calculateBtn.addEventListener('click', () => {
+            this.updateResults();
+            this.saveToHistory();
+        });
+        
+        // Roll点按钮事件
         this.elements.startRollBtn.addEventListener('click', () => this.performRoll());
         
+        // 玩家人数变化事件
         this.elements.playerCount.addEventListener('change', (e) => {
             this.state.playerCount = parseInt(e.target.value);
             this.updatePlayerCount();
             this.updateResults();
         });
         
+        // Pouch输入事件
         this.elements.pouchInputs.forEach(input => {
             input.addEventListener('input', (e) => {
                 const index = parseInt(e.target.dataset.index);
@@ -69,18 +75,21 @@ class CoinsCalculatorApp {
             });
         });
         
-        this.elements.quickButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const amount = parseInt(e.target.dataset.amount);
-                this.setTotalAndDistribute(amount);
-            });
-        });
+        // 工具按钮事件
+        if (this.elements.copyResultsBtn) {
+            this.elements.copyResultsBtn.addEventListener('click', () => this.copyResultsToClipboard());
+        }
+        
+        if (this.elements.clearHistoryBtn) {
+            this.elements.clearHistoryBtn.addEventListener('click', () => this.clearHistory());
+        }
     }
 
     renderInitialState() {
         this.updatePlayerCount();
         this.elements.totalDisplay.textContent = this.state.totalCoins;
         
+        // 设置pouch输入框初始值
         this.elements.pouchInputs.forEach((input, index) => {
             input.value = this.state.pouchValues[index];
         });
@@ -91,28 +100,9 @@ class CoinsCalculatorApp {
         this.state.totalCoins = total;
         
         this.elements.totalCoins.value = total;
-        this.elements.pouchTotal.textContent = total;
         this.elements.totalDisplay.textContent = total;
         
         this.updateResults();
-    }
-
-    setTotalAndDistribute(totalAmount) {
-        const baseValue = Math.floor(totalAmount / 4);
-        const remainder = totalAmount % 4;
-        
-        const newPouchValues = [0, 0, 0, 0];
-        for (let i = 0; i < 4; i++) {
-            newPouchValues[i] = baseValue + (i < remainder ? 1 : 0);
-        }
-        
-        this.state.pouchValues = newPouchValues;
-        
-        this.elements.pouchInputs.forEach((input, index) => {
-            input.value = newPouchValues[index];
-        });
-        
-        this.updatePouchTotal();
     }
 
     updatePlayerCount() {
@@ -127,11 +117,8 @@ class CoinsCalculatorApp {
         // 更新扣减数组
         this.state.deductions = new Array(playerCount).fill(0);
         
-        // 更新玩家名输入框
+        // 更新玩家名输入框 - 保持现有值
         this.updatePlayerNameInputs();
-        
-        // 更新参与者复选框
-        this.updateParticipantCheckboxes();
         
         // 更新结果
         this.updateResults();
@@ -140,89 +127,69 @@ class CoinsCalculatorApp {
     updatePlayerNameInputs() {
         const playerCount = this.state.playerCount;
         let html = '';
-    
-        for (let i = 0; i < playerCount; i++) {
-            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
-            const isParticipant = this.state.participants[i];
         
+        // 表头
+        html += `
+            <div class="player-header-row">
+                <span class="player-header-name">玩家名字 / Player Name</span>
+                <span class="player-header-roll">参与Roll点</span>
+            </div>
+            <div class="player-name-inputs-compact">
+        `;
+        
+        // 玩家输入行
+        for (let i = 0; i < playerCount; i++) {
+            const currentName = this.state.playerNames[i] || '';
+            const isParticipant = this.state.participants[i];
+            
             html += `
-                <div class="player-name-row">
+                <div class="player-row-compact">
                     <input type="text" 
                            id="playerName${i}" 
-                           class="player-name-input-vertical"
+                           class="player-input-compact"
                            data-index="${i}"
-                           value="${playerName}"
-                           placeholder="ign${i + 1}">
-                    <div class="participant-checkbox-wrapper">
-                        <label for="participant${i}">参与Roll点:</label>
-                        <input type="checkbox" 
-                               id="participant${i}"
-                               class="participant-checkbox"
-                               data-index="${i}"
-                               ${isParticipant ? 'checked' : ''}>
-                    </div>
+                           value="${currentName}"
+                           placeholder="输入IGN ${i+1}">
+                    <input type="checkbox" 
+                           class="roll-checkbox-solo"
+                           data-index="${i}"
+                           ${isParticipant ? 'checked' : ''}>
                 </div>
             `;
         }
-    
-    this.elements.playerNameInputs.innerHTML = html;
-    
-    // 绑定事件
-    this.bindPlayerNameInputs();
-    this.bindParticipantCheckboxes();
-}
+        
+        html += '</div>';
+        
+        this.elements.playerNameInputs.innerHTML = html;
+        
+        // 绑定事件
+        this.bindPlayerInputs();
+    }
 
-    bindPlayerNameInputs() {
-        const playerNameInputs = this.elements.playerNameInputs.querySelectorAll('.player-name-input-vertical');
-    
-        playerNameInputs.forEach(input => {
+    bindPlayerInputs() {
+        const inputs = this.elements.playerNameInputs.querySelectorAll('.player-input-compact');
+        const checkboxes = this.elements.playerNameInputs.querySelectorAll('.roll-checkbox-solo');
+        
+        // 绑定输入框
+        inputs.forEach(input => {
+            // 输入时实时保存
             input.addEventListener('input', (e) => {
                 const index = parseInt(e.target.dataset.index);
                 const value = e.target.value.trim();
+                if (value !== '') {
+                    this.state.playerNames[index] = value;
+                }
+            });
+            
+            // 失去焦点时确保保存
+            input.addEventListener('blur', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                const value = e.target.value.trim();
                 this.state.playerNames[index] = value || `ign${index + 1}`;
-                this.updateResults();
             });
         });
-    
-        // 绑定复选框事件
-        this.bindParticipantCheckboxes();
-    }
-
-bindParticipantCheckboxes() {
-    const checkboxes = this.elements.playerNameInputs.querySelectorAll('.participant-checkbox');
-    
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', (e) => {
-            const index = parseInt(e.target.dataset.index);
-            this.state.participants[index] = e.target.checked;
-        });
-    });
-}
-
-    updateParticipantCheckboxes() {
-        const playerCount = this.state.playerCount;
-        let html = '';
         
-        for (let i = 0; i < playerCount; i++) {
-            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
-            
-            html += `
-                <label class="checkbox-item">
-                    <input type="checkbox" 
-                           data-index="${i}"
-                           ${this.state.participants[i] ? 'checked' : ''}>
-                    <span>${playerName}</span>
-                </label>
-            `;
-        }
-        
-        this.elements.participantCheckboxes.innerHTML = html;
-        this.bindCheckboxEvents();
-    }
-
-    bindCheckboxEvents() {
-        const checkboxes = this.elements.participantCheckboxes.querySelectorAll('input[type="checkbox"]');
-        
+        // 绑定复选框
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', (e) => {
                 const index = parseInt(e.target.dataset.index);
@@ -235,8 +202,9 @@ bindParticipantCheckboxes() {
         try {
             const players = [];
             for (let i = 0; i < this.state.playerCount; i++) {
+                const name = this.state.playerNames[i] || `ign${i + 1}`;
                 players.push({
-                    name: this.state.playerNames[i] || `ign${i + 1}`,
+                    name: name,
                     checked: this.state.participants[i]
                 });
             }
@@ -252,9 +220,12 @@ bindParticipantCheckboxes() {
                     !rollResults.some(r => r.name === name && this.state.participants[index])
                 ));
             
-            // 更新玩家名
+            // 更新玩家名 - 但保持用户已输入的值
             for (let i = 0; i < sortedNames.length && i < this.state.playerCount; i++) {
-                this.state.playerNames[i] = sortedNames[i];
+                // 只有当玩家原来没有输入名字时才更新
+                if (!this.state.playerNames[i] || this.state.playerNames[i].startsWith('ign')) {
+                    this.state.playerNames[i] = sortedNames[i];
+                }
             }
             
             // 更新UI
@@ -337,97 +308,122 @@ bindParticipantCheckboxes() {
         });
     }
 
-    showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <span>${message}</span>
-            <button class="notification-close">&times;</button>
-        `;
+    // ========== 历史记录功能 ==========
+    saveToHistory() {
+        const timestamp = new Date().toLocaleString('zh-CN');
+        const playerCount = this.state.playerCount;
+        const total = this.state.totalCoins;
         
-        document.body.appendChild(notification);
+        // 构建历史记录内容
+        let historyContent = '';
+        for (let i = 0; i < playerCount; i++) {
+            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
+            const baseAllocation = this.calculator.calculateBaseAllocation(total, playerCount);
+            const actualGains = this.calculator.adjustAllocationSmartly(
+                total, 
+                playerCount, 
+                this.state.deductions.slice(0, playerCount)
+            );
+            
+            historyContent += `${i+1}-${playerName}-${actualGains[i]}, `;
+        }
         
-        notification.querySelector('.notification-close').addEventListener('click', () => {
-            notification.remove();
+        // 移除最后的逗号和空格
+        historyContent = historyContent.replace(/, $/, '');
+        
+        const historyEntry = {
+            timestamp: timestamp,
+            totalCoins: total,
+            playerCount: playerCount,
+            content: historyContent,
+            details: {
+                pouchValues: [...this.state.pouchValues],
+                playerNames: [...this.state.playerNames.slice(0, playerCount)],
+                deductions: [...this.state.deductions.slice(0, playerCount)]
+            }
+        };
+        
+        this.history.unshift(historyEntry);
+        
+        // 限制历史记录数量
+        if (this.history.length > 20) {
+            this.history.pop();
+        }
+        
+        // 保存到localStorage
+        localStorage.setItem('coinsHistory', JSON.stringify(this.history));
+        
+        // 更新显示
+        this.updateHistoryDisplay();
+        
+        this.showNotification('分配结果已保存到历史记录', 'success');
+    }
+
+    updateHistoryDisplay() {
+        if (!this.elements.historyList) return;
+        
+        if (this.history.length === 0) {
+            this.elements.historyList.innerHTML = `
+                <div class="empty-history">
+                    暂无历史记录<br>
+                    <small style="opacity:0.7">完成一次分配后，结果将自动保存到这里</small>
+                </div>
+            `;
+            return;
+        }
+        
+        let html = '';
+        this.history.forEach((entry, index) => {
+            html += `
+                <div class="history-item" data-index="${index}">
+                    <div class="history-timestamp">
+                        <span>🕒 ${entry.timestamp}</span>
+                        <span style="margin-left:auto">👥 ${entry.playerCount}人 | 🪙 ${entry.totalCoins}币</span>
+                    </div>
+                    <div class="history-content">${entry.content}</div>
+                </div>
+            `;
         });
         
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 3000);
+        this.elements.historyList.innerHTML = html;
+        
+        // 为历史记录项添加点击复制功能
+        document.querySelectorAll('.history-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const index = parseInt(e.currentTarget.dataset.index);
+                this.copyHistoryToClipboard(index);
+            });
+        });
     }
-}
 
-// ========== 添加通知样式 ==========
-const notificationStyles = `
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 8px;
-        color: white;
-        z-index: 1000;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-width: 300px;
-        max-width: 400px;
-        animation: slideIn 0.3s ease-out;
-    }
-    
-    .notification-success {
-        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-    }
-    
-    .notification-error {
-        background: linear-gradient(135deg, #f56565 0%, #c53030 100%);
-    }
-    
-    .notification-info {
-        background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-    }
-    
-    .notification-close {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 24px;
-        cursor: pointer;
-        margin-left: 15px;
-        padding: 0 5px;
-    }
-    
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
+    clearHistory() {
+        if (confirm('确定要清空所有历史记录吗？此操作不可恢复。')) {
+            this.history = [];
+            localStorage.removeItem('coinsHistory');
+            this.updateHistoryDisplay();
+            this.showNotification('历史记录已清空', 'success');
         }
     }
-    
-    @media (max-width: 768px) {
-        .notification {
-            left: 20px;
-            right: 20px;
-            max-width: none;
+
+    // ========== 复制功能 ==========
+    copyResultsToClipboard() {
+        const playerCount = this.state.playerCount;
+        const total = this.state.totalCoins;
+        
+        const baseAllocation = this.calculator.calculateBaseAllocation(total, playerCount);
+        const actualGains = this.calculator.adjustAllocationSmartly(
+            total, 
+            playerCount, 
+            this.state.deductions.slice(0, playerCount)
+        );
+        
+        let copyText = '';
+        for (let i = 0; i < playerCount; i++) {
+            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
+            copyText += `${i+1}-${playerName}-${actualGains[i]}, `;
         }
-    }
-`;
-
-// 添加样式到页面
-const styleSheet = document.createElement('style');
-styleSheet.textContent = notificationStyles;
-document.head.appendChild(styleSheet);
-
-// ========== 初始化应用 ==========
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new CoinsCalculatorApp();
-    window.app = app;
-    console.log('应用已加载完成');
-});
+        
+        // 移除最后的逗号和空格
+        copyText = copyText.replace(/, $/, '');
+        
+        navigator.clipboard.writeText(copyText).then(()
