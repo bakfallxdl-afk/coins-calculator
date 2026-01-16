@@ -1,0 +1,45 @@
+/* 紧凑布局样式 */
+.pouch-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.pouch-item {
+    flex: 1;
+    min-width: 120px;
+    max-width: 140px;
+}
+
+.player-input-row {
+    transition: all 0.2s ease;
+}
+
+.player-input-row:focus-within {
+    border-color: #FF6B35 !important;
+    box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.1);
+}
+
+.pouch-input:focus {
+    border-color: #FF6B35;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.1);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .pouch-inputs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .pouch-item {
+        min-width: 110px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pouch-inputs {
+        grid-template-columns: 1fr;
+    }
+}

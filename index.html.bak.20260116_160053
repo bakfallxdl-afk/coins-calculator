@@ -7,7 +7,7 @@
     
     <!-- CSS -->
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/compact.css">    
+    
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FF6B35">
 </head>
@@ -101,7 +101,7 @@
                             <input type="text" class="player-name-input" style="width: 100%; padding: 6px 8px; font-size: 0.9rem; border: 1px solid #ced4da; border-radius: 4px;" id="player1" value="ign1" placeholder="玩家名">
                             <label class="checkbox-label" style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #6c757d; cursor: pointer; user-select: none;">
                                 <input type="checkbox" class="participant-checkbox" checked>
-                                
+                                <span class="checkmark"></span>
                                 <span class="checkbox-text">参与Roll点</span>
                             </label>
                         </div>
@@ -109,7 +109,7 @@
                             <input type="text" class="player-name-input" style="width: 100%; padding: 6px 8px; font-size: 0.9rem; border: 1px solid #ced4da; border-radius: 4px;" id="player2" value="ign2" placeholder="玩家名">
                             <label class="checkbox-label" style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #6c757d; cursor: pointer; user-select: none;">
                                 <input type="checkbox" class="participant-checkbox" checked>
-                                
+                                <span class="checkmark"></span>
                                 <span class="checkbox-text">参与Roll点</span>
                             </label>
                         </div>
@@ -117,7 +117,7 @@
                             <input type="text" class="player-name-input" style="width: 100%; padding: 6px 8px; font-size: 0.9rem; border: 1px solid #ced4da; border-radius: 4px;" id="player3" value="ign3" placeholder="玩家名">
                             <label class="checkbox-label" style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #6c757d; cursor: pointer; user-select: none;">
                                 <input type="checkbox" class="participant-checkbox" checked>
-                                
+                                <span class="checkmark"></span>
                                 <span class="checkbox-text">参与Roll点</span>
                             </label>
                         </div>
@@ -125,7 +125,7 @@
                             <input type="text" class="player-name-input" style="width: 100%; padding: 6px 8px; font-size: 0.9rem; border: 1px solid #ced4da; border-radius: 4px;" id="player4" value="ign4" placeholder="玩家名">
                             <label class="checkbox-label" style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #6c757d; cursor: pointer; user-select: none;">
                                 <input type="checkbox" class="participant-checkbox" checked>
-                                
+                                <span class="checkmark"></span>
                                 <span class="checkbox-text">参与Roll点</span>
                             </label>
                         </div>
@@ -135,6 +135,7 @@
                 <!-- Roll点区域 -->
                 <div class="roll-section" style="padding: 15px; margin-top: 15px;">
             <!-- 参与者复选框容器（供JS使用） -->
+            <div id="participantCheckboxes" class="checkbox-group"></div>
 
                     <h3>Random Roll / 随机Roll点 & Calculate / 计算分配</h3>
                     
@@ -248,7 +249,7 @@
                         <input type="text" class="player-name-input" style="width: 100%; padding: 6px 8px; font-size: 0.9rem; border: 1px solid #ced4da; border-radius: 4px;" id="player${i}" value="ign${i}" placeholder="玩家名">
                         <label class="checkbox-label" style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #6c757d; cursor: pointer; user-select: none;">
                             <input type="checkbox" class="participant-checkbox" checked>
-                            
+                            <span class="checkmark"></span>
                             <span class="checkbox-text">参与Roll点</span>
                         </label>
                     </div>
@@ -260,4 +261,3 @@
     </script>
 </body>
 </html>
-✅ HTML处理完成

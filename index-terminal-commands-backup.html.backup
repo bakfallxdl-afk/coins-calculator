@@ -52,35 +52,39 @@
                         <label>
                             <span class="en">Pouch Values / Pouch数值:</span>
                         </label>
-                        <div class="pouch-inputs" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
-                            <div class="pouch-item" style="flex: 1; min-width: 120px; padding: 6px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef;">
-                                <div class="pouch-icon" style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px; font-size: 0.85rem; color: #495057;">
-                                    <img src="assets/images/pouch4.png" alt="pouch" class="pouch-img" style="width: 22px; height: 22px; object-fit: contain;">
+                        <div class="pouch-inputs">
+                            <div class="pouch-item">
+                                <div class="pouch-icon">
+                                    <img src="assets/images/pouch4.png" alt="pouch1" class="pouch-img">
                                     <span>pouch1:</span>
                                 </div>
-                                <input type="number" id="<input type="number" id="pouch1" class="pouch-input" value="0" min="0"" class="pouch-input" value="0" min="0" style="width: 100%; padding: 5px 6px; font-size: 0.9rem; text-align: center; border: 1px solid #ced4da; border-radius: 4px;" data-index="0">
+                                <input type="number" id="pouch1" class="pouch-input" value="0" min="0" data-index="0">
                             </div>
-                            <div class="pouch-item" style="flex: 1; min-width: 120px; padding: 6px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef;">
-                                <div class="pouch-icon" style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px; font-size: 0.85rem; color: #495057;">
-                                    <img src="assets/images/pouch4.png" alt="pouch" class="pouch-img" style="width: 22px; height: 22px; object-fit: contain;">
+                            <div class="pouch-item">
+                                <div class="pouch-icon">
+                                    <img src="assets/images/pouch4.png" alt="pouch2" class="pouch-img">
                                     <span>pouch2:</span>
                                 </div>
-                                <input type="number" id="<input type="number" id="pouch2" class="pouch-input" value="0" min="0"" class="pouch-input" value="0" min="0" style="width: 100%; padding: 5px 6px; font-size: 0.9rem; text-align: center; border: 1px solid #ced4da; border-radius: 4px;" data-index="1">
+                                <input type="number" id="pouch2" class="pouch-input" value="0" min="0" data-index="1">
                             </div>
-                            <div class="pouch-item" style="flex: 1; min-width: 120px; padding: 6px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef;">
-                                <div class="pouch-icon" style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px; font-size: 0.85rem; color: #495057;">
-                                    <img src="assets/images/pouch4.png" alt="pouch" class="pouch-img" style="width: 22px; height: 22px; object-fit: contain;">
+                            <div class="pouch-item">
+                                <div class="pouch-icon">
+                                    <img src="assets/images/pouch4.png" alt="pouch3" class="pouch-img">
                                     <span>pouch3:</span>
                                 </div>
-                                <input type="number" id="<input type="number" id="pouch3" class="pouch-input" value="0" min="0"" class="pouch-input" value="0" min="0" style="width: 100%; padding: 5px 6px; font-size: 0.9rem; text-align: center; border: 1px solid #ced4da; border-radius: 4px;" data-index="2">
+                                <input type="number" id="pouch3" class="pouch-input" value="0" min="0" data-index="2">
                             </div>
-                            <div class="pouch-item" style="flex: 1; min-width: 120px; padding: 6px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef;">
-                                <div class="pouch-icon" style="display: flex; align-items: center; gap: 5px; margin-bottom: 4px; font-size: 0.85rem; color: #495057;">
-                                    <img src="assets/images/pouch4.png" alt="pouch" class="pouch-img" style="width: 22px; height: 22px; object-fit: contain;">
+                            <div class="pouch-item">
+                                <div class="pouch-icon">
+                                    <img src="assets/images/pouch4.png" alt="pouch4" class="pouch-img">
                                     <span>pouch4:</span>
                                 </div>
-                                <input type="number" id="<input type="number" id="pouch4" class="pouch-input" value="0" min="0"" class="pouch-input" value="0" min="0" style="width: 100%; padding: 5px 6px; font-size: 0.9rem; text-align: center; border: 1px solid #ced4da; border-radius: 4px;" data-index="3">
+                                <input type="number" id="pouch4" class="pouch-input" value="0" min="0" data-index="3">
                             </div>
+                        </div>
+                        <div class="pouch-summary">
+                            <span>Pouch总和: </span>
+                            <strong id="pouchTotal">0</strong>
                         </div>
                     </div>
                     
@@ -88,6 +92,13 @@
                         <label for="totalCoins">
                             <span class="en">Total Coins / 硬币总数:</span>
                         </label>
+                        <div class="input-with-buttons">
+                            <input type="number" id="totalCoins" value="0" min="0" readonly>
+                            <div class="quick-buttons">
+                                <button class="quick-btn" data-amount="50">50</button>
+                                <button class="quick-btn" data-amount="100">100</button>
+                                <button class="quick-btn" data-amount="200">200</button>
+                            </div>
                         </div>
                     </div>
                     
