@@ -11,8 +11,7 @@ class CoinsCalculatorApp {
             pouchValues: [0, 0, 0, 0],
             playerNames: ['', '', '', '', '', ''], // 初始为空
             deductions: [0, 0, 0, 0, 0, 0],
-            participants: [true, true, true, true, false, false],
-            rollResults: null // 新增：保存Roll点结果
+            participants: [true, true, true, true, false, false]
         };
         
         // 从localStorage加载历史记录
@@ -118,9 +117,6 @@ class CoinsCalculatorApp {
         // 更新扣减数组
         this.state.deductions = new Array(playerCount).fill(0);
         
-        // 重置Roll点结果
-        this.state.rollResults = null;
-        
         // 更新玩家名输入框 - 保持现有值
         this.updatePlayerNameInputs();
         
@@ -198,9 +194,6 @@ class CoinsCalculatorApp {
             checkbox.addEventListener('change', (e) => {
                 const index = parseInt(e.target.dataset.index);
                 this.state.participants[index] = e.target.checked;
-                // 当参与状态改变时，重置Roll点结果
-                this.state.rollResults = null;
-                this.updateResults();
             });
         });
     }
@@ -220,12 +213,7 @@ class CoinsCalculatorApp {
             const resultsHTML = this.rollManager.generateResultsHTML(rollResults);
             this.elements.rollResults.innerHTML = resultsHTML;
             
-            // === 修复的核心：保存Roll点结果，但不改变玩家名字 ===
-            this.state.rollResults = rollResults;
-            
-            // === 原来的逻辑：只更新使用默认名的玩家（可选，根据需求保留）===
-            // 如果您希望Player Management区域的名字也按Roll点排序，就保留这部分
-            // 如果希望Player Management区域完全不变，就注释掉这部分
+            // === 修复的核心：不覆盖已输入的IGN ===
             
             // 1. 获取参与Roll的玩家（按点数排序）
             const sortedParticipants = rollResults.map(p => p.name);
@@ -241,7 +229,7 @@ class CoinsCalculatorApp {
             // 3. 构建新顺序：参与者在前面，非参与者在后面
             const newOrder = [...sortedParticipants, ...nonParticipants];
             
-            // 4. 只更新使用默认名的玩家（如果您希望Player Management区域的名字也按Roll点排序）
+            // 4. 重要：只更新使用默认名的玩家
             for (let i = 0; i < this.state.playerCount; i++) {
                 const currentName = this.state.playerNames[i];
                 const isUsingDefaultName = !currentName || 
@@ -286,63 +274,22 @@ class CoinsCalculatorApp {
         const { baseAllocations, playerCount } = baseAllocation;
         let html = '';
         
-        // 如果有Roll点结果，就按Roll点顺序显示，否则按原始顺序
-        let displayIndices = [];
-        
-        if (this.state.rollResults && this.state.rollResults.length > 0) {
-            // 按Roll点结果排序：参与的在前（按点数排序），不参与的在后面
-            const participantIndices = [];
-            const nonParticipantIndices = [];
-            
-            // 首先，我们需要找到每个玩家在state中的索引
-            for (let i = 0; i < playerCount; i++) {
-                const playerName = this.state.playerNames[i] || `ign${i + 1}`;
-                
-                // 检查这个玩家是否在rollResults中（参与Roll点）
-                const rollResultIndex = this.state.rollResults.findIndex(r => r.name === playerName);
-                
-                if (rollResultIndex >= 0) {
-                    // 参与Roll点的玩家，保存他们的rollResultIndex用于排序
-                    participantIndices.push({
-                        originalIndex: i,
-                        rollIndex: rollResultIndex
-                    });
-                } else {
-                    // 不参与Roll点的玩家
-                    nonParticipantIndices.push(i);
-                }
-            }
-            
-            // 参与Roll点的玩家按rollIndex排序（点数从高到低）
-            participantIndices.sort((a, b) => a.rollIndex - b.rollIndex);
-            
-            // 构建显示顺序
-            displayIndices = [
-                ...participantIndices.map(item => item.originalIndex),
-                ...nonParticipantIndices
-            ];
-        } else {
-            // 没有Roll点结果，按原始顺序显示
-            displayIndices = Array.from({length: playerCount}, (_, i) => i);
-        }
-        
-        // 按确定的顺序显示
-        for (let displayPos = 0; displayPos < playerCount; displayPos++) {
-            const originalIndex = displayIndices[displayPos];
-            const playerName = this.state.playerNames[originalIndex] || `ign${originalIndex + 1}`;
-            const baseGain = baseAllocations[originalIndex];
-            const deduction = this.state.deductions[originalIndex] || 0;
-            const actualGain = actualGains[originalIndex];
+        // === 修复：永远按原始顺序显示，不按Roll点排序 ===
+        for (let i = 0; i < playerCount; i++) {
+            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
+            const baseGain = baseAllocations[i];
+            const deduction = this.state.deductions[i] || 0;
+            const actualGain = actualGains[i];
             
             html += `
                 <tr>
-                    <td class="player-rank">${displayPos + 1}</td>
+                    <td class="player-rank">${i + 1}</td>
                     <td class="player-name">${playerName}</td>
                     <td class="base-gain">${baseGain}</td>
                     <td class="deduction-cell">
                         <input type="number" 
                                class="deduction-input"
-                               data-index="${originalIndex}"
+                               data-index="${i}"
                                value="${deduction}"
                                min="0"
                                max="${baseGain}">
@@ -389,42 +336,11 @@ class CoinsCalculatorApp {
             this.state.deductions.slice(0, playerCount)
         );
         
-        // 确定显示顺序（与Results区域一致）
-        let displayIndices = [];
-        
-        if (this.state.rollResults && this.state.rollResults.length > 0) {
-            // 按Roll点结果排序
-            const participantIndices = [];
-            const nonParticipantIndices = [];
-            
-            for (let i = 0; i < playerCount; i++) {
-                const playerName = this.state.playerNames[i] || `ign${i + 1}`;
-                const rollResultIndex = this.state.rollResults.findIndex(r => r.name === playerName);
-                
-                if (rollResultIndex >= 0) {
-                    participantIndices.push({
-                        originalIndex: i,
-                        rollIndex: rollResultIndex
-                    });
-                } else {
-                    nonParticipantIndices.push(i);
-                }
-            }
-            
-            participantIndices.sort((a, b) => a.rollIndex - b.rollIndex);
-            displayIndices = [
-                ...participantIndices.map(item => item.originalIndex),
-                ...nonParticipantIndices
-            ];
-        } else {
-            displayIndices = Array.from({length: playerCount}, (_, i) => i);
-        }
-        
+        // === 修复：永远按原始顺序复制 ===
         let copyText = '';
-        for (let displayPos = 0; displayPos < playerCount; displayPos++) {
-            const originalIndex = displayIndices[displayPos];
-            const playerName = this.state.playerNames[originalIndex] || `ign${originalIndex + 1}`;
-            copyText += `${displayPos+1}-${playerName}-${actualGains[originalIndex]}, `;
+        for (let i = 0; i < playerCount; i++) {
+            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
+            copyText += `${i+1}-${playerName}-${actualGains[i]}, `;
         }
         
         // 移除最后的逗号和空格
@@ -545,42 +461,11 @@ class CoinsCalculatorApp {
             this.state.deductions.slice(0, playerCount)
         );
         
-        // 确定显示顺序（与Results区域一致）
-        let displayIndices = [];
-        
-        if (this.state.rollResults && this.state.rollResults.length > 0) {
-            const participantIndices = [];
-            const nonParticipantIndices = [];
-            
-            for (let i = 0; i < playerCount; i++) {
-                const playerName = this.state.playerNames[i] || `ign${i + 1}`;
-                const rollResultIndex = this.state.rollResults.findIndex(r => r.name === playerName);
-                
-                if (rollResultIndex >= 0) {
-                    participantIndices.push({
-                        originalIndex: i,
-                        rollIndex: rollResultIndex
-                    });
-                } else {
-                    nonParticipantIndices.push(i);
-                }
-            }
-            
-            participantIndices.sort((a, b) => a.rollIndex - b.rollIndex);
-            displayIndices = [
-                ...participantIndices.map(item => item.originalIndex),
-                ...nonParticipantIndices
-            ];
-        } else {
-            displayIndices = Array.from({length: playerCount}, (_, i) => i);
-        }
-        
-        // 构建历史记录内容
+        // === 修复：永远按原始顺序保存历史 ===
         let historyContent = '';
-        for (let displayPos = 0; displayPos < playerCount; displayPos++) {
-            const originalIndex = displayIndices[displayPos];
-            const playerName = this.state.playerNames[originalIndex] || `ign${originalIndex + 1}`;
-            historyContent += `${displayPos+1}-${playerName}-${actualGains[originalIndex]}, `;
+        for (let i = 0; i < playerCount; i++) {
+            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
+            historyContent += `${i+1}-${playerName}-${actualGains[i]}, `;
         }
         
         // 移除最后的逗号和空格
@@ -594,8 +479,7 @@ class CoinsCalculatorApp {
             details: {
                 pouchValues: [...this.state.pouchValues],
                 playerNames: [...this.state.playerNames.slice(0, playerCount)],
-                deductions: [...this.state.deductions.slice(0, playerCount)],
-                hasRollResults: !!this.state.rollResults
+                deductions: [...this.state.deductions.slice(0, playerCount)]
             }
         };
         
