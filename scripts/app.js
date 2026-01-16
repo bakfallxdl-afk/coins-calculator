@@ -12,7 +12,7 @@ class CoinsCalculatorApp {
             playerNames: ['', '', '', '', '', ''], // 初始为空
             deductions: [0, 0, 0, 0, 0, 0],
             participants: [true, true, true, true, false, false],
-            rollResults: null // 新增：保存Roll点结果
+            rollResults: null // 保存Roll点结果
         };
         
         // 从localStorage加载历史记录
@@ -276,9 +276,9 @@ class CoinsCalculatorApp {
         const { baseAllocations, playerCount } = baseAllocation;
         let html = '';
         
-        // === 修复：只有"玩家"列按Roll点排序，其他列保持固定 ===
+        // === 关键修复：表格按Roll点排名排序，但分配值对应原始玩家 ===
         
-        // 如果有Roll点结果，按Roll点顺序显示玩家
+        // 如果有Roll点结果，按Roll点排名显示
         if (this.state.rollResults && this.state.rollResults.length > 0) {
             // 1. 获取参与Roll的玩家（按点数从高到低排序）
             const sortedParticipants = [...this.state.rollResults];
@@ -288,7 +288,8 @@ class CoinsCalculatorApp {
             for (let i = 0; i < playerCount; i++) {
                 const playerName = this.state.playerNames[i] || `ign${i + 1}`;
                 // 检查这个玩家是否不在rollResults中
-                if (!sortedParticipants.some(p => p.name === playerName)) {
+                const isParticipant = sortedParticipants.some(p => p.name === playerName);
+                if (!isParticipant) {
                     nonParticipants.push({
                         name: playerName,
                         originalIndex: i
@@ -296,7 +297,7 @@ class CoinsCalculatorApp {
                 }
             }
             
-            // 3. 合并：参与Roll的在前，不参与的在后面
+            // 3. 合并：参与Roll的在前（按点数排序），不参与的在后面
             const allPlayers = [...sortedParticipants, ...nonParticipants];
             
             // 4. 生成表格行
@@ -318,6 +319,7 @@ class CoinsCalculatorApp {
                     originalIndex = displayIndex;
                 }
                 
+                // 使用原始索引获取分配值（确保分配逻辑固定）
                 const baseGain = baseAllocations[originalIndex];
                 const deduction = this.state.deductions[originalIndex] || 0;
                 const actualGain = actualGains[originalIndex];
@@ -375,15 +377,15 @@ class CoinsCalculatorApp {
         
         deductionInputs.forEach(input => {
             input.addEventListener('input', (e) => {
-                const index = parseInt(e.target.dataset.index);
+                const originalIndex = parseInt(e.target.dataset.index);
                 const value = parseInt(e.target.value) || 0;
                 const baseGain = parseInt(e.target.max);
                 
                 if (value > baseGain) {
                     e.target.value = baseGain;
-                    this.state.deductions[index] = baseGain;
+                    this.state.deductions[originalIndex] = baseGain;
                 } else {
-                    this.state.deductions[index] = value;
+                    this.state.deductions[originalIndex] = value;
                 }
                 
                 this.updateResults();
@@ -403,7 +405,7 @@ class CoinsCalculatorApp {
             this.state.deductions.slice(0, playerCount)
         );
         
-        // === 修复：按Results表格显示的顺序复制 ===
+        // 按Results表格显示的顺序复制
         let copyText = '';
         
         if (this.state.rollResults && this.state.rollResults.length > 0) {
@@ -564,7 +566,7 @@ class CoinsCalculatorApp {
             this.state.deductions.slice(0, playerCount)
         );
         
-        // === 修复：按Results表格显示的顺序保存历史 ===
+        // 按Results表格显示的顺序保存历史
         let historyContent = '';
         
         if (this.state.rollResults && this.state.rollResults.length > 0) {
