@@ -96,13 +96,14 @@ class CoinsCalculatorApp {
     }
 
     updatePouchTotal() {
-        const total = this.state.pouchValues.reduce((sum, value) => sum + value, 0);
-        this.state.totalCoins = total;
-        
-        this.elements.totalCoins.value = total;
-        this.elements.totalDisplay.textContent = total;
-        
-        this.updateResults();
+    const total = this.state.pouchValues.reduce((sum, value) => sum + value, 0);
+    this.state.totalCoins = total;
+    
+    // 更新显示（注意：现在totalCoins是div不是input）
+    this.elements.totalCoins.textContent = total;  // 改为.textContent
+    this.elements.totalDisplay.textContent = total;
+    
+    this.updateResults();
     }
 
     updatePlayerCount() {
