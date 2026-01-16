@@ -140,31 +140,41 @@ class CoinsCalculatorApp {
     updatePlayerNameInputs() {
         const playerCount = this.state.playerCount;
         let html = '';
-        
+    
         for (let i = 0; i < playerCount; i++) {
             const playerName = this.state.playerNames[i] || `ign${i + 1}`;
+            const isParticipant = this.state.participants[i];
+        
             html += `
-                <div class="player-name-item">
-                    <label for="playerName${i}">Player ${i + 1}:</label>
+                <div class="player-name-row">
                     <input type="text" 
                            id="playerName${i}" 
-                           class="player-name-input"
+                           class="player-name-input-vertical"
                            data-index="${i}"
-                           value=""
+                           value="${playerName}"
                            placeholder="ign${i + 1}">
+                    <div class="participant-checkbox-wrapper">
+                        <label for="participant${i}">参与Roll点:</label>
+                        <input type="checkbox" 
+                               id="participant${i}"
+                               class="participant-checkbox"
+                               data-index="${i}"
+                               ${isParticipant ? 'checked' : ''}>
+                    </div>
                 </div>
             `;
         }
-        
-        this.elements.playerNameInputs.innerHTML = html;
-        
-        // 绑定玩家名输入事件
-        this.bindPlayerNameInputs();
-    }
+    
+    this.elements.playerNameInputs.innerHTML = html;
+    
+    // 绑定事件
+    this.bindPlayerNameInputs();
+    this.bindParticipantCheckboxes();
+}
 
     bindPlayerNameInputs() {
-        const playerNameInputs = this.elements.playerNameInputs.querySelectorAll('.player-name-input');
-        
+        const playerNameInputs = this.elements.playerNameInputs.querySelectorAll('.player-name-input-vertical');
+    
         playerNameInputs.forEach(input => {
             input.addEventListener('input', (e) => {
                 const index = parseInt(e.target.dataset.index);
@@ -173,7 +183,21 @@ class CoinsCalculatorApp {
                 this.updateResults();
             });
         });
+    
+        // 绑定复选框事件
+        this.bindParticipantCheckboxes();
     }
+
+bindParticipantCheckboxes() {
+    const checkboxes = this.elements.playerNameInputs.querySelectorAll('.participant-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+            const index = parseInt(e.target.dataset.index);
+            this.state.participants[index] = e.target.checked;
+        });
+    });
+}
 
     updateParticipantCheckboxes() {
         const playerCount = this.state.playerCount;
