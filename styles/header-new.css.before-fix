@@ -108,7 +108,7 @@
     object-position: center; /* 居中显示 */
     
     /* 轻微旋转和阴影增加立体感 */
-    
+    transform: rotate(-2deg);
 }
 
 /* 星星装饰 */
@@ -167,7 +167,7 @@
     .header-image {
         max-height: 280px;
         max-width: 85%;
-        
+        transform: rotate(-1deg) scale(1.05);
     }
 }
 
@@ -181,7 +181,7 @@
     .header-image {
         max-height: 240px;
         max-width: 88%;
-        
+        transform: rotate(-2deg);
     }
     
         width: 65%;
@@ -201,7 +201,7 @@
     .header-image {
         max-height: 190px;
         max-width: 90%;
-        
+        transform: rotate(-3deg);
     }
     
         width: 70%;
@@ -231,7 +231,7 @@
     .header-image {
         max-height: 150px;
         max-width: 92%;
-        
+        transform: rotate(-4deg);
     }
     
         width: 75%;
@@ -251,7 +251,7 @@
 
 /* 悬停动画 */
 .app-header:hover .header-image {
-    
+    transform: rotate(-1deg) scale(1.03);
     transition: all 0.5s ease;
 }
 
@@ -265,8 +265,4 @@
 
 .app-header {
     transition: all 0.3s ease;
-}
-
-/* 修复：移除图片倾斜 */
-.header-image {
 }

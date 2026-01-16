@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coins Calculator | 硬币计算器</title>
+    
+    <!-- CSS引用 - 保持原有顺序 -->
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="header-new.css"> <!-- 橙色渐变在这里 -->
+    <link rel="stylesheet" href="button.css">
+    <link rel="stylesheet" href="theme.css">
+    
+    <!-- Font Awesome 图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF6B35">
+    
+    <!-- 紧急橙色渐变修复 -->
+    <style>
+        /* 如果其他CSS加载失败，这个会生效 */
+        .app-header {
+            background: linear-gradient(135deg, #FFB347 0%, #FF8C42 25%, #FFD89C 50%, #FFF5E1 75%, #FFA726 100%) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部区域 - 从你的代码推断 -->
+        <header class="app-header">
+            <div class="header-content">
+                <img src="assets/images/head.png" alt="Coins Calculator" class="header-image" id="headerImage">
+                <div class="header-text" style="display: none;">
+                    <h1><i class="fas fa-coins"></i> Coins Calculator</h1>
+                    <h2>硬币计算器</h2>
+                    <p class="subtitle">轻松计算硬币分配和Roll点</p>
+                    <p class="made-by">Made by Bakfall</p>
+                </div>
+                
+                <!-- 星星装饰 -->
+                <div class="star">★</div>
+                <div class="star">★</div>
+                <div class="star">★</div>
+                <div class="star">★</div>
+            </div>
+        </header>
+
+        <!-- 主内容区域 - 根据 script.js 推断 -->
+        <main>
+            <!-- 硬币计算卡片 -->
+            <section class="card" id="calculatorCard">
+                <h2><i class="fas fa-calculator"></i> 硬币计算</h2>
+                
+                <!-- 玩家名称 -->
+                <div class="player-name-inputs">
+                    <div class="player-name-item">
+                        <label for="player1">玩家 1</label>
+                        <input type="text" id="player1" class="player-name-input" value="玩家1" data-index="0">
+                    </div>
+                    <div class="player-name-item">
+                        <label for="player2">玩家 2</label>
+                        <input type="text" id="player2" class="player-name-input" value="玩家2" data-index="1">
+                    </div>
+                    <div class="player-name-item">
+                        <label for="player3">玩家 3</label>
+                        <input type="text" id="player3" class="player-name-input" value="玩家3" data-index="2">
+                    </div>
+                </div>
+                
+                <!-- Pouch 输入 -->
+                <div class="pouch-inputs">
+                    <div class="pouch-item">
+                        <label for="silver">Silver</label>
+                        <input type="number" id="silver" class="pouch-input" value="0" min="0">
+                    </div>
+                    <div class="pouch-item">
+                        <label for="gold">Gold</label>
+                        <input type="number" id="gold" class="pouch-input" value="0" min="0">
+                    </div>
+                    <div class="pouch-item">
+                        <label for="mithril">Mithril</label>
+                        <input type="number" id="mithril" class="pouch-input" value="0" min="0">
+                    </div>
+                    <div class="pouch-item">
+                        <label for="ancient">Ancient</label>
+                        <input type="number" id="ancient" class="pouch-input" value="0" min="0">
+                    </div>
+                </div>
+                
+                <!-- 总硬币数 -->
+                <div class="input-group">
+                    <label for="totalCoins">总硬币数 <span class="en">(Total Coins)</span></label>
+                    <div class="input-with-buttons">
+                        <input type="number" id="totalCoins" value="0" min="0" readonly>
+                        <div class="quick-buttons">
+                            <button class="quick-btn" data-value="1000">1K</button>
+                            <button class="quick-btn" data-value="5000">5K</button>
+                            <button class="quick-btn" data-value="10000">10K</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 按钮 -->
+                <div class="button-group">
+                    <button class="btn-primary" id="calculateBtn">
+                        <i class="fas fa-calculator"></i> 计算分配
+                    </button>
+                    <button class="btn-secondary" id="resetBtn">
+                        <i class="fas fa-redo"></i> 重置
+                    </button>
+                </div>
+            </section>
+
+            <!-- Roll点卡片 -->
+            <section class="card" id="rollCard">
+                <h2><i class="fas fa-dice"></i> Roll点系统</h2>
+                <div class="roll-section">
+                    <h3>点击按钮开始Roll点</h3>
+                    <button class="btn-image-roll" id="rollBtn">
+                        <img src="assets/images/startroll.png" alt="开始Roll点" class="roll-btn-img">
+                    </button>
+                    
+                    <div class="roll-results" id="rollResultsContainer">
+                        <div class="roll-results-list" id="rollResults">
+                            <!-- Roll结果动态插入 -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 结果表格 -->
+            <section class="card" id="resultsCard">
+                <h2><i class="fas fa-table"></i> 计算结果</h2>
+                <div class="table-container">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>玩家</th>
+                                <th>百分比</th>
+                                <th>获得硬币</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            <!-- 结果动态插入 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="summary">
+                    <div class="summary-item">
+                        <i class="fas fa-users"></i>
+                        <span>玩家总数:</span>
+                        <strong id="totalPlayers">3</strong>
+                    </div>
+                    <div class="summary-item">
+                        <i class="fas fa-coins"></i>
+                        <span>总硬币数:</span>
+                        <strong id="displayTotalCoins">0</strong>
+                    </div>
+                    <div class="summary-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>已分配:</span>
+                        <strong id="distributedCoins">0</strong>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 历史记录 -->
+            <section class="card" id="historyCard">
+                <h2><i class="fas fa-history"></i> 历史记录</h2>
+                <div class="history-panel">
+                    <div class="data-actions">
+                        <button class="btn-secondary" id="exportBtn">
+                            <i class="fas fa-download"></i> 导出数据
+                        </button>
+                        <button class="btn-secondary" id="importBtn">
+                            <i class="fas fa-upload"></i> 导入数据
+                        </button>
+                        <label class="btn-secondary file-input-label">
+                            <i class="fas fa-file-import"></i> 选择文件
+                            <input type="file" id="fileInput" accept=".json" style="display: none;">
+                        </label>
+                    </div>
+                    <div class="history-list" id="historyList">
+                        <!-- 历史记录动态插入 -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="app-footer">
+            <p>Coins Calculator v2.0 | 硬币计算器</p>
+            <p class="instructions">用于计算硬币分配和Roll点结果</p>
+            <p><i class="fas fa-copyright"></i> 2024 Bakfall. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+    
+    <!-- PWA Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker 注册成功:', reg.scope))
+                .catch(err => console.log('Service Worker 注册失败:', err));
+        }
+        
+        // 头部图片加载处理
+        document.addEventListener('DOMContentLoaded', function() {
+            const headerImage = document.getElementById('headerImage');
+            const headerText = document.querySelector('.header-text');
+            
+            if (headerImage) {
+                headerImage.onerror = function() {
+                    if (headerText) headerText.style.display = 'block';
+                };
+                
+                // 如果图片已损坏
+                if (headerImage.complete && headerImage.naturalWidth === 0) {
+                    if (headerText) headerText.style.display = 'block';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

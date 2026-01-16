@@ -1,0 +1,40 @@
+<!-- ========== 可以直接复制的HTML修复代码 ========== -->
+
+<!-- 1. CSS引用（添加到<head>中） -->
+<link rel="stylesheet" href="styles/fix-all.css">
+
+<!-- 2. JavaScript引用（添加到<body>末尾，其他script之前） -->
+<script src="scripts/complete-fix.js"></script>
+
+<!-- 3. 参与者区域替换代码（如果原有结构有问题，用这个替换） -->
+<div id="participantCheckboxes" class="checkbox-group">
+    <!-- JavaScript会动态填充这里 -->
+    <div class="loading-placeholder" style="text-align: center; padding: 30px; color: #666;">
+        <p>参与者列表加载中...</p>
+        <small>如果长时间未显示，请检查JavaScript控制台</small>
+    </div>
+</div>
+
+<!-- 4. Roll点按钮确保有正确结构 -->
+<button id="startRoll" class="btn-image-roll">
+    <img src="assets/images/startroll.png" alt="开始Roll点" class="roll-btn-img">
+</button>
+
+<!-- 5. 调试面板（开发时使用，上线前可删除） -->
+<div id="debug-panel" style="position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px; font-size: 12px; z-index: 9999; display: none;">
+    <button onclick="FixManager.reload()" style="background: #FF6B35; color: white; border: none; padding: 5px 10px; border-radius: 3px; margin-bottom: 5px;">重新加载修复</button>
+    <div id="debug-info"></div>
+</div>
+
+<script>
+// 显示调试面板（开发时）
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    document.getElementById('debug-panel').style.display = 'block';
+    setInterval(() => {
+        document.getElementById('debug-info').innerHTML = `
+            玩家数: ${document.querySelectorAll('.player-name-input').length}<br>
+            参与者: ${document.querySelectorAll('.participant-item').length}
+        `;
+    }, 2000);
+}
+</script>
