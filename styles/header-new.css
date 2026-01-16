@@ -1,0 +1,229 @@
+/* ========== 修复版：柔和橙黄渐变 ========== */
+.app-header {
+    position: relative;
+    margin-bottom: 25px;
+    border-radius: 20px;
+    overflow: hidden; /* 改回 hidden，防止图片溢出 */
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+    
+    /* 柔和的橙黄渐变 */
+    background: linear-gradient(
+        135deg,
+        #FFB347 0%,    /* 柔和的橙色 */
+        #FF8C42 25%,   /* 中等橙色 */
+        #FFD89C 50%,   /* 浅奶油黄 */
+        #FFF5E1 75%,   /* 非常浅的米白 */
+        #FFA726 100%   /* 温暖的橙色 */
+    );
+    
+    padding: 15px; /* 恢复内边距控制图片大小 */
+    border: 4px solid #FFD89C; /* 柔和的边框 */
+    min-height: 280px; /* 适当的最小高度 */
+    max-height: 350px; /* 添加最大高度限制 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* 更细腻的云朵纹理 */
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.5) 1%, transparent 3%),
+        radial-gradient(circle at 90% 80%, rgba(255, 248, 225, 0.4) 1%, transparent 3%),
+        radial-gradient(circle at 50% 50%, rgba(255, 216, 156, 0.2) 2%, transparent 4%);
+    background-size: 120px 120px, 180px 180px, 250px 250px;
+}
+
+/* 头部内容容器 - 控制图片大小 */
+.header-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* 修复图片大小 - 添加严格的尺寸控制 */
+.header-image {
+    /* 严格限制图片大小 */
+    max-height: 240px; /* 控制最大高度 */
+    max-width: 90%;    /* 控制最大宽度 */
+    height: auto;
+    width: auto;
+    display: block;
+    
+    /* 保持透明PNG显示效果 */
+    object-fit: contain; /* 保持完整比例 */
+    object-position: center; /* 居中显示 */
+    
+    /* 轻微旋转和阴影增加立体感 */
+    transform: rotate(-2deg);
+    filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.15))
+           drop-shadow(-2px -2px 5px rgba(255, 255, 255, 0.3));
+}
+
+/* 星星装饰 */
+.star {
+    position: absolute;
+    color: #FF8C42; /* 与背景协调的橙色 */
+    font-size: 20px;
+    opacity: 0.7;
+    z-index: 2;
+    animation: twinkle 3s infinite;
+    text-shadow: 0 0 8px rgba(255, 179, 71, 0.5);
+}
+
+.star:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+.star:nth-child(2) { top: 15%; right: 15%; animation-delay: 0.5s; }
+.star:nth-child(3) { bottom: 25%; left: 15%; animation-delay: 1s; }
+.star:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 1.5s; }
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.9); }
+    50% { opacity: 0.9; transform: scale(1.1); }
+}
+
+/* 牌子和天使的装饰效果 */
+.header-content::before {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 120px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+    top: 50%;
+    left: 20%;
+    transform: translateY(-50%) rotate(-2deg);
+    border-radius: 20px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* 天使区域的光晕 */
+.header-content::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 216, 156, 0.2) 0%, transparent 70%);
+    top: 50%;
+    right: 15%;
+    transform: translateY(-50%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* 响应式调整 - 严格控制图片大小 */
+@media (min-width: 1200px) {
+    .app-header {
+        min-height: 320px;
+        max-height: 380px;
+        padding: 20px;
+    }
+    
+    .header-image {
+        max-height: 280px;
+        max-width: 85%;
+        transform: rotate(-1deg) scale(1.05);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .app-header {
+        min-height: 280px;
+        max-height: 320px;
+        padding: 15px;
+    }
+    
+    .header-image {
+        max-height: 240px;
+        max-width: 88%;
+        transform: rotate(-2deg);
+    }
+    
+    .header-content::before {
+        width: 65%;
+        left: 18%;
+    }
+}
+
+@media (max-width: 767px) {
+    .app-header {
+        min-height: 220px;
+        max-height: 280px;
+        margin-bottom: 20px;
+        border-radius: 16px;
+        padding: 12px;
+    }
+    
+    .header-image {
+        max-height: 190px;
+        max-width: 90%;
+        transform: rotate(-3deg);
+    }
+    
+    .header-content::before {
+        width: 70%;
+        height: 100px;
+        left: 15%;
+    }
+    
+    .header-content::after {
+        width: 150px;
+        height: 150px;
+        right: 10%;
+    }
+    
+    .star {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-header {
+        min-height: 180px;
+        max-height: 220px;
+        margin-bottom: 15px;
+        border-radius: 14px;
+        padding: 10px;
+    }
+    
+    .header-image {
+        max-height: 150px;
+        max-width: 92%;
+        transform: rotate(-4deg);
+    }
+    
+    .header-content::before {
+        width: 75%;
+        height: 80px;
+        left: 12%;
+    }
+    
+    .header-content::after {
+        width: 120px;
+        height: 120px;
+        right: 8%;
+    }
+    
+    .star {
+        font-size: 14px;
+    }
+}
+
+/* 悬停动画 */
+.app-header:hover .header-image {
+    transform: rotate(-1deg) scale(1.03);
+    transition: all 0.5s ease;
+}
+
+.header-image {
+    transition: all 0.5s ease;
+}
+
+.app-header:hover {
+    box-shadow: 0 15px 40px rgba(255, 107, 53, 0.25);
+    transform: translateY(-3px);
+}
+
+.app-header {
+    transition: all 0.3s ease;
+}

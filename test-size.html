@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { padding: 20px; font-family: sans-serif; }
+        .size-info { 
+            background: #FFF5E1; 
+            padding: 15px; 
+            margin: 15px 0; 
+            border-radius: 10px;
+            border-left: 4px solid #FF8C42;
+        }
+        .visual-box {
+            width: 90%;
+            max-width: 800px;
+            height: 280px;
+            background: linear-gradient(135deg, #FFB347, #FF8C42, #FFD89C, #FFF5E1, #FFA726);
+            margin: 20px auto;
+            border-radius: 20px;
+            border: 4px solid #FFD89C;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .image-boundary {
+            max-height: 240px;
+            max-width: 90%;
+            border: 2px dashed #FF6B35;
+            padding: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+        }
+        .dimension {
+            position: absolute;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        .top { top: 10px; left: 50%; transform: translateX(-50%); }
+        .bottom { bottom: 10px; left: 50%; transform: translateX(-50%); }
+        .left { left: 10px; top: 50%; transform: translateY(-50%); }
+        .right { right: 10px; top: 50%; transform: translateY(-50%); }
+    </style>
+</head>
+<body>
+    <h2>图片大小测试</h2>
+    
+    <div class="size-info">
+        <p><strong>当前限制：</strong></p>
+        <p>• 最大高度: 240px</p>
+        <p>• 最大宽度: 90% 容器宽度</p>
+        <p>• 容器高度: 280px</p>
+        <p>• 图片占比: 约85%</p>
+    </div>
+    
+    <div class="visual-box">
+        <div class="image-boundary">
+            <p style="margin:0; color:#FF6B35; text-align:center;">图片显示区域</p>
+            <p style="margin:0; font-size:12px; color:#666; text-align:center;">(天使和牌子会显示在这里)</p>
+        </div>
+        <div class="dimension top">max-height: 240px</div>
+        <div class="dimension bottom">容器高度: 280px</div>
+        <div class="dimension left">max-width: 90%</div>
+        <div class="dimension right">柔和的橙黄渐变</div>
+    </div>
+</body>
+</html>
