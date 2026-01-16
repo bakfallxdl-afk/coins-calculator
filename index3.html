@@ -84,12 +84,6 @@
                     <input type="number" id="totalCoins" value="0" min="0" readonly>
                 </div>
                 
-                <!-- 计算按钮 -->
-                <div class="button-group">
-                    <button id="calculate" class="btn-primary">
-                        Calculate / 计算分配
-                    </button>
-                </div>
             </section>
             
             <!-- 玩家管理区域 -->
@@ -97,12 +91,12 @@
                 <h2>Player Management / 玩家管理</h2>
                 
                 <!-- 玩家名输入框 -->
-                <div class="input-group">
-                    <label>
-                        <span class="en">Player Names / 玩家名字:</span>
-                    </label>
-                    <div id="playerNameInputs" class="player-name-inputs">
-                        <!-- 会被JavaScript动态填充 -->
+               <div class="input-group">
+                <label>
+                    <span class="en">Player Names / 玩家名字:</span>
+                </label>
+                    <div id="playerNameInputs" class="player-name-inputs-vertical">
+                        <!-- JavaScript会动态填充 -->
                     </div>
                 </div>
                 
@@ -110,20 +104,14 @@
                 <div class="roll-section">
                     <h3>Random Roll / 随机Roll点</h3>
                     
-                    <!-- 参与者选择 -->
-                    <div class="input-group">
-                        <label>
-                            <span class="en">Participants / 参与者:</span>
-                        </label>
-                        <div id="participantCheckboxes" class="checkbox-group">
-                            <!-- 会被JavaScript动态填充 -->
-                        </div>
-                    </div>
                     
                     <!-- Roll点按钮 -->
-                    <div class="button-group">
+                    <div class="button-group-row">
                         <button id="startRoll" class="btn-image-roll">
                             <img src="assets/images/startroll.png" alt="Start Roll" class="roll-btn-img">
+                        </button>
+                        <button id="calculate" class="btn-image-calculate">
+                            <img src="assets/images/startcalculate.png" alt="Calculate" class="calculate-btn-img">
                         </button>
                     </div>
                     
