@@ -29,7 +29,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -50,6 +50,12 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.card h3 {
+    color: var(--gray-text);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
 }
 
 /* ========== 头部样式 ========== */
@@ -74,37 +80,16 @@ body {
     object-fit: contain;
 }
 
-/* ========== 主内容布局 ========== */
-/* 垂直布局 - 修改为flex布局 */
+/* ========== 垂直布局 ========== */
 .main-content-vertical {
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    width: 100%;
-}
-
-/* 上部分：控制面板和玩家管理 */
-.upper-panel {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 30px;
-}
-
-@media (min-width: 1024px) {
-    .upper-panel {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-/* 下部分：结果面板 */
-.lower-panel {
-    width: 100%;
-    margin-top: 10px;
+    gap: 25px;
 }
 
 /* ========== 输入组样式 ========== */
 .input-group {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .input-group label {
@@ -122,7 +107,7 @@ body {
 
 input, select {
     width: 100%;
-    padding: 14px 18px;
+    padding: 12px 16px;
     border: 2px solid var(--gray-border);
     border-radius: 8px;
     font-size: 1rem;
@@ -136,74 +121,16 @@ input:focus, select:focus {
     outline: none;
 }
 
-/* ========== 玩家表格布局 ========== */
-.player-table-container {
-    background: var(--white);
-    border-radius: 10px;
-    border: 2px solid var(--gray-border);
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.table-header {
-    display: flex;
-    align-items: center;
-    background: linear-gradient(135deg, var(--gray-light) 0%, #e9ecef 100%);
-    padding: 18px 20px;
-    border-bottom: 3px solid var(--orange-light);
-    font-weight: 700;
-    color: var(--gray-text);
-}
-
-.col-name {
-    flex: 1;
-    font-size: 1.1rem;
-}
-
-.col-checkbox {
-    width: 120px;
-    text-align: center;
-    font-size: 1.1rem;
-}
-
-.player-row {
-    display: flex;
-    align-items: center;
-    padding: 18px 20px;
-    border-bottom: 1px solid var(--gray-border);
-    transition: all 0.2s ease;
-}
-
-.player-row:hover {
-    background: var(--gray-light);
-}
-
-.player-row:last-child {
-    border-bottom: none;
-}
-
-.player-row input[type="text"] {
-    flex: 1;
-    margin-right: 20px;
-    border: 2px solid var(--gray-border);
-    padding: 14px 18px;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: 500;
-}
-
-.player-row input[type="checkbox"] {
-    width: 22px;
-    height: 22px;
-    accent-color: var(--primary-orange);
-    cursor: pointer;
+input[readonly] {
+    background-color: var(--gray-light);
+    color: #666;
+    cursor: not-allowed;
 }
 
 /* ========== 按钮样式 ========== */
 .button-group {
     display: flex;
     justify-content: center;
-    align-items: center;
     margin-top: 20px;
 }
 
@@ -211,13 +138,15 @@ input:focus, select:focus {
     background: linear-gradient(135deg, var(--primary-orange) 0%, var(--orange-dark) 100%);
     color: white;
     border: none;
-    padding: 14px 28px;
+    padding: 14px 32px;
     border-radius: 10px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 300px;
 }
 
 .btn-primary:hover {
@@ -253,128 +182,27 @@ input:focus, select:focus {
     display: flex;
     align-items: center;
     gap: 8px;
+    font-size: 0.9rem;
+    color: var(--gray-text);
 }
 
 .pouch-img {
     width: 24px;
     height: 24px;
+    object-fit: contain;
 }
 
 .pouch-input {
     text-align: center;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
-/* ========== 表格样式 ========== */
-.table-container {
-    overflow-x: auto;
-    margin: 20px 0;
-    border-radius: 8px;
-    border: 1px solid var(--gray-border);
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 500px;
-}
-
-thead {
-    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--orange-dark) 100%);
-    color: var(--white);
-}
-
-th, td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--gray-border);
-}
-
-tbody tr:hover {
-    background: var(--gray-light);
-}
-
-/* ========== 摘要样式 ========== */
-.summary {
-    display: flex;
-    gap: 30px;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--gray-border);
-}
-
-.summary-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.summary-item span {
-    color: #666;
-}
-
-.summary-item strong {
-    font-size: 1.2rem;
-    color: var(--primary-orange);
-}
-
-/* ========== 响应式设计 ========== */
-@media (max-width: 1024px) {
-    .upper-panel {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .app-header {
-        min-height: 150px;
-    }
-    
-    .header-image {
-        max-height: 120px;
-    }
-    
-    .pouch-inputs {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .summary {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .card {
-        padding: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-    
-    .pouch-inputs {
-        grid-template-columns: 1fr;
-    }
-    
-    .btn-primary {
-        width: 100%;
-        padding: 16px;
-    }
-}
-
-/* ========== 玩家输入区域 ========== */
+/* ========== 玩家名输入区域 ========== */
 .player-name-inputs {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
-}
-
-@media (max-width: 768px) {
-    .player-name-inputs {
-        grid-template-columns: 1fr;
-    }
 }
 
 .player-name-item {
@@ -389,11 +217,18 @@ tbody tr:hover {
     color: var(--gray-text);
 }
 
-/* ========== 复选框样式 ========== */
+/* ========== Roll点区域 ========== */
+.roll-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid var(--gray-border);
+}
+
 .checkbox-group {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 12px;
+    margin: 15px 0;
 }
 
 .checkbox-item {
@@ -401,6 +236,16 @@ tbody tr:hover {
     align-items: center;
     gap: 8px;
     cursor: pointer;
+    padding: 10px 12px;
+    background: var(--gray-light);
+    border-radius: 8px;
+    border: 1px solid var(--gray-border);
+    transition: all 0.2s ease;
+}
+
+.checkbox-item:hover {
+    background: #e9ecef;
+    border-color: var(--primary-orange);
 }
 
 .checkbox-item input[type="checkbox"] {
@@ -410,13 +255,46 @@ tbody tr:hover {
     cursor: pointer;
 }
 
-/* ========== Roll点结果样式 ========== */
+.checkbox-item span {
+    font-weight: 500;
+    color: var(--gray-text);
+}
+
+/* Roll点按钮 */
+.btn-image-roll {
+    display: block;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    width: 180px;
+}
+
+.btn-image-roll:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.roll-btn-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+}
+
+/* Roll点结果 */
 .roll-results {
-    background: #f8f9fa;
+    background: var(--gray-light);
     border-radius: 8px;
     padding: 15px;
-    border: 1px solid #e9ecef;
-    min-height: 80px;
+    border: 2px solid var(--gray-border);
+    min-height: 100px;
+    margin-top: 20px;
 }
 
 .roll-results-list {
@@ -433,6 +311,7 @@ tbody tr:hover {
     background: white;
     border-radius: 8px;
     border-left: 4px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .rank-first {
@@ -453,64 +332,244 @@ tbody tr:hover {
 .roll-rank {
     font-weight: 700;
     color: var(--primary-orange);
-    min-width: 30px;
+    min-width: 35px;
+    font-size: 1.1rem;
 }
 
 .roll-player {
     flex: 1;
     font-weight: 600;
+    font-size: 1rem;
 }
 
 .roll-value {
     font-weight: 700;
     font-size: 1.1rem;
-    color: #2d3748;
+    color: var(--gray-text);
+    background: var(--gray-light);
+    padding: 4px 10px;
+    border-radius: 6px;
+    min-width: 60px;
+    text-align: center;
 }
 
 .roll-emoji {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
 }
 
-/* 隐藏不需要的元素 */
-#participantCheckboxes,
+/* ========== 表格样式 ========== */
+.table-container {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: 8px;
+    border: 2px solid var(--gray-border);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 500px;
+}
+
+thead {
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--orange-dark) 100%);
+    color: var(--white);
+}
+
+th {
+    padding: 16px;
+    text-align: center;
+    font-weight: 600;
+    border-bottom: 2px solid var(--orange-dark);
+}
+
+td {
+    padding: 14px 16px;
+    text-align: center;
+    border-bottom: 1px solid var(--gray-border);
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--gray-light);
+}
+
+tbody tr:hover {
+    background-color: #e8f4f8;
+}
+
+.player-rank {
+    font-weight: 700;
+    color: var(--primary-orange);
+    width: 50px;
+}
+
+.player-name {
+    text-align: left;
+    font-weight: 600;
+}
+
+.base-gain, .actual-gain {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.deduction-cell {
+    padding: 8px;
+}
+
+.deduction-input {
+    width: 80px;
+    padding: 8px;
+    text-align: center;
+    font-weight: 600;
+    border: 2px solid var(--gray-border);
+    border-radius: 6px;
+    background: white;
+}
+
+.deduction-input:focus {
+    border-color: var(--primary-orange);
+    outline: none;
+}
+
+/* ========== 摘要样式 ========== */
+.summary {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px solid var(--gray-border);
+}
+
+.summary-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+}
+
+.summary-item span {
+    font-weight: 600;
+    color: var(--gray-text);
+}
+
+.summary-item strong {
+    font-size: 1.2rem;
+    color: var(--primary-orange);
+    min-width: 60px;
+}
+
+/* ========== 响应式设计 ========== */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    
+    .container {
+        max-width: 100%;
+    }
+    
+    .app-header {
+        min-height: 150px;
+        padding: 15px;
+    }
+    
+    .header-image {
+        max-height: 120px;
+    }
+    
+    .card {
+        padding: 20px;
+    }
+    
+    .pouch-inputs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .player-name-inputs {
+        grid-template-columns: 1fr;
+    }
+    
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .table-container {
+        margin: 15px -20px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+    }
+    
+    .summary {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .summary-item {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    th, td {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+    }
+    
+    .deduction-input {
+        width: 60px;
+        padding: 6px;
+    }
+    
+    .btn-primary {
+        max-width: 100%;
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pouch-inputs {
+        grid-template-columns: 1fr;
+    }
+    
+    table {
+        min-width: 400px;
+    }
+    
+    th, td {
+        padding: 10px 6px;
+        font-size: 0.85rem;
+    }
+    
+    .card h2 {
+        font-size: 1.2rem;
+    }
+    
+    .card h3 {
+        font-size: 1.1rem;
+    }
+    
+    .btn-image-roll {
+        width: 160px;
+    }
+}
+
+/* ========== 隐藏不需要的元素 ========== */
 .participant-controls,
 .select-all-btn,
-.deselect-all-btn {
-    display: none !important;
-}
-
-/* ========== 图像按钮样式 ========== */
-.btn-image-roll {
-    display: block;
-    padding: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    margin: 0 auto;
-}
-
-.btn-image-roll:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.roll-btn-img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 10px;
-    max-width: 180px;
-}
-
-/* 移除旧的重复样式 */
+.deselect-all-btn,
 .dual-buttons,
 .btn-roll,
 .btn-calculate,
-.btn-image-calculate,
-.calculate-btn-img {
+.btn-image-calculate {
     display: none !important;
+}
+
+/* 空状态样式 */
+.empty-results {
+    text-align: center;
+    color: #999;
+    padding: 30px;
+    font-style: italic;
 }
