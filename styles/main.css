@@ -454,8 +454,16 @@ input:focus, select:focus {
 }
 
 .coins-total-label::before {
-    content: '🪙';
-    font-size: 1.3rem;
+    content: '';  /* ← 改为空 */
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background-image: url('../assets/images/coins.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 10px;
+    /* 删除原来的 font-size: 1.4rem; */
 }
 
 .coins-total-value {
