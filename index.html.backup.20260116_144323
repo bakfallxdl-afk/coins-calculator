@@ -7,7 +7,7 @@
     
     <!-- 样式 -->
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/participant-fix.css">    <!-- 头部样式 -->
+    <!-- 头部样式 -->
     <link rel="stylesheet" href="styles/header-new.css?v=1.0">
     <!-- 按钮样式 -->
     <link rel="stylesheet" href="styles/button.css">    <link rel="stylesheet" href="styles/theme.css">
@@ -103,6 +103,7 @@
                     </div>
                     
                     <div class="button-group">
+                        <button id="calculate" class="btn-primary">
                             Calculate / 计算分配
                         </button>
                     </div>
@@ -187,6 +188,6 @@
     <!-- JavaScript -->
     <script src="scripts/calculator.js"></script>
     <script src="scripts/roll.js"></script>
-    <script src="scripts/fix-dynamic-players.js"></script>    <script src="scripts/fill-participants.js"></script>    <script src="scripts/simple-sync.js"></script>    <script src="scripts/participant-fix.js"></script>    <script src="scripts/participant-sync-fixed.js"></script>    <script src="scripts/app.js"></script>
-    <script src="scripts/simple-new-layout.js"></script></body>
+    <script src="scripts/participant-sync-fixed.js"></script>    <script src="scripts/app.js"></script>
+</body>
 </html>
