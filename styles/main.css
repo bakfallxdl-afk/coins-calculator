@@ -262,19 +262,48 @@ input[readonly] {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
     flex-shrink: 0;
+    position: relative; /* 为伪元素定位 */
 }
 
-.btn-image-roll:hover,
-.btn-image-calculate:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+/* 添加发光边框 - 使用伪元素实现 */
+.btn-image-roll::before,
+.btn-image-calculate::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 18px; /* 比按钮大一点 */
+    background: linear-gradient(45deg, 
+        #FF6B35, #FF8C42, #FFD89C, #FF6B35);
+    z-index: -1;
+    opacity: 0.7;
+    filter: blur(8px);
+    transition: all 0.4s ease;
 }
 
-.btn-image-roll:active,
-.btn-image-calculate:active {
-    transform: translateY(-2px);
+/* Roll按钮特殊发光效果 */
+.btn-image-roll::before {
+    background: linear-gradient(45deg, 
+        #FF6B35, #FF8C42, #FFD89C, #FF6B35);
 }
 
+/* 计算按钮特殊发光效果 */
+.btn-image-calculate::before {
+    background: linear-gradient(45deg, 
+        #0288D1, #03A9F4, #B3E5FC, #0288D1);
+}
+
+/* 悬停时发光效果增强 */
+.btn-image-roll:hover::before,
+.btn-image-calculate:hover::before {
+    opacity: 0.9;
+    filter: blur(10px);
+    transform: scale(1.02);
+}
+
+/* 确保图片在边框上方 */
 .roll-btn-img,
 .calculate-btn-img {
     width: 100%;
@@ -282,6 +311,8 @@ input[readonly] {
     object-fit: contain;
     display: block;
     border-radius: 14px;
+    position: relative; /* 确保在伪元素之上 */
+    z-index: 1;
 }
 
 /* ========== Roll点结果 ========== */
