@@ -21,155 +21,150 @@
             </div>
         </header>
 
-        <!-- 主内容区 - 修改为垂直布局 -->
+        <!-- 主内容区 - 全纵向布局 -->
         <main class="main-content-vertical">
-            <!-- 左侧：控制面板 + 玩家管理 -->
-            <div class="upper-panel">
-                <!-- 控制面板 -->
-                <section class="control-panel card">
-                    <h2>设置 Settings</h2>
-                    
-                    <!-- 玩家数量选择 -->
-                    <div class="input-group">
-                        <label for="playerCount">
-                            <span class="en">Player Count / 玩家人数:</span>
-                        </label>
-                        <select id="playerCount">
-                            <option value="4">4 Players (4人)</option>
-                            <option value="5">5 Players (5人)</option>
-                            <option value="6">6 Players (6人)</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Pouch输入区域 - 紧凑水平布局 -->
-                    <div class="input-group">
-                        <label>
-                            <span class="en">Pouch Values / Pouch数值:</span>
-                        </label>
-                        <div class="pouch-inputs" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
-                            <div class="pouch-item" style="flex: 1; min-width: 120px; padding: 8px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef;">
-                                <div class="pouch-icon" style="display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-size: 0.85rem; color: #495057;">
-                                    <img src="assets/images/pouch4.png" alt="pouch1" class="pouch-img" style="width: 24px; height: 24px; object-fit: contain;">
-                                    <span>pouch1:</span>
-                                </div>
-                                <input type="number" id="pouch1" class="pouch-input" value="0" min="0" data-index="0" style="width: 100%; padding: 6px 8px; font-size: 0.9rem; text-align: center; border: 1px solid #ced4da; border-radius: 4px;">
+            <!-- 控制面板 -->
+            <section class="control-panel card">
+                <h2>设置 Settings</h2>
+                
+                <!-- 玩家数量选择 -->
+                <div class="input-group">
+                    <label for="playerCount">
+                        <span class="en">Player Count / 玩家人数:</span>
+                    </label>
+                    <select id="playerCount">
+                        <option value="4">4 Players (4人)</option>
+                        <option value="5">5 Players (5人)</option>
+                        <option value="6">6 Players (6人)</option>
+                    </select>
+                </div>
+                
+                <!-- Pouch输入区域 -->
+                <div class="input-group">
+                    <label>
+                        <span class="en">Pouch Values / Pouch数值:</span>
+                    </label>
+                    <div class="pouch-inputs">
+                        <div class="pouch-item">
+                            <div class="pouch-icon">
+                                <img src="assets/images/pouch4.png" alt="pouch1" class="pouch-img">
+                                <span>pouch1:</span>
                             </div>
-                            <div class="pouch-item" style="flex: 1; min-width: 120px; padding: 8px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef;">
-                                <div class="pouch-icon" style="display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-size: 0.85rem; color: #495057;">
-                                    <img src="assets/images/pouch4.png" alt="pouch2" class="pouch-img" style="width: 24px; height: 24px; object-fit: contain;">
-                                    <span>pouch2:</span>
-                                </div>
-                                <input type="number" id="pouch2" class="pouch-input" value="0" min="0" data-index="1" style="width: 100%; padding: 6px 8px; font-size: 0.9rem; text-align: center; border: 1px solid #ced4da; border-radius: 4px;">
+                            <input type="number" id="pouch1" class="pouch-input" value="0" min="0" data-index="0">
+                        </div>
+                        <div class="pouch-item">
+                            <div class="pouch-icon">
+                                <img src="assets/images/pouch4.png" alt="pouch2" class="pouch-img">
+                                <span>pouch2:</span>
                             </div>
-                            <div class="pouch-item" style="flex: 1; min-width: 120px; padding: 8px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef;">
-                                <div class="pouch-icon" style="display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-size: 0.85rem; color: #495057;">
-                                    <img src="assets/images/pouch4.png" alt="pouch3" class="pouch-img" style="width: 24px; height: 24px; object-fit: contain;">
-                                    <span>pouch3:</span>
-                                </div>
-                                <input type="number" id="pouch3" class="pouch-input" value="0" min="0" data-index="2" style="width: 100%; padding: 6px 8px; font-size: 0.9rem; text-align: center; border: 1px solid #ced4da; border-radius: 4px;">
+                            <input type="number" id="pouch2" class="pouch-input" value="0" min="0" data-index="1">
+                        </div>
+                        <div class="pouch-item">
+                            <div class="pouch-icon">
+                                <img src="assets/images/pouch4.png" alt="pouch3" class="pouch-img">
+                                <span>pouch3:</span>
                             </div>
-                            <div class="pouch-item" style="flex: 1; min-width: 120px; padding: 8px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef;">
-                                <div class="pouch-icon" style="display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-size: 0.85rem; color: #495057;">
-                                    <img src="assets/images/pouch4.png" alt="pouch4" class="pouch-img" style="width: 24px; height: 24px; object-fit: contain;">
-                                    <span>pouch4:</span>
-                                </div>
-                                <input type="number" id="pouch4" class="pouch-input" value="0" min="0" data-index="3" style="width: 100%; padding: 6px 8px; font-size: 0.9rem; text-align: center; border: 1px solid #ced4da; border-radius: 4px;">
+                            <input type="number" id="pouch3" class="pouch-input" value="0" min="0" data-index="2">
+                        </div>
+                        <div class="pouch-item">
+                            <div class="pouch-icon">
+                                <img src="assets/images/pouch4.png" alt="pouch4" class="pouch-img">
+                                <span>pouch4:</span>
                             </div>
+                            <input type="number" id="pouch4" class="pouch-input" value="0" min="0" data-index="3">
                         </div>
                     </div>
-                    
-                    <!-- 总硬币数 -->
-                    <div class="input-group">
-                        <label for="totalCoins">
-                            <span class="en">Total Coins / 硬币总数:</span>
-                        </label>
-                        <input type="number" id="totalCoins" value="0" min="0" readonly style="width: 120px; padding: 6px 8px; background: #f8f9fa; border: 1px solid #ced4da; border-radius: 4px;">
-                    </div>
-                    
-                    <!-- 计算按钮 -->
-                    <div class="button-group" style="margin-top: 20px;">
-                        <button id="calculate" class="btn-primary" style="padding: 12px 24px; font-size: 1rem; font-weight: 600;">
-                            Calculate / 计算分配
-                        </button>
-                    </div>
-                </section>
+                </div>
                 
-                <!-- 玩家管理区域 -->
-                <section class="player-management card">
-                    <h2>Player Management / 玩家管理</h2>
+                <!-- 总硬币数 -->
+                <div class="input-group">
+                    <label for="totalCoins">
+                        <span class="en">Total Coins / 硬币总数:</span>
+                    </label>
+                    <input type="number" id="totalCoins" value="0" min="0" readonly>
+                </div>
+                
+                <!-- 计算按钮 -->
+                <div class="button-group">
+                    <button id="calculate" class="btn-primary">
+                        Calculate / 计算分配
+                    </button>
+                </div>
+            </section>
+            
+            <!-- 玩家管理区域 -->
+            <section class="player-management card">
+                <h2>Player Management / 玩家管理</h2>
+                
+                <!-- 玩家名输入框 -->
+                <div class="input-group">
+                    <label>
+                        <span class="en">Player Names / 玩家名字:</span>
+                    </label>
+                    <div id="playerNameInputs" class="player-name-inputs">
+                        <!-- 会被JavaScript动态填充 -->
+                    </div>
+                </div>
+                
+                <!-- Roll点区域 -->
+                <div class="roll-section">
+                    <h3>Random Roll / 随机Roll点</h3>
                     
-                    <!-- 玩家名输入框 -->
+                    <!-- 参与者选择 -->
                     <div class="input-group">
                         <label>
-                            <span class="en">Player Names / 玩家名字:</span>
+                            <span class="en">Participants / 参与者:</span>
                         </label>
-                        <div id="playerNameInputs" class="player-name-inputs" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                        <div id="participantCheckboxes" class="checkbox-group">
                             <!-- 会被JavaScript动态填充 -->
                         </div>
                     </div>
                     
-                    <!-- Roll点区域 -->
-                    <div class="roll-section" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e9ecef;">
-                        <h3>Random Roll / 随机Roll点</h3>
-                        
-                        <!-- 参与者选择 -->
-                        <div class="input-group">
-                            <label>
-                                <span class="en">Participants / 参与者:</span>
-                            </label>
-                            <div id="participantCheckboxes" class="checkbox-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 10px 0;">
-                                <!-- 会被JavaScript动态填充 -->
-                            </div>
-                        </div>
-                        
-                        <!-- Roll点按钮 -->
-                        <div class="button-group">
-                            <button id="startRoll" class="btn-image-roll" style="background: none; border: none; padding: 0; cursor: pointer;">
-                                <img src="assets/images/startroll.png" alt="Start Roll" class="roll-btn-img" style="width: 160px; height: auto;">
-                            </button>
-                        </div>
-                        
-                        <!-- Roll点结果 -->
-                        <div id="rollResults" class="roll-results" style="margin-top: 15px; min-height: 60px; padding: 10px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-                            <!-- 结果区域 -->
-                        </div>
-                    </div>
-                </section>
-            </div>
-            
-            <!-- 右侧：分配结果 - 移动到下方 -->
-            <div class="lower-panel">
-                <section class="results-panel card">
-                    <h2>Results / 分配结果</h2>
-                    <div class="table-container" style="overflow-x: auto;">
-                        <table id="resultsTable" style="width: 100%; border-collapse: collapse;">
-                            <thead style="background: #f8f9fa;">
-                                <tr>
-                                    <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">#</th>
-                                    <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Player / 玩家</th>
-                                    <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Base / 基础</th>
-                                    <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Deduction / 扣减</th>
-                                    <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6;">Actual / 实际</th>
-                                </tr>
-                            </thead>
-                            <tbody id="resultsBody">
-                                <!-- 会被JavaScript动态填充 -->
-                            </tbody>
-                        </table>
+                    <!-- Roll点按钮 -->
+                    <div class="button-group">
+                        <button id="startRoll" class="btn-image-roll">
+                            <img src="assets/images/startroll.png" alt="Start Roll" class="roll-btn-img">
+                        </button>
                     </div>
                     
-                    <div class="summary" style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
-                        <div class="summary-item">
-                            <span style="font-weight: 600; color: #495057;">Total / 总数:</span>
-                            <strong id="totalDisplay" style="margin-left: 10px; font-size: 1.1rem; color: #FF6B35;">0</strong>
-                        </div>
-                        <div class="summary-item">
-                            <span style="font-weight: 600; color: #495057;">Remainder / 余数:</span>
-                            <strong id="remainderDisplay" style="margin-left: 10px; font-size: 1.1rem; color: #6c757d;">0</strong>
-                        </div>
+                    <!-- Roll点结果 -->
+                    <div id="rollResults" class="roll-results">
+                        <!-- 结果区域 -->
                     </div>
-                </section>
-            </div>
+                </div>
+            </section>
+            
+            <!-- 分配结果 -->
+            <section class="results-panel card">
+                <h2>Results / 分配结果</h2>
+                <div class="table-container">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Player / 玩家</th>
+                                <th>Base / 基础</th>
+                                <th>Deduction / 扣减</th>
+                                <th>Actual / 实际</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            <!-- 会被JavaScript动态填充 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="summary">
+                    <div class="summary-item">
+                        <span>Total / 总数:</span>
+                        <strong id="totalDisplay">0</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Remainder / 余数:</span>
+                        <strong id="remainderDisplay">0</strong>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
