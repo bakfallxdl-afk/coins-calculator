@@ -1,4 +1,6 @@
 /* ========== 基础重置和变量 ========== */
+@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+
 :root {
     --primary-orange: #FF6B35;
     --orange-light: #FFD89C;
@@ -21,11 +23,12 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Play', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     min-height: 100vh;
     padding: 20px;
     color: var(--gray-text);
+    line-height: 1.6;
 }
 
 .container {
@@ -46,16 +49,12 @@ body {
 .card h2 {
     color: var(--primary-orange);
     margin-bottom: 20px;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     display: flex;
     align-items: center;
     gap: 10px;
-}
-
-.card h3 {
-    color: var(--gray-text);
-    margin-bottom: 15px;
-    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 /* ========== 头部样式 ========== */
@@ -67,14 +66,14 @@ body {
     text-align: center;
     border: 4px solid var(--orange-light);
     box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
-    min-height: 200px;
+    min-height: 180px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .header-image {
-    max-height: 160px;
+    max-height: 150px;
     max-width: 90%;
     border-radius: 12px;
     object-fit: contain;
@@ -89,14 +88,15 @@ body {
 
 /* ========== 输入组样式 ========== */
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 10px;
-    font-weight: 600;
+    margin-bottom: 12px;
+    font-weight: 700;
     color: var(--gray-text);
+    font-size: 1.05rem;
 }
 
 .input-group label .en {
@@ -111,8 +111,10 @@ input, select {
     border: 2px solid var(--gray-border);
     border-radius: 8px;
     font-size: 1rem;
+    font-family: 'Play', sans-serif;
     transition: all 0.3s ease;
     background: var(--white);
+    color: var(--gray-text);
 }
 
 input:focus, select:focus {
@@ -125,37 +127,6 @@ input[readonly] {
     background-color: var(--gray-light);
     color: #666;
     cursor: not-allowed;
-}
-
-/* ========== 按钮样式 ========== */
-.button-group {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--orange-dark) 100%);
-    color: white;
-    border: none;
-    padding: 14px 32px;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow);
-    width: 100%;
-    max-width: 300px;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
-}
-
-.btn-primary:active {
-    transform: translateY(0);
 }
 
 /* ========== Pouch输入区域 ========== */
@@ -196,122 +167,160 @@ input[readonly] {
     text-align: center;
     font-weight: 600;
     font-size: 1rem;
+    font-family: 'Play', sans-serif;
 }
 
-/* ========== 玩家名输入区域 ========== */
-.player-name-inputs {
+/* ========== 玩家名输入区域重构 ========== */
+.player-header-row {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    grid-template-columns: 1fr auto;
+    padding: 10px 16px;
+    background: var(--primary-orange);
+    color: white;
+    border-radius: 8px 8px 0 0;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
 }
 
-.player-name-item {
+.player-header-roll {
+    text-align: center;
+    min-width: 85px;
+}
+
+.player-name-inputs-compact {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-}
-
-.player-name-item label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--gray-text);
-}
-
-/* ========== Roll点区域 ========== */
-.roll-section {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 2px solid var(--gray-border);
-}
-
-.checkbox-group {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    margin: 15px 0;
+    padding: 18px;
+    background: var(--gray-light);
+    border-radius: 0 0 8px 8px;
+    border: 2px solid var(--gray-border);
+    border-top: none;
 }
 
-.checkbox-item {
-    display: flex;
+.player-row-compact {
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    padding: 10px 12px;
-    background: var(--gray-light);
+    gap: 20px;
+}
+
+.player-input-compact {
+    padding: 11px 14px;
+    border: 2px solid var(--gray-border);
     border-radius: 8px;
-    border: 1px solid var(--gray-border);
+    font-size: 1rem;
+    font-family: 'Play', sans-serif;
+    color: var(--gray-text);
+    background: white;
     transition: all 0.2s ease;
 }
 
-.checkbox-item:hover {
-    background: #e9ecef;
-    border-color: var(--primary-orange);
+.player-input-compact::placeholder {
+    color: #a0aec0;
+    font-style: italic;
+    opacity: 0.8;
 }
 
-.checkbox-item input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+.player-input-compact:focus {
+    border-color: var(--primary-orange);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.roll-checkbox-solo {
+    width: 24px;
+    height: 24px;
     accent-color: var(--primary-orange);
     cursor: pointer;
+    transform: scale(1.1);
 }
 
-.checkbox-item span {
-    font-weight: 500;
-    color: var(--gray-text);
-}
-
-/* Roll点按钮 */
-.btn-image-roll {
-    display: block;
-    padding: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    margin: 0 auto;
-    width: 180px;
-}
-
-.btn-image-roll:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.roll-btn-img {
+/* ========== 按钮容器 ========== */
+.button-group-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin: 30px auto;
     width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 10px;
 }
 
-/* Roll点结果 */
+.btn-image-roll,
+.btn-image-calculate {
+    display: block;
+    width: 220px;
+    height: 170px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.btn-image-roll:hover,
+.btn-image-calculate:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.btn-image-roll:active,
+.btn-image-calculate:active {
+    transform: translateY(-2px);
+}
+
+.roll-btn-img,
+.calculate-btn-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    border-radius: 14px;
+}
+
+/* ========== Roll点结果 ========== */
+.roll-section {
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 2px solid var(--gray-border);
+}
+
+.roll-section h3 {
+    color: var(--gray-text);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
 .roll-results {
     background: var(--gray-light);
-    border-radius: 8px;
-    padding: 15px;
+    border-radius: 10px;
+    padding: 20px;
     border: 2px solid var(--gray-border);
-    min-height: 100px;
+    min-height: 120px;
     margin-top: 20px;
 }
 
 .roll-results-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .roll-result-item {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 12px 15px;
+    gap: 20px;
+    padding: 14px 18px;
     background: white;
-    border-radius: 8px;
-    border-left: 4px solid #dee2e6;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-radius: 10px;
+    border-left: 5px solid #dee2e6;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
 }
 
 .rank-first {
@@ -330,45 +339,48 @@ input[readonly] {
 }
 
 .roll-rank {
-    font-weight: 700;
+    font-weight: 800;
     color: var(--primary-orange);
-    min-width: 35px;
-    font-size: 1.1rem;
+    min-width: 40px;
+    font-size: 1.2rem;
+    text-align: center;
 }
 
 .roll-player {
     flex: 1;
-    font-weight: 600;
-    font-size: 1rem;
+    font-weight: 700;
+    font-size: 1.1rem;
 }
 
 .roll-value {
-    font-weight: 700;
-    font-size: 1.1rem;
+    font-weight: 800;
+    font-size: 1.2rem;
     color: var(--gray-text);
     background: var(--gray-light);
-    padding: 4px 10px;
-    border-radius: 6px;
-    min-width: 60px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    min-width: 70px;
     text-align: center;
 }
 
 .roll-emoji {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
 }
 
 /* ========== 表格样式 ========== */
 .table-container {
     overflow-x: auto;
-    margin: 20px 0;
-    border-radius: 8px;
+    margin: 25px 0;
+    border-radius: 10px;
     border: 2px solid var(--gray-border);
+    background: white;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     min-width: 500px;
+    font-family: 'Play', sans-serif;
 }
 
 thead {
@@ -377,86 +389,217 @@ thead {
 }
 
 th {
-    padding: 16px;
+    padding: 18px 16px;
     text-align: center;
-    font-weight: 600;
-    border-bottom: 2px solid var(--orange-dark);
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-bottom: 3px solid var(--orange-dark);
+    letter-spacing: 0.5px;
 }
 
 td {
-    padding: 14px 16px;
+    padding: 16px;
     text-align: center;
     border-bottom: 1px solid var(--gray-border);
+    font-weight: 500;
 }
 
 tbody tr:nth-child(even) {
-    background-color: var(--gray-light);
+    background-color: rgba(255, 107, 53, 0.03);
 }
 
 tbody tr:hover {
-    background-color: #e8f4f8;
+    background-color: rgba(255, 107, 53, 0.08);
+    transition: background-color 0.2s ease;
 }
 
 .player-rank {
-    font-weight: 700;
+    font-weight: 800;
     color: var(--primary-orange);
     width: 50px;
+    font-size: 1.1rem;
 }
 
 .player-name {
     text-align: left;
-    font-weight: 600;
+    font-weight: 700;
+    padding-left: 20px;
 }
 
 .base-gain, .actual-gain {
-    font-weight: 600;
-    color: #2d3748;
+    font-weight: 700;
+    color: var(--gray-text);
+    font-size: 1.1rem;
 }
 
 .deduction-cell {
-    padding: 8px;
+    padding: 10px;
 }
 
 .deduction-input {
-    width: 80px;
-    padding: 8px;
+    width: 85px;
+    padding: 10px;
     text-align: center;
-    font-weight: 600;
+    font-weight: 700;
+    font-family: 'Play', sans-serif;
     border: 2px solid var(--gray-border);
-    border-radius: 6px;
+    border-radius: 8px;
     background: white;
+    color: var(--gray-text);
+    transition: all 0.2s ease;
 }
 
 .deduction-input:focus {
     border-color: var(--primary-orange);
     outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
 /* ========== 摘要样式 ========== */
 .summary {
     display: flex;
     justify-content: space-between;
-    margin-top: 25px;
-    padding-top: 20px;
+    margin-top: 30px;
+    padding-top: 25px;
     border-top: 2px solid var(--gray-border);
 }
 
 .summary-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 1rem;
+    gap: 12px;
+    font-size: 1.1rem;
 }
 
 .summary-item span {
-    font-weight: 600;
+    font-weight: 700;
     color: var(--gray-text);
 }
 
 .summary-item strong {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: var(--primary-orange);
-    min-width: 60px;
+    min-width: 80px;
+    text-align: right;
+    font-weight: 800;
+}
+
+/* ========== 工具按钮样式 ========== */
+.utility-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 3px solid var(--gray-border);
+}
+
+.utility-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--gray-light) 0%, #e9ecef 100%);
+    color: var(--gray-text);
+    font-family: 'Play', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    letter-spacing: 0.5px;
+}
+
+.utility-btn:hover {
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--orange-dark) 100%);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.25);
+}
+
+.utility-btn:active {
+    transform: translateY(-1px);
+}
+
+/* ========== 历史记录面板 ========== */
+.history-panel {
+    margin-top: 30px;
+    animation: fadeIn 0.5s ease;
+}
+
+.history-panel h3 {
+    color: var(--primary-orange);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.history-list {
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-orange) var(--gray-light);
+}
+
+.history-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.history-list::-webkit-scrollbar-track {
+    background: var(--gray-light);
+    border-radius: 4px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background-color: var(--primary-orange);
+    border-radius: 4px;
+}
+
+.history-item {
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    background: var(--gray-light);
+    border-radius: 10px;
+    border-left: 5px solid var(--primary-orange);
+    font-size: 0.95rem;
+    font-family: 'Play', monospace;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.history-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.history-timestamp {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-bottom: 6px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.history-content {
+    color: var(--gray-text);
+    font-weight: 500;
+    line-height: 1.5;
+    word-break: break-all;
+}
+
+.empty-history {
+    text-align: center;
+    padding: 40px 20px;
+    color: #a0aec0;
+    font-style: italic;
+    font-size: 1.1rem;
 }
 
 /* ========== 响应式设计 ========== */
@@ -482,29 +625,69 @@ tbody tr:hover {
         padding: 20px;
     }
     
+    .card h2 {
+        font-size: 1.3rem;
+    }
+    
     .pouch-inputs {
         grid-template-columns: repeat(2, 1fr);
     }
     
-    .player-name-inputs {
-        grid-template-columns: 1fr;
+    .player-header-row {
+        font-size: 0.9rem;
+        padding: 8px 12px;
     }
     
-    .checkbox-group {
-        grid-template-columns: 1fr;
+    .player-name-inputs-compact {
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .player-row-compact {
+        gap: 15px;
+    }
+    
+    .player-input-compact {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+    
+    .button-group-row {
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    .btn-image-roll,
+    .btn-image-calculate {
+        width: 200px;
+        height: 155px;
     }
     
     .table-container {
-        margin: 15px -20px;
+        margin: 20px -20px;
         border-left: none;
         border-right: none;
         border-radius: 0;
     }
     
+    th, td {
+        padding: 14px 10px;
+        font-size: 0.95rem;
+    }
+    
+    .player-name {
+        padding-left: 10px;
+    }
+    
+    .deduction-input {
+        width: 70px;
+        padding: 8px;
+    }
+    
     .summary {
         flex-direction: column;
-        gap: 15px;
-        align-items: center;
+        gap: 20px;
+        align-items: flex-start;
     }
     
     .summary-item {
@@ -512,19 +695,13 @@ tbody tr:hover {
         justify-content: space-between;
     }
     
-    th, td {
-        padding: 12px 8px;
-        font-size: 0.9rem;
+    .utility-buttons {
+        flex-direction: column;
+        gap: 15px;
     }
     
-    .deduction-input {
-        width: 60px;
-        padding: 6px;
-    }
-    
-    .btn-primary {
-        max-width: 100%;
-        padding: 16px;
+    .history-list {
+        max-height: 180px;
     }
 }
 
@@ -534,216 +711,61 @@ tbody tr:hover {
     }
     
     table {
-        min-width: 400px;
+        min-width: 450px;
     }
     
     th, td {
-        padding: 10px 6px;
-        font-size: 0.85rem;
+        padding: 12px 8px;
+        font-size: 0.9rem;
     }
     
-    .card h2 {
-        font-size: 1.2rem;
+    .player-row-compact {
+        grid-template-columns: 1fr;
+        gap: 12px;
     }
     
-    .card h3 {
-        font-size: 1.1rem;
+    .roll-checkbox-solo {
+        justify-self: start;
     }
     
-    .btn-image-roll {
-        width: 160px;
+    .button-group-row {
+        gap: 20px;
+    }
+    
+    .btn-image-roll,
+    .btn-image-calculate {
+        width: 180px;
+        height: 140px;
+    }
+}
+
+/* ========== 动画效果 ========== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
 /* ========== 隐藏不需要的元素 ========== */
-/* 移除 .btn-image-calculate 从隐藏列表中 */
 .participant-controls,
 .select-all-btn,
 .deselect-all-btn,
 .dual-buttons,
 .btn-roll,
+.btn-calculate {
+    display: none !important;
+}
 
 /* 空状态样式 */
 .empty-results {
     text-align: center;
-    color: #999;
-    padding: 30px;
+    color: #a0aec0;
+    padding: 40px 20px;
     font-style: italic;
+    font-size: 1.1rem;
 }
-/* ========== 新添加的样式 ========== */
-
-/* ========== 按钮容器 ========== */
-.button-group-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    margin: 30px auto;
-    width: 100%;
-}
-
-/* ========== 两个按钮相同的样式 ========== */
-.btn-image-roll,
-.btn-image-calculate {
-    display: block;
-    width: 220px;
-    height: 170px;
-    padding: 0;
-    margin: 0;
-    border: none;
-    background: none;
-    cursor: pointer;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
-
-/* 悬停效果 */
-.btn-image-roll:hover,
-.btn-image-calculate:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-}
-
-.btn-image-roll:active,
-.btn-image-calculate:active {
-    transform: translateY(-2px);
-}
-
-/* 图片样式 - 确保完全一致 */
-.roll-btn-img,
-.calculate-btn-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    border-radius: 14px;
-}
-
-/* ========== 响应式调整 ========== */
-@media (max-width: 768px) {
-    .button-group-row {
-        gap: 30px;
-    }
-    
-    .btn-image-roll,
-    .btn-image-calculate {
-        width: 200px;
-        height: 155px;
-    }
-}
-
-@media (max-width: 480px) {
-    .button-group-row {
-        flex-direction: column;
-        gap: 25px;
-    }
-    
-    .btn-image-roll,
-    .btn-image-calculate {
-        width: 220px;
-        height: 170px;
-    }
-}
-
-/* ========== 玩家名垂直布局 ========== */
-.player-name-inputs-vertical {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.player-name-row {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 12px 16px;
-    background: var(--gray-light);
-    border-radius: 10px;
-    border: 2px solid var(--gray-border);
-}
-
-.player-name-input-vertical {
-    flex: 1;
-    padding: 12px 16px;
-    border: 2px solid var(--gray-border);
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-}
-
-.player-name-input-vertical:focus {
-    border-color: var(--primary-orange);
-    outline: none;
-}
-
-/* ========== 复选框紧挨着玩家名 ========== */
-.participant-checkbox-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    white-space: nowrap;
-}
-
-.participant-checkbox-wrapper label {
-    font-weight: 500;
-    color: var(--gray-text);
-    margin: 0;
-}
-
-.participant-checkbox {
-    width: 20px;
-    height: 20px;
-    accent-color: var(--primary-orange);
-    cursor: pointer;
-}
-
-/* ========== 响应式调整 ========== */
-@media (max-width: 768px) {
-    .button-group-row {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-    }
-    
-    .player-name-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-    }
-    
-    .participant-checkbox-wrapper {
-        justify-content: space-between;
-    }
-}
-
-/* ========== 删除重复和冲突的样式 ========== */
-/* 确保没有以下重复样式 */
-/*
-.btn-image-calculate {
-    display: block;
-    padding: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    width: 180px;  <- 这个会覆盖上面的220px！
-}
-
-.btn-image-calculate:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.calculate-btn-img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 10px;
-}
-*/
