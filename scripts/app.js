@@ -203,9 +203,9 @@ class CoinsCalculatorApp {
     try {
         const players = [];
         for (let i = 0; i < this.state.playerCount; i++) {
+            const name = this.state.playerNames[i] || `ign${i + 1}`;
             players.push({
-                index: i,  // 重要：保存索引
-                name: this.state.playerNames[i] || `ign${i + 1}`,
+                name: name,
                 checked: this.state.participants[i]
             });
         }
@@ -214,53 +214,57 @@ class CoinsCalculatorApp {
         const resultsHTML = this.rollManager.generateResultsHTML(rollResults);
         this.elements.rollResults.innerHTML = resultsHTML;
         
-        // === 核心修复：正确处理排序 ===
+        // === 修复：只更新参与Roll的玩家顺序，不覆盖已输入的名字 ===
         
-        // 1. 创建新顺序数组
-        const newOrder = [];
+        // 1. 获取参与Roll的玩家（按点数排序）
+        const sortedParticipants = rollResults.map(p => p.name);
         
-        // 2. 先添加参与Roll的玩家（按点数排序）
-        rollResults.forEach(result => {
-            newOrder.push({
-                index: result.originalIndex,  // 使用原始索引
-                name: result.name,
-                isParticipant: true
-            });
-        });
-        
-        // 3. 添加不参与Roll的玩家（保持原顺序）
+        // 2. 获取不参与Roll的玩家（保持原顺序和名字）
+        const nonParticipants = [];
         for (let i = 0; i < this.state.playerCount; i++) {
-            const isAlreadyIncluded = newOrder.some(item => item.index === i);
-            if (!isAlreadyIncluded) {
-                newOrder.push({
+            if (!this.state.participants[i]) {
+                nonParticipants.push({
                     index: i,
-                    name: this.state.playerNames[i] || `ign${i + 1}`,
-                    isParticipant: false
+                    name: this.state.playerNames[i] || `ign${i + 1}`
                 });
             }
         }
         
-        // 4. 按新顺序重建数组
-        const newPlayerNames = [];
-        const newParticipants = [];
+        // 3. 构建新顺序：参与者在前面，非参与者在后面
+        const newOrder = [];
         
-        newOrder.forEach(item => {
-            newPlayerNames.push(item.name);
-            // 保持原来的参与者状态
-            newParticipants.push(this.state.participants[item.index]);
+        // 先放参与Roll的玩家（按点数排序）
+        sortedParticipants.forEach(name => {
+            newOrder.push(name);
         });
         
-        // 5. 更新状态
-        this.state.playerNames = newPlayerNames;
-        this.state.participants = newParticipants;
+        // 再放不参与Roll的玩家（保持原位置和名字）
+        nonParticipants.forEach(player => {
+            // 找到这个玩家原来的位置（通过名字匹配）
+            const originalIndex = this.state.playerNames.findIndex(n => n === player.name);
+            if (originalIndex !== -1) {
+                newOrder.push(this.state.playerNames[originalIndex]);
+            }
+        });
         
-        // 6. 更新UI
+        // 4. 重要：只更新顺序，不改变已输入的名字！
+        // 如果玩家之前有输入名字，保持它；如果没有，使用排序后的名字
+        for (let i = 0; i < this.state.playerCount; i++) {
+            const currentName = this.state.playerNames[i];
+            const newName = newOrder[i];
+            
+            // 只有当玩家原来没有输入名字（使用默认ign）时才更新
+            if (!currentName || currentName === `ign${i + 1}` || currentName.startsWith('ign')) {
+                this.state.playerNames[i] = newName;
+            }
+            // 如果玩家已经输入了自定义名字，保持它不变
+        }
+        
+        // 更新UI
         this.updatePlayerNameInputs();
         this.updateResults();
         
-        // 显示结果（包含实际排序的玩家名）
-        const sortedNames = rollResults.map(r => r.name).join(', ');
-        this.showNotification(`Roll点完成！排序: ${sortedNames}`, 'success');
+        this.showNotification('Roll点完成！玩家顺序已更新。', 'success');
         
     } catch (error) {
         this.showNotification(error.message, 'error');
