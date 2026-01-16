@@ -123,12 +123,6 @@ input:focus, select:focus {
     outline: none;
 }
 
-input[readonly] {
-    background-color: var(--gray-light);
-    color: #666;
-    cursor: not-allowed;
-}
-
 /* ========== Pouch输入区域 ========== */
 .pouch-inputs {
     display: grid;
@@ -168,6 +162,90 @@ input[readonly] {
     font-weight: 600;
     font-size: 1rem;
     font-family: 'Play', sans-serif;
+}
+
+/* ========== 硬币总数显示优化 ========== */
+.coins-total-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 248, 240, 0.95) 100%);
+    border-radius: 14px;
+    padding: 18px 25px;
+    border: 3px solid var(--orange-light);
+    box-shadow: 
+        0 6px 20px rgba(255, 107, 53, 0.15),
+        inset 0 1px 3px rgba(255, 255, 255, 0.8);
+    margin: 25px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.coins-total-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FF6B35, #FF8C42, #FFD89C, #FF6B35);
+    background-size: 300% 100%;
+    animation: shimmer 3s infinite linear;
+}
+
+@keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.coins-total-label {
+    font-weight: 700;
+    color: var(--gray-text);
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.coins-total-label::before {
+    content: '🪙';
+    font-size: 1.3rem;
+}
+
+.coins-total-value {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: var(--primary-orange);
+    font-family: 'Play', monospace;
+    text-shadow: 2px 2px 4px rgba(255, 107, 53, 0.25);
+    min-width: 120px;
+    text-align: center;
+    padding: 10px 25px;
+    background: white;
+    border-radius: 10px;
+    border: 3px solid var(--orange-light);
+    box-shadow: 
+        inset 0 2px 8px rgba(255, 107, 53, 0.1),
+        0 4px 12px rgba(255, 107, 53, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.coins-total-value::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(30deg);
 }
 
 /* ========== 玩家名输入区域重构 ========== */
@@ -247,6 +325,7 @@ input[readonly] {
     width: 100%;
 }
 
+/* ========== 按钮发光边框效果 ========== */
 .btn-image-roll,
 .btn-image-calculate {
     display: block;
@@ -257,65 +336,99 @@ input[readonly] {
     border: none;
     background: none;
     cursor: pointer;
-    border-radius: 16px;
+    border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink: 0;
-    position: relative; /* 为伪元素定位 */
+    position: relative;
+    isolation: isolate;
 }
 
-/* 添加发光边框 - 使用伪元素实现 */
+/* 发光边框 - 使用伪元素 */
 .btn-image-roll::before,
 .btn-image-calculate::before {
     content: '';
     position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    border-radius: 18px; /* 比按钮大一点 */
-    background: linear-gradient(45deg, 
-        #FF6B35, #FF8C42, #FFD89C, #FF6B35);
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 22px;
     z-index: -1;
     opacity: 0.7;
-    filter: blur(8px);
-    transition: all 0.4s ease;
+    filter: blur(12px);
+    transition: all 0.5s ease;
+    background: linear-gradient(
+        45deg,
+        #FF6B35,
+        #FF8C42,
+        #FFD89C,
+        #FF8C42,
+        #FF6B35
+    );
+    background-size: 400% 400%;
+    animation: gradientFlow 8s ease infinite;
 }
 
-/* Roll按钮特殊发光效果 */
-.btn-image-roll::before {
-    background: linear-gradient(45deg, 
-        #FF6B35, #FF8C42, #FFD89C, #FF6B35);
-}
-
-/* 计算按钮特殊发光效果 */
+/* 计算按钮的特殊发光颜色 */
 .btn-image-calculate::before {
-    background: linear-gradient(45deg, 
-        #0288D1, #03A9F4, #B3E5FC, #0288D1);
+    background: linear-gradient(
+        45deg,
+        #0288D1,
+        #03A9F4,
+        #B3E5FC,
+        #03A9F4,
+        #0288D1
+    );
+    background-size: 400% 400%;
 }
 
-/* 悬停时发光效果增强 */
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 悬停效果 */
+.btn-image-roll:hover,
+.btn-image-calculate:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
 .btn-image-roll:hover::before,
 .btn-image-calculate:hover::before {
     opacity: 0.9;
-    filter: blur(10px);
+    filter: blur(16px);
     transform: scale(1.02);
 }
 
-/* 确保图片在边框上方 */
+.btn-image-roll:active,
+.btn-image-calculate:active {
+    transform: translateY(-4px) scale(1.02);
+    transition: transform 0.1s ease;
+}
+
+/* 图片样式 */
 .roll-btn-img,
 .calculate-btn-img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     display: block;
-    border-radius: 14px;
-    position: relative; /* 确保在伪元素之上 */
+    border-radius: 16px;
+    position: relative;
     z-index: 1;
+    transition: all 0.3s ease;
 }
 
-/* ========== Roll点结果 ========== */
+.btn-image-roll:hover .roll-btn-img,
+.btn-image-calculate:hover .calculate-btn-img {
+    transform: scale(1.03);
+}
+
+/* ========== Roll点区域 ========== */
 .roll-section {
     margin-top: 25px;
     padding-top: 25px;
@@ -541,13 +654,30 @@ tbody tr:hover {
     justify-content: center;
     gap: 10px;
     letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.utility-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.7s ease;
 }
 
 .utility-btn:hover {
     background: linear-gradient(135deg, var(--primary-orange) 0%, var(--orange-dark) 100%);
     color: white;
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.25);
+    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+}
+
+.utility-btn:hover::before {
+    left: 100%;
 }
 
 .utility-btn:active {
@@ -601,11 +731,13 @@ tbody tr:hover {
     font-family: 'Play', monospace;
     transition: all 0.2s ease;
     position: relative;
+    cursor: pointer;
 }
 
 .history-item:hover {
     background: #e9ecef;
     transform: translateX(5px);
+    border-left-color: var(--orange-dark);
 }
 
 .history-timestamp {
@@ -664,6 +796,26 @@ tbody tr:hover {
         grid-template-columns: repeat(2, 1fr);
     }
     
+    /* 硬币总数响应式 */
+    .coins-total-display {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .coins-total-label {
+        justify-content: center;
+    }
+    
+    .coins-total-value {
+        font-size: 2rem;
+        width: 100%;
+        max-width: 200px;
+        padding: 8px 20px;
+    }
+    
+    /* 玩家名区域响应式 */
     .player-header-row {
         font-size: 0.9rem;
         padding: 8px 12px;
@@ -683,6 +835,7 @@ tbody tr:hover {
         font-size: 0.95rem;
     }
     
+    /* 按钮响应式 */
     .button-group-row {
         flex-direction: column;
         gap: 25px;
@@ -694,6 +847,12 @@ tbody tr:hover {
         height: 155px;
     }
     
+    .btn-image-roll::before,
+    .btn-image-calculate::before {
+        filter: blur(8px);
+    }
+    
+    /* 表格响应式 */
     .table-container {
         margin: 20px -20px;
         border-left: none;
@@ -715,6 +874,7 @@ tbody tr:hover {
         padding: 8px;
     }
     
+    /* 摘要响应式 */
     .summary {
         flex-direction: column;
         gap: 20px;
@@ -726,11 +886,13 @@ tbody tr:hover {
         justify-content: space-between;
     }
     
+    /* 工具按钮响应式 */
     .utility-buttons {
         flex-direction: column;
         gap: 15px;
     }
     
+    /* 历史记录响应式 */
     .history-list {
         max-height: 180px;
     }
@@ -741,6 +903,12 @@ tbody tr:hover {
         grid-template-columns: 1fr;
     }
     
+    /* 硬币总数小屏幕 */
+    .coins-total-value {
+        font-size: 1.8rem;
+    }
+    
+    /* 表格小屏幕 */
     table {
         min-width: 450px;
     }
@@ -750,6 +918,7 @@ tbody tr:hover {
         font-size: 0.9rem;
     }
     
+    /* 玩家名区域小屏幕 */
     .player-row-compact {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -759,6 +928,7 @@ tbody tr:hover {
         justify-self: start;
     }
     
+    /* 按钮小屏幕 */
     .button-group-row {
         gap: 20px;
     }
