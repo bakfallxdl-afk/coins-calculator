@@ -112,11 +112,12 @@
                 <section class="player-management card">
                     <h2>Player Management / 玩家管理</h2>
                     
-                    <!-- 玩家名输入框 - 新表格布局 -->
+                    <!-- 玩家名输入框 -->
                     <div class="input-group">
                         <label>
                             <span class="en">Player Names / 玩家名字:</span>
                         </label>
+                        <div id="playerNameInputs" class="player-name-inputs">
                         <div id="playerNameInputs" class="player-name-inputs">
                             <!-- 表头 -->
                             <div class="player-table-header">
@@ -124,29 +125,6 @@
                                 <div class="header-checkbox">参与Roll点</div>
                             </div>
                             <!-- 玩家行 -->
-                            <div class="player-row">
-                                <input type="text" class="player-input" id="player1" value="玩家1" placeholder="输入玩家名">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" class="player-checkbox" data-player-id="player1" checked>
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="player-row">
-                                <input type="text" class="player-input" id="player2" value="玩家2" placeholder="输入玩家名">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" class="player-checkbox" data-player-id="player2" checked>
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="player-row">
-                                <input type="text" class="player-input" id="player3" value="玩家3" placeholder="输入玩家名">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" class="player-checkbox" data-player-id="player3" checked>
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                    <!-- Roll点区域 - 双按钮横向布局 -->
-                    <div class="roll-section">
                         <h3>Random Roll / 随机Roll点 & Calculate / 计算分配</h3>
                         
                         <div class="dual-buttons-horizontal">
@@ -161,8 +139,26 @@
                         
                         <div id="rollResults" class="roll-results">
                             <!-- 结果区域 -->
+                        </div>                            <div class="player-row">
+                                <input type="text" class="player-input" id="player4" value="玩家4" placeholder="输入玩家名">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="player-checkbox" data-player-id="player4" checked>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>                    <!-- Roll点区域 -->
+                    <div class="roll-section">
+                        <h3>Random Roll / 随机Roll点</h3>
+                        
+                        <div class="input-group">
+                            <label>
+                                <span class="en">Participants / 参与者:</span>
+                            </label>
+                            <div id="participantCheckboxes" class="checkbox-group">
+                                <!-- 动态生成 -->
+                            </div>
                         </div>
-                    </div>                        
+                        
                         <div class="button-group">
                             <button id="startRoll" class="btn-image-roll">
                                 <img src="assets/images/startroll.png" alt="Start Roll" class="roll-btn-img">
