@@ -556,13 +556,13 @@ tbody tr:hover {
 }
 
 /* ========== 隐藏不需要的元素 ========== */
+/* 移除 .btn-image-calculate 从隐藏列表中 */
 .participant-controls,
 .select-all-btn,
 .deselect-all-btn,
 .dual-buttons,
 .btn-roll,
-.btn-calculate,
-.btn-image-calculate {
+.btn-calculate {  /* 注意：没有 .btn-image-calculate */
     display: none !important;
 }
 
