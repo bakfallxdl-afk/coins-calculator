@@ -257,142 +257,163 @@ class CoinsCalculatorApp {
     }
 
     updateResults() {
-        const playerCount = this.state.playerCount;
-        const total = this.state.totalCoins;
-        
-        const baseAllocation = this.calculator.calculateBaseAllocation(total, playerCount);
-        const actualGains = this.calculator.adjustAllocationSmartly(
-            total, 
-            playerCount, 
-            this.state.deductions.slice(0, playerCount)
-        );
-        
-        this.updateResultsTable(baseAllocation, actualGains);
-        this.elements.totalDisplay.textContent = total;
-        this.elements.remainderDisplay.textContent = baseAllocation.remainder;
-    }
+    const playerCount = this.state.playerCount;
+    const total = this.state.totalCoins;
+    
+    const baseAllocation = this.calculator.calculateBaseAllocation(total, playerCount);
+    
+    // 关键：按排名排序扣减值
+    const sortedDeductions = this.calculator.sortDeductionsByRank(
+        this.state.deductions.slice(0, playerCount),
+        this.state.playerNames,
+        this.state.rollResults
+    );
+    
+    const actualGains = this.calculator.adjustAllocationSmartly(
+        total, 
+        playerCount, 
+        sortedDeductions
+    );
+    
+    this.updateResultsTable(baseAllocation, actualGains, sortedDeductions);
+    this.elements.totalDisplay.textContent = total;
+    this.elements.remainderDisplay.textContent = baseAllocation.remainder;
+}
 
-    updateResultsTable(baseAllocation, actualGains) {
-        const { baseAllocations, playerCount } = baseAllocation;
-        let html = '';
+    updateResultsTable(baseAllocation, actualGains, sortedDeductions) {
+    const { baseAllocations, playerCount } = baseAllocation;
+    let html = '';
+    
+    // 基础分配从大到小
+    const sortedBaseAllocations = [...baseAllocations].sort((a, b) => b - a);
+    
+    // 如果有Roll点结果，按Roll点排名显示
+    if (this.state.rollResults && this.state.rollResults.length > 0) {
+        // 1. 获取参与Roll的玩家（按点数从高到低排序）
+        const sortedParticipants = [...this.state.rollResults];
         
-        // === 关键修复：表格按Roll点排名排序，但分配值对应原始玩家 ===
-        
-        // 如果有Roll点结果，按Roll点排名显示
-        if (this.state.rollResults && this.state.rollResults.length > 0) {
-            // 1. 获取参与Roll的玩家（按点数从高到低排序）
-            const sortedParticipants = [...this.state.rollResults];
-            
-            // 2. 获取不参与Roll的玩家（保持原顺序）
-            const nonParticipants = [];
-            for (let i = 0; i < playerCount; i++) {
-                const playerName = this.state.playerNames[i] || `ign${i + 1}`;
-                // 检查这个玩家是否不在rollResults中
-                const isParticipant = sortedParticipants.some(p => p.name === playerName);
-                if (!isParticipant) {
-                    nonParticipants.push({
-                        name: playerName,
-                        originalIndex: i
-                    });
-                }
-            }
-            
-            // 3. 合并：参与Roll的在前（按点数排序），不参与的在后面
-            const allPlayers = [...sortedParticipants, ...nonParticipants];
-            
-            // 4. 生成表格行
-            for (let displayIndex = 0; displayIndex < allPlayers.length; displayIndex++) {
-                const player = allPlayers[displayIndex];
-                const playerName = player.name;
-                
-                // 找到玩家在原数组中的索引
-                let originalIndex = -1;
-                for (let i = 0; i < playerCount; i++) {
-                    if ((this.state.playerNames[i] || `ign${i + 1}`) === playerName) {
-                        originalIndex = i;
-                        break;
-                    }
-                }
-                
-                // 如果找不到，使用显示索引
-                if (originalIndex === -1) {
-                    originalIndex = displayIndex;
-                }
-                
-                // 使用原始索引获取分配值（确保分配逻辑固定）
-                const baseGain = baseAllocations[originalIndex];
-                const deduction = this.state.deductions[originalIndex] || 0;
-                const actualGain = actualGains[originalIndex];
-                
-                html += `
-                    <tr>
-                        <td class="player-rank">${displayIndex + 1}</td>
-                        <td class="player-name">${playerName}</td>
-                        <td class="base-gain">${baseGain}</td>
-                        <td class="deduction-cell">
-                            <input type="number" 
-                                   class="deduction-input"
-                                   data-index="${originalIndex}"
-                                   value="${deduction}"
-                                   min="0"
-                                   max="${baseGain}">
-                        </td>
-                        <td class="actual-gain">${actualGain}</td>
-                    </tr>
-                `;
-            }
-        } else {
-            // 没有Roll点结果，按原始顺序显示
-            for (let i = 0; i < playerCount; i++) {
-                const playerName = this.state.playerNames[i] || `ign${i + 1}`;
-                const baseGain = baseAllocations[i];
-                const deduction = this.state.deductions[i] || 0;
-                const actualGain = actualGains[i];
-                
-                html += `
-                    <tr>
-                        <td class="player-rank">${i + 1}</td>
-                        <td class="player-name">${playerName}</td>
-                        <td class="base-gain">${baseGain}</td>
-                        <td class="deduction-cell">
-                            <input type="number" 
-                                   class="deduction-input"
-                                   data-index="${i}"
-                                   value="${deduction}"
-                                   min="0"
-                                   max="${baseGain}">
-                        </td>
-                        <td class="actual-gain">${actualGain}</td>
-                    </tr>
-                `;
+        // 2. 获取不参与Roll的玩家（保持原顺序）
+        const nonParticipants = [];
+        for (let i = 0; i < playerCount; i++) {
+            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
+            const isParticipant = sortedParticipants.some(p => p.name === playerName);
+            if (!isParticipant) {
+                nonParticipants.push({
+                    name: playerName,
+                    originalIndex: i
+                });
             }
         }
         
-        this.elements.resultsBody.innerHTML = html;
-        this.bindDeductionInputs();
+        // 3. 合并：参与Roll的在前（按点数排序），不参与的在后面
+        const allPlayers = [...sortedParticipants, ...nonParticipants];
+        
+        // 4. 生成表格行：按排名分配
+        for (let rank = 0; rank < allPlayers.length; rank++) {
+            const player = allPlayers[rank];
+            const playerName = player.name;
+            
+            // 基础值按排名分配（排名越高，基础值越大）
+            const baseGain = sortedBaseAllocations[rank] || 0;
+            const deduction = sortedDeductions[rank] || 0;
+            const actualGain = actualGains[rank] || 0;
+            
+            // 找到玩家原索引（用于保存扣减值）
+            let originalIndex = -1;
+            for (let i = 0; i < playerCount; i++) {
+                if ((this.state.playerNames[i] || `ign${i + 1}`) === playerName) {
+                    originalIndex = i;
+                    break;
+                }
+            }
+            
+            if (originalIndex === -1) {
+                originalIndex = rank;
+            }
+            
+            html += `
+                <tr>
+                    <td class="player-rank">${rank + 1}</td>
+                    <td class="player-name">${playerName}</td>
+                    <td class="base-gain">${baseGain}</td>
+                    <td class="deduction-cell">
+                        <input type="number" 
+                               class="deduction-input"
+                               data-rank="${rank}"
+                               data-original-index="${originalIndex}"
+                               value="${deduction}"
+                               min="0"
+                               max="${baseGain}">
+                    </td>
+                    <td class="actual-gain">${actualGain}</td>
+                </tr>
+            `;
+        }
+    } else {
+        // 没有Roll点，按基础值从大到小显示
+        // 创建玩家数据数组
+        const playersWithBase = [];
+        for (let i = 0; i < playerCount; i++) {
+            playersWithBase.push({
+                name: this.state.playerNames[i] || `ign${i + 1}`,
+                baseGain: sortedBaseAllocations[i] || 0,
+                originalIndex: i,
+                deduction: this.state.deductions[i] || 0,
+                actualGain: actualGains[i] || 0
+            });
+        }
+        
+        // 按基础值从大到小排序
+        playersWithBase.sort((a, b) => b.baseGain - a.baseGain);
+        
+        for (let rank = 0; rank < playersWithBase.length; rank++) {
+            const player = playersWithBase[rank];
+            
+            html += `
+                <tr>
+                    <td class="player-rank">${rank + 1}</td>
+                    <td class="player-name">${player.name}</td>
+                    <td class="base-gain">${player.baseGain}</td>
+                    <td class="deduction-cell">
+                        <input type="number" 
+                               class="deduction-input"
+                               data-rank="${rank}"
+                               data-original-index="${player.originalIndex}"
+                               value="${player.deduction}"
+                               min="0"
+                               max="${player.baseGain}">
+                    </td>
+                    <td class="actual-gain">${player.actualGain}</td>
+                </tr>
+            `;
+        }
     }
+    
+    this.elements.resultsBody.innerHTML = html;
+    this.bindDeductionInputs();
+}
 
     bindDeductionInputs() {
-        const deductionInputs = this.elements.resultsBody.querySelectorAll('.deduction-input');
-        
-        deductionInputs.forEach(input => {
-            input.addEventListener('input', (e) => {
-                const originalIndex = parseInt(e.target.dataset.index);
-                const value = parseInt(e.target.value) || 0;
-                const baseGain = parseInt(e.target.max);
-                
-                if (value > baseGain) {
-                    e.target.value = baseGain;
-                    this.state.deductions[originalIndex] = baseGain;
-                } else {
-                    this.state.deductions[originalIndex] = value;
-                }
-                
-                this.updateResults();
-            });
+    const deductionInputs = this.elements.resultsBody.querySelectorAll('.deduction-input');
+    
+    deductionInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            const rank = parseInt(e.target.dataset.rank); // 排名
+            const originalIndex = parseInt(e.target.dataset.originalIndex); // 玩家原索引
+            const value = parseInt(e.target.value) || 0;
+            const baseGain = parseInt(e.target.max);
+            
+            if (value > baseGain) {
+                e.target.value = baseGain;
+                this.state.deductions[originalIndex] = baseGain;
+            } else {
+                this.state.deductions[originalIndex] = value;
+            }
+            
+            this.updateResults();
         });
-    }
-
+    });
+}
     // ========== 复制功能 ==========
     copyResultsToClipboard() {
         const playerCount = this.state.playerCount;
