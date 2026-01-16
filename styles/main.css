@@ -578,12 +578,79 @@ tbody tr:hover {
 /* 按钮行布局 */
 .button-group-row {
     display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin: 30px auto;
+    width: 100%;
+}
+.btn-image-roll,
+.btn-image-calculate {
+    display: block;
+    width: 200px;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
+/* 鼠标悬停效果 */
+.btn-image-roll:hover,
+.btn-image-calculate:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+/* 图片样式 */
+.roll-btn-img,
+.calculate-btn-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* 大屏幕 */
+@media (min-width: 769px) {
+    .button-group-row {
+        flex-direction: row;
+        gap: 40px;
+    }
+}
+
+/* 平板 */
+@media (max-width: 768px) {
+    .button-group-row {
+        flex-direction: row;
+        gap: 25px;
+    }
+    
+    .btn-image-roll,
+    .btn-image-calculate {
+        width: 180px;
+    }
+}
+
+/* 手机 */
+@media (max-width: 480px) {
+    .button-group-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .btn-image-roll,
+    .btn-image-calculate {
+        width: 200px;
+    }
+}
 /* 计算按钮样式 */
 .btn-image-calculate {
     display: block;
