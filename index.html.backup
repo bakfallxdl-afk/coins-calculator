@@ -6,10 +6,10 @@
     <title>Coins Calculator | 硬币计算器</title>
     
     <!-- 样式 -->
-    <link rel="stylesheet" href="styles/main.css?v=20241219">
+    <link rel="stylesheet" href="styles/main.css">
     
     <!-- PWA配置 -->
-    <link rel="manifest" href="manifest.json?v=20241219">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FF6B35">
 </head>
 <body>
@@ -181,9 +181,9 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="scripts/calculator.js?v=20241219"></script>
-    <script src="scripts/roll.js?v=20241219"></script>
-    <script src="scripts/app.js?v=20241219"></script>
+    <script src="scripts/calculator.js"></script>
+    <script src="scripts/roll.js"></script>
+    <script src="scripts/app.js"></script>
     
     <!-- PWA Service Worker 注册 -->
     <script>
