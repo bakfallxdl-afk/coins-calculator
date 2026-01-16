@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coins Calculator</title>
+    <title>Coins Calculator / 硬币计算器</title>
     
     <!-- 样式 -->
     <link rel="stylesheet" href="styles/main.css">
-    <!-- 头部样式 -->
+    <link rel="stylesheet" href="styles/theme.css">
     <link rel="stylesheet" href="styles/header.css">
-    <!-- 按钮样式 -->
-    <link rel="stylesheet" href="styles/button.css">    <link rel="stylesheet" href="styles/theme.css">
+    <link rel="stylesheet" href="styles/button.css">
     
-    <!-- 移动端主题色 -->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 移动端设置 -->
     <meta name="theme-color" content="#FF6B35">
 </head>
 <body>
     <div class="container">
-        <!-- 头部 - 只有图片 -->
+        <!-- 头部 - 图片背景 + 文字 -->
         <header class="app-header">
             <div class="header-content">
                 <img src="assets/images/head.png" alt="Coins Calculator" class="header-image">
+                <div class="header-text">
+                    <h1><i class="fas fa-coins"></i> Coins Calculator</h1>
+                    <p class="subtitle">硬币计算器</p>
+                    <p class="made-by">Made by @bakfall</p>
+                </div>
             </div>
         </header>
 
@@ -30,7 +37,7 @@
             <div class="left-panel">
                 <!-- 硬币控制区域 -->
                 <section class="control-panel card">
-                    <h2>设置 Settings</h2>
+                    <h2><i class="fas fa-cog"></i> 设置 Settings</h2>
                     
                     <div class="input-group">
                         <label for="playerCount">
@@ -100,14 +107,14 @@
                     
                     <div class="button-group">
                         <button id="calculate" class="btn-primary">
-                            Calculate / 计算分配
+                            <i class="fas fa-calculator"></i> Calculate / 计算分配
                         </button>
                     </div>
                 </section>
                 
                 <!-- 玩家管理区域 -->
                 <section class="player-management card">
-                    <h2>Player Management / 玩家管理</h2>
+                    <h2><i class="fas fa-users"></i> Player Management / 玩家管理</h2>
                     
                     <!-- 玩家名输入框 -->
                     <div class="input-group">
@@ -121,7 +128,7 @@
                     
                     <!-- Roll点区域 -->
                     <div class="roll-section">
-                        <h3>Random Roll / 随机Roll点</h3>
+                        <h3><i class="fas fa-dice"></i> Random Roll / 随机Roll点</h3>
                         
                         <div class="input-group">
                             <label>
@@ -148,7 +155,7 @@
             <!-- 右侧：分配结果 -->
             <div class="right-panel">
                 <section class="results-panel card">
-                    <h2>Results / 分配结果</h2>
+                    <h2><i class="fas fa-chart-bar"></i> Results / 分配结果</h2>
                     <div class="table-container">
                         <table id="resultsTable">
                             <thead>

@@ -600,3 +600,121 @@ body {
 .btn-primary:active {
     animation: pulse 0.3s ease;
 }
+
+/* ========== Pouch输入样式 ========== */
+.pouch-inputs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+@media (min-width: 768px) {
+    .pouch-inputs {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.pouch-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.pouch-item label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 2px;
+}
+
+.pouch-input {
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    text-align: center;
+    transition: border-color 0.3s ease;
+    background: var(--light-color);
+}
+
+.pouch-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.pouch-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: var(--light-color);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    margin-top: 10px;
+}
+
+.pouch-summary span {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+#pouchTotal {
+    font-size: 1.2rem;
+    color: var(--primary-dark);
+}
+
+/* Total Coins输入框只读样式 */
+#totalCoins[readonly] {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+    border-color: #dee2e6;
+}
+
+#totalCoins[readonly]:focus {
+    border-color: #dee2e6;
+    box-shadow: none;
+}
+
+/* 玩家名输入框样式 */
+.player-name-inputs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+@media (min-width: 768px) {
+    .player-name-inputs {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.player-name-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.player-name-item label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 2px;
+}
+
+.player-name-input {
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    background: var(--light-color);
+}
+
+.player-name-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}

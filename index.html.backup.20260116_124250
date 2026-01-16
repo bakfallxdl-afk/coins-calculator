@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coins Calculator / 硬币计算器</title>
+    
+    <!-- PWA 配置 -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- 样式 -->
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <!-- 图标 -->
+    <link rel="icon" type="image/png" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    
+    <!-- 移动端主题色 -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>🪙 Coins Calculator</h1>
+                <p class="subtitle">硬币计算器</p>
+                <p class="made-by">Made by @bakfall</p>
+            </div>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 控制面板 -->
+            <section class="control-panel card">
+                <h2>⚙️ 设置 Settings</h2>
+                <div class="input-group">
+                    <label for="playerCount">
+                        <span class="en">Player Count / 玩家人数:</span>
+                    </label>
+                    <select id="playerCount">
+                        <option value="4">4 Players (4人)</option>
+                        <option value="5">5 Players (5人)</option>
+                        <option value="6">6 Players (6人)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+    <div class="input-group">
+        <label>
+            <span class="en">Pouch Values / Pouch数值:</span>
+        </label>
+        <div class="pouch-inputs">
+            <div class="pouch-item">
+                <label for="pouch1">pouch1:</label>
+                <input type="number" id="pouch1" class="pouch-input" value="0" min="0" data-index="0">
+            </div>
+            <div class="pouch-item">
+                <label for="pouch2">pouch2:</label>
+                <input type="number" id="pouch2" class="pouch-input" value="0" min="0" data-index="1">
+            </div>
+            <div class="pouch-item">
+                <label for="pouch3">pouch3:</label>
+                <input type="number" id="pouch3" class="pouch-input" value="0" min="0" data-index="2">
+            </div>
+            <div class="pouch-item">
+                <label for="pouch4">pouch4:</label>
+                <input type="number" id="pouch4" class="pouch-input" value="0" min="0" data-index="3">
+            </div>
+        </div>
+        <div class="pouch-summary">
+            <span>Pouch总和: </span>
+            <strong id="pouchTotal">0</strong>
+        </div>
+    </div>                    <label for="totalCoins">
+                        <span class="en">Total Coins / 硬币总数:</span>
+                    </label>
+                    <div class="input-with-buttons">
+                        <input type="number" id="totalCoins" value="0" min="0" readonly>
+                        <div class="quick-buttons">
+                            <button class="quick-btn" data-amount="50" title="设置总数为50，平均分配到pouch">50</button>
+                            <button class="quick-btn" data-amount="100" title="设置总数为100，平均分配到pouch">100</button>
+                            <button class="quick-btn" data-amount="200" title="设置总数为200，平均分配到pouch">200</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="playerNames">
+                        <span class="en">Player Names / 玩家名字:</span>
+                    </label>
+                    <textarea id="playerNames" rows="3" placeholder="输入玩家名字，用逗号分隔
+Enter player names, separated by commas"></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button id="rollPlayers" class="btn-secondary">🎲 Randomize Order / 随机排序</button>
+                    <button id="calculate" class="btn-primary">📊 Calculate / 计算分配</button>
+                </div>
+                <!-- 主题选择 -->
+                <section class="theme-panel card">
+                    <h2>🎨 主题设置</h2>
+                    <div id="themeSelector"></div>
+                </section>
+
+                <!-- 历史记录 -->
+                <section class="history-panel card">
+                    <h2>📜 历史记录</h2>
+                    <div class="button-group">
+                        <button id="saveCurrent" class="btn-secondary">💾 保存当前计算</button>
+                        <button id="clearHistory" class="btn-secondary">🗑️ 清空历史</button>
+                    </div>
+                    <div id="historyList" class="history-list">
+                    <!-- 历史记录将在这里显示 -->
+                    </div>
+                </section>
+                <div class="data-actions">
+                    <button id="saveSettings" class="btn-secondary">💾 保存设置</button>
+                    <button id="exportData" class="btn-secondary">📤 导出数据</button>
+    <label class="btn-secondary file-input-label">
+        📥 导入数据
+        <input type="file" id="importData" accept=".json" style="display: none;">
+    </label>
+</div>
+            </section>
+
+            <!-- 结果表格 -->
+            <section class="results-panel card">
+                <h2>📊 Results / 分配结果</h2>
+                <div class="table-container">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Player / 玩家</th>
+                                <th>Base / 基础</th>
+                                <th>Deduction / 扣减</th>
+                                <th>Actual / 实际</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            <!-- 结果将在这里动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="summary">
+                    <div class="summary-item">
+                        <span>Total / 总数:</span>
+                        <strong id="totalDisplay">100</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Remainder / 余数:</span>
+                        <strong id="remainderDisplay">0</strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Roll点区域 -->
+            <section class="roll-panel card">
+                <h2>🎲 Random Roll / 随机Roll点</h2>
+                <div class="roll-controls">
+                    <div class="input-group">
+                        <label>
+                            <span class="en">Participants / 参与者:</span>
+                        </label>
+                        <div id="participantCheckboxes" class="checkbox-group">
+                            <!-- 复选框将在这里动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="startRoll" class="btn-secondary">🔄 Roll Dice / 开始Roll点</button>
+                    </div>
+                    
+                    <div id="rollResults" class="roll-results">
+                        <!-- Roll点结果将在这里显示 -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>Coins Calculator PWA v1.0</p>
+                <p class="instructions">
+                    💡 提示：可以添加到主屏幕使用 | Tip: Can be added to home screen
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 更新后的script部分 -->
+    <script src="scripts/calculator.js"></script>
+    <script src="scripts/roll.js"></script>
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/theme.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/update.js"></script>
+    
+    <!-- PWA Service Worker 注册 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(() => console.log('Service Worker 已注册'))
+                .catch(err => console.log('Service Worker 注册失败:', err));
+        }
+    </script>
+</body>
+</html>

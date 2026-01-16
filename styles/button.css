@@ -1,0 +1,107 @@
+/* ========== Roll点按钮图片样式 ========== */
+/* startroll.png: 1551x1197 ≈ 1.3:1 比例 */
+.btn-image-roll {
+    display: block;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    margin: 0 auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-image-roll:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+}
+
+.btn-image-roll:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* 按钮图片 - 调整大小 */
+.roll-btn-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    aspect-ratio: 1551 / 1197; /* ≈ 1.3:1 */
+    object-fit: contain;
+}
+
+/* 按钮尺寸控制 - 大幅减小 */
+@media (min-width: 1024px) {
+    .btn-image-roll {
+        max-width: 280px; /* 从400px减小到280px */
+        max-height: 215px; /* 280 / 1.3 ≈ 215 */
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .btn-image-roll {
+        max-width: 240px; /* 从350px减小到240px */
+        max-height: 185px;
+    }
+}
+
+@media (max-width: 767px) {
+    .btn-image-roll {
+        max-width: 200px; /* 从280px减小到200px */
+        max-height: 154px;
+    }
+}
+
+/* Roll点区域布局 */
+.roll-section {
+    text-align: center;
+}
+
+.roll-section .button-group {
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.roll-section h3 {
+    margin-bottom: 15px;
+    color: #FF6B35;
+    font-size: 1.2rem;
+}
+
+/* Pouch图标样式 */
+.pouch-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.pouch-img {
+    width: 22px; /* 稍微减小 */
+    height: 22px;
+    object-fit: contain;
+}
+
+.pouch-item label {
+    display: none;
+}
+
+.pouch-item .pouch-icon span {
+    font-weight: 600;
+    color: #FF6B35;
+    font-size: 0.9rem;
+}
+
+/* 其他按钮也稍微减小 */
+.quick-btn {
+    padding: 8px 12px; /* 减小内边距 */
+    font-size: 0.85rem;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 12px 20px; /* 减小内边距 */
+    font-size: 0.95rem;
+}

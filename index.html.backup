@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coins Calculator</title>
+    <title>Coins Calculator / 硬币计算器</title>
+    
+    <!-- PWA 配置 -->
+    <link rel="manifest" href="manifest.json">
     
     <!-- 样式 -->
     <link rel="stylesheet" href="styles/main.css">
-    <!-- 头部样式 -->
-    <link rel="stylesheet" href="styles/header.css">
-    <!-- 按钮样式 -->
-    <link rel="stylesheet" href="styles/button.css">    <link rel="stylesheet" href="styles/theme.css">
+    <!-- 主题样式 -->
+    <link rel="stylesheet" href="styles/theme.css">    
+    <!-- 图标 -->
+    <link rel="icon" type="image/png" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
     
     <!-- 移动端主题色 -->
-    <meta name="theme-color" content="#FF6B35">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
     <div class="container">
-        <!-- 头部 - 只有图片 -->
+        <!-- 头部 -->
         <header class="app-header">
             <div class="header-content">
-                <img src="assets/images/head.png" alt="Coins Calculator" class="header-image">
+                <h1>🪙 Coins Calculator</h1>
+                <p class="subtitle">硬币计算器</p>
+                <p class="made-by">Made by @bakfall</p>
             </div>
         </header>
 
@@ -30,7 +37,7 @@
             <div class="left-panel">
                 <!-- 硬币控制区域 -->
                 <section class="control-panel card">
-                    <h2>设置 Settings</h2>
+                    <h2>⚙️ 设置 Settings</h2>
                     
                     <div class="input-group">
                         <label for="playerCount">
@@ -50,31 +57,19 @@
                         </label>
                         <div class="pouch-inputs">
                             <div class="pouch-item">
-                                <div class="pouch-icon">
-                                    <img src="assets/images/pouch4.png" alt="pouch1" class="pouch-img">
-                                    <span>pouch1:</span>
-                                </div>
+                                <label for="pouch1">pouch1:</label>
                                 <input type="number" id="pouch1" class="pouch-input" value="0" min="0" data-index="0">
                             </div>
                             <div class="pouch-item">
-                                <div class="pouch-icon">
-                                    <img src="assets/images/pouch4.png" alt="pouch2" class="pouch-img">
-                                    <span>pouch2:</span>
-                                </div>
+                                <label for="pouch2">pouch2:</label>
                                 <input type="number" id="pouch2" class="pouch-input" value="0" min="0" data-index="1">
                             </div>
                             <div class="pouch-item">
-                                <div class="pouch-icon">
-                                    <img src="assets/images/pouch4.png" alt="pouch3" class="pouch-img">
-                                    <span>pouch3:</span>
-                                </div>
+                                <label for="pouch3">pouch3:</label>
                                 <input type="number" id="pouch3" class="pouch-input" value="0" min="0" data-index="2">
                             </div>
                             <div class="pouch-item">
-                                <div class="pouch-icon">
-                                    <img src="assets/images/pouch4.png" alt="pouch4" class="pouch-img">
-                                    <span>pouch4:</span>
-                                </div>
+                                <label for="pouch4">pouch4:</label>
                                 <input type="number" id="pouch4" class="pouch-input" value="0" min="0" data-index="3">
                             </div>
                         </div>
@@ -91,64 +86,71 @@
                         <div class="input-with-buttons">
                             <input type="number" id="totalCoins" value="0" min="0" readonly>
                             <div class="quick-buttons">
-                                <button class="quick-btn" data-amount="50">50</button>
-                                <button class="quick-btn" data-amount="100">100</button>
-                                <button class="quick-btn" data-amount="200">200</button>
+                                <button class="quick-btn" data-amount="50" title="设置总数为50，平均分配到pouch">50</button>
+                                <button class="quick-btn" data-amount="100" title="设置总数为100，平均分配到pouch">100</button>
+                                <button class="quick-btn" data-amount="200" title="设置总数为200，平均分配到pouch">200</button>
                             </div>
                         </div>
                     </div>
                     
                     <div class="button-group">
-                        <button id="calculate" class="btn-primary">
-                            Calculate / 计算分配
-                        </button>
+                        <button id="calculate" class="btn-primary">📊 Calculate / 计算分配</button>
+                    </div>
+                    
+                    <!-- 数据操作按钮 -->
+                    <div class="data-actions">
+                        <button id="saveSettings" class="btn-secondary">💾 保存设置</button>
+                        <button id="exportData" class="btn-secondary">📤 导出数据</button>
+                        <label class="btn-secondary file-input-label">
+                            📥 导入数据
+                            <input type="file" id="importData" accept=".json" style="display: none;">
+                        </label>
                     </div>
                 </section>
                 
                 <!-- 玩家管理区域 -->
                 <section class="player-management card">
-                    <h2>Player Management / 玩家管理</h2>
+                    <h2>👥 Player Management / 玩家管理</h2>
                     
-                    <!-- 玩家名输入框 -->
+                    <!-- 玩家名输入框（根据人数动态显示） -->
                     <div class="input-group">
                         <label>
                             <span class="en">Player Names / 玩家名字:</span>
                         </label>
                         <div id="playerNameInputs" class="player-name-inputs">
-                            <!-- 动态生成 -->
+                            <!-- 玩家名输入框将在这里动态生成 -->
                         </div>
                     </div>
                     
                     <!-- Roll点区域 -->
                     <div class="roll-section">
-                        <h3>Random Roll / 随机Roll点</h3>
+                        <h3>🎲 Random Roll / 随机Roll点</h3>
                         
                         <div class="input-group">
                             <label>
                                 <span class="en">Participants / 参与者:</span>
                             </label>
                             <div id="participantCheckboxes" class="checkbox-group">
-                                <!-- 动态生成 -->
+                                <!-- 复选框将在这里动态生成 -->
                             </div>
                         </div>
                         
                         <div class="button-group">
-                            <button id="startRoll" class="btn-image-roll">
-                                <img src="assets/images/startroll.png" alt="Start Roll" class="roll-btn-img">
-                            </button>
+                            <button id="startRoll" class="btn-secondary">🔄 Start Roll / 开始Roll点</button>
                         </div>
                         
                         <div id="rollResults" class="roll-results">
-                            <!-- 结果区域 -->
+                            <!-- Roll点结果将在这里显示 -->
                         </div>
                     </div>
                 </section>
             </div>
             
-            <!-- 右侧：分配结果 -->
+            <!-- 右侧：分配结果 + 历史记录 -->
             <div class="right-panel">
+                <!-- 分配结果板块 -->
                 <section class="results-panel card">
-                    <h2>Results / 分配结果</h2>
+                    <h2>📊 Results / 分配结果</h2>
                     <div class="table-container">
                         <table id="resultsTable">
                             <thead>
@@ -161,7 +163,7 @@
                                 </tr>
                             </thead>
                             <tbody id="resultsBody">
-                                <!-- 动态生成 -->
+                                <!-- 结果将在这里动态生成 -->
                             </tbody>
                         </table>
                     </div>
@@ -177,13 +179,45 @@
                         </div>
                     </div>
                 </section>
+                
+                <!-- 历史记录 -->
+                <section class="history-panel card">
+                    <h2>📜 History / 历史记录</h2>
+                    <div class="button-group">
+                        <button id="saveCurrent" class="btn-secondary">💾 保存当前计算</button>
+                        <button id="clearHistory" class="btn-secondary">🗑️ 清空历史</button>
+                    </div>
+                    <div id="historyList" class="history-list">
+                        <!-- 历史记录将在这里显示 -->
+                    </div>
+                </section>
             </div>
         </main>
+
+        <!-- 页脚 -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>Coins Calculator PWA v1.0</p>
+                <p class="instructions">
+                    💡 提示：可以添加到主屏幕使用 | Tip: Can be added to home screen
+                </p>
+            </div>
+        </footer>
     </div>
 
-    <!-- JavaScript -->
+    <!-- JavaScript 文件 -->
     <script src="scripts/calculator.js"></script>
     <script src="scripts/roll.js"></script>
+    <script src="scripts/storage.js"></script>
     <script src="scripts/app.js"></script>
+    
+    <!-- PWA Service Worker 注册 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(() => console.log('Service Worker 已注册'))
+                .catch(err => console.log('Service Worker 注册失败:', err));
+        }
+    </script>
 </body>
 </html>

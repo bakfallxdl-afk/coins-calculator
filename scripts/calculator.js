@@ -123,7 +123,7 @@ class CoinsCalculator {
         const players = [];
         
         if (!orderText || orderText.trim() === '') {
-            return ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
+            return ['ign1', 'ign2', 'ign3', 'ign4', 'ign5', 'ign6'];
         }
         
         const parts = orderText.split(',');
@@ -139,7 +139,7 @@ class CoinsCalculator {
         }
         
         if (players.length === 0) {
-            return ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
+            return ['ign1', 'ign2', 'ign3', 'ign4', 'ign5', 'ign6'];
         }
         
         return players;

@@ -1,0 +1,49 @@
+/* ========== 柔和橙黄渐变 ========== */
+.app-header {
+    position: relative;
+    margin-bottom: 25px;
+    border-radius: 20px;
+    overflow: visible;
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+    
+    /* 柔和的橙黄渐变 */
+    background: linear-gradient(
+        135deg,
+        #FFB347 0%,    /* 柔和的橙色 */
+        #FF8C42 25%,   /* 中等橙色 */
+        #FFD89C 50%,   /* 浅奶油黄 */
+        #FFF5E1 75%,   /* 非常浅的米白 */
+        #FFA726 100%   /* 温暖的橙色 */
+    );
+    
+    padding: 0;
+    border: 4px solid #FFD89C; /* 柔和的边框 */
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* 更细腻的云朵纹理 */
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.5) 1%, transparent 3%),
+        radial-gradient(circle at 90% 80%, rgba(255, 248, 225, 0.4) 1%, transparent 3%),
+        radial-gradient(circle at 50% 50%, rgba(255, 216, 156, 0.2) 2%, transparent 4%);
+    background-size: 120px 120px, 180px 180px, 250px 250px;
+}
+
+/* 更新星星颜色匹配新主题 */
+.star {
+    color: #FF8C42; /* 与背景协调的橙色 */
+    text-shadow: 0 0 8px rgba(255, 179, 71, 0.5);
+}
+
+/* 更新装饰效果颜色 */
+.header-content::before {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+}
+
+.header-content::after {
+    background: radial-gradient(circle, rgba(255, 216, 156, 0.25) 0%, transparent 70%);
+}
+
+/* 保持其他样式不变... */

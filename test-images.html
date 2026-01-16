@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { padding: 20px; }
+        .test-box { margin: 20px 0; border: 2px solid red; padding: 10px; }
+        img { max-width: 100%; border: 1px solid blue; }
+    </style>
+</head>
+<body>
+    <h1>图片测试</h1>
+    
+    <div class="test-box">
+        <h3>测试head.png：</h3>
+        <img src="assets/images/head.png" alt="头部图片测试">
+        <p>路径: assets/images/head.png</p>
+    </div>
+    
+    <div class="test-box">
+        <h3>测试startroll.png：</h3>
+        <img src="assets/images/startroll.png" alt="按钮图片测试">
+        <p>路径: assets/images/startroll.png</p>
+    </div>
+    
+    <script>
+        // 自动检查图片加载状态
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.onload = () => console.log(`${img.src} 加载成功`);
+                img.onerror = () => console.error(`${img.src} 加载失败`);
+            });
+        });
+    </script>
+</body>
+</html>
