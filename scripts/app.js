@@ -5,14 +5,15 @@ class CoinsCalculatorApp {
         this.rollManager = rollManager;
         this.elements = {};
         
-        this.state = {
-            playerCount: 4,
-            totalCoins: 0,
-            pouchValues: [0, 0, 0, 0],
-            playerNames: ['', '', '', '', '', ''], // 初始为空
-            deductions: [0, 0, 0, 0, 0, 0],
-            participants: [true, true, true, true, false, false]
-        };
+        tthis.state = {
+        playerCount: 4,
+        totalCoins: 0,
+        pouchValues: [0, 0, 0, 0],
+        playerNames: ['', '', '', '', '', ''], // 初始为空
+        deductions: [0, 0, 0, 0, 0, 0],
+        participants: [true, true, true, true, false, false],
+        resultsDisplayOrder: null  // 新增：Results区域显示顺序
+    };
         
         // 从localStorage加载历史记录
         this.history = JSON.parse(localStorage.getItem('coinsHistory')) || [];
@@ -214,55 +215,35 @@ class CoinsCalculatorApp {
         const resultsHTML = this.rollManager.generateResultsHTML(rollResults);
         this.elements.rollResults.innerHTML = resultsHTML;
         
-        // === 修复：正确重新排序玩家 ===
+        // === 修复：记录Roll点排序，但不改变玩家名字数组 ===
         
-        // 1. 获取参与Roll的玩家（按点数排序）
-        const sortedParticipants = rollResults;
+        // 1. 获取参与Roll的玩家（按点数排序）的原始索引
+        const sortedParticipantIndices = [];
+        for (let i = 0; i < rollResults.length; i++) {
+            if (rollResults[i].originalIndex !== undefined) {
+                sortedParticipantIndices.push(rollResults[i].originalIndex);
+            }
+        }
         
-        // 2. 获取不参与Roll的玩家（保持原顺序）
-        const nonParticipants = [];
+        // 2. 获取不参与Roll的玩家的原始索引（保持原顺序）
+        const nonParticipantIndices = [];
         for (let i = 0; i < this.state.playerCount; i++) {
             if (!this.state.participants[i]) {
-                nonParticipants.push({
-                    name: this.state.playerNames[i] || `ign${i + 1}`,
-                    originalIndex: i
-                });
+                nonParticipantIndices.push(i);
             }
         }
         
-        // 3. 构建新的玩家顺序数组
-        const newOrder = [...sortedParticipants, ...nonParticipants];
+        // 3. 构建Results区域的显示顺序：参与Roll的在前，不参与的在后面
+        const resultsDisplayOrder = [...sortedParticipantIndices, ...nonParticipantIndices];
         
-        // 4. 更新玩家名字数组（保持名字不变，但重新排序）
-        const newPlayerNames = new Array(this.state.playerCount);
-        const newDeductions = new Array(this.state.playerCount);
-        const newParticipants = new Array(this.state.playerCount);
+        // 4. 保存这个顺序到state，供Results区域使用
+        this.state.resultsDisplayOrder = resultsDisplayOrder;
         
-        for (let i = 0; i < newOrder.length; i++) {
-            const player = newOrder[i];
-            newPlayerNames[i] = player.name;
-            
-            // 如果玩家有originalIndex，则保留其原有的deduction和participant状态
-            if (player.originalIndex !== undefined) {
-                newDeductions[i] = this.state.deductions[player.originalIndex];
-                newParticipants[i] = this.state.participants[player.originalIndex];
-            } else {
-                // 对于新玩家，使用默认值
-                newDeductions[i] = 0;
-                newParticipants[i] = true;
-            }
-        }
-        
-        // 5. 更新状态
-        this.state.playerNames = newPlayerNames;
-        this.state.deductions = newDeductions;
-        this.state.participants = newParticipants;
-        
-        // 6. 更新UI
-        this.updatePlayerNameInputs();
+        // 5. Player Management区域不更新（保持原样）
+        // 6. 只更新Results区域
         this.updateResults();
         
-        this.showNotification('Roll点完成！玩家顺序已更新。', 'success');
+        this.showNotification('Roll点完成！分配结果已按Roll点排序更新。', 'success');
         
     } catch (error) {
         this.showNotification(error.message, 'error');
@@ -286,57 +267,62 @@ class CoinsCalculatorApp {
     }
 
     updateResultsTable(baseAllocation, actualGains) {
-        const { baseAllocations, playerCount } = baseAllocation;
-        let html = '';
+    const { baseAllocations, playerCount } = baseAllocation;
+    let html = '';
+    
+    // 如果有resultsDisplayOrder，就按这个顺序显示，否则按原始顺序
+    const displayOrder = this.state.resultsDisplayOrder || 
+                        Array.from({length: playerCount}, (_, i) => i);
+    
+    for (let displayIndex = 0; displayIndex < playerCount; displayIndex++) {
+        const originalIndex = displayOrder[displayIndex];
+        const playerName = this.state.playerNames[originalIndex] || `ign${originalIndex + 1}`;
+        const baseGain = baseAllocations[originalIndex];
+        const deduction = this.state.deductions[originalIndex] || 0;
+        const actualGain = actualGains[originalIndex];
         
-        for (let i = 0; i < playerCount; i++) {
-            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
-            const baseGain = baseAllocations[i];
-            const deduction = this.state.deductions[i] || 0;
-            const actualGain = actualGains[i];
-            
-            html += `
-                <tr>
-                    <td class="player-rank">${i + 1}</td>
-                    <td class="player-name">${playerName}</td>
-                    <td class="base-gain">${baseGain}</td>
-                    <td class="deduction-cell">
-                        <input type="number" 
-                               class="deduction-input"
-                               data-index="${i}"
-                               value="${deduction}"
-                               min="0"
-                               max="${baseGain}">
-                    </td>
-                    <td class="actual-gain">${actualGain}</td>
-                </tr>
-            `;
-        }
-        
-        this.elements.resultsBody.innerHTML = html;
-        this.bindDeductionInputs();
+        html += `
+            <tr>
+                <td class="player-rank">${displayIndex + 1}</td>
+                <td class="player-name">${playerName}</td>
+                <td class="base-gain">${baseGain}</td>
+                <td class="deduction-cell">
+                    <input type="number" 
+                           class="deduction-input"
+                           data-index="${originalIndex}"  // 注意：使用原始索引
+                           value="${deduction}"
+                           min="0"
+                           max="${baseGain}">
+                </td>
+                <td class="actual-gain">${actualGain}</td>
+            </tr>
+        `;
     }
+    
+    this.elements.resultsBody.innerHTML = html;
+    this.bindDeductionInputs();
+}
 
     bindDeductionInputs() {
-        const deductionInputs = this.elements.resultsBody.querySelectorAll('.deduction-input');
-        
-        deductionInputs.forEach(input => {
-            input.addEventListener('input', (e) => {
-                const index = parseInt(e.target.dataset.index);
-                const value = parseInt(e.target.value) || 0;
-                const baseGain = parseInt(e.target.max);
-                
-                if (value > baseGain) {
-                    e.target.value = baseGain;
-                    this.state.deductions[index] = baseGain;
-                } else {
-                    this.state.deductions[index] = value;
-                }
-                
-                this.updateResults();
-            });
+    const deductionInputs = this.elements.resultsBody.querySelectorAll('.deduction-input');
+    
+    deductionInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            const originalIndex = parseInt(e.target.dataset.index);  // 使用原始索引
+            const value = parseInt(e.target.value) || 0;
+            const baseGain = parseInt(e.target.max);
+            
+            if (value > baseGain) {
+                e.target.value = baseGain;
+                this.state.deductions[originalIndex] = baseGain;  // 使用原始索引
+            } else {
+                this.state.deductions[originalIndex] = value;  // 使用原始索引
+            }
+            
+            this.updateResults();
         });
-    }
+    });
+}
 
     // ========== 复制功能 ==========
     copyResultsToClipboard() {
