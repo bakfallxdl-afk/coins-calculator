@@ -1,3 +1,21 @@
+#!/bin/bash
+
+echo "⚙️ 恢复原有功能..."
+
+cd "/Users/xiedonglei/Desktop/boss/coins-calculator-pwa"
+
+# 备份
+cp index.html index.html.before-restore-func
+cp scripts/app.js scripts/app.js.backup 2>/dev/null || true
+
+# 1. 修改HTML结构以匹配原有JavaScript
+echo "修改HTML结构匹配原有JS..."
+
+# 首先查看原有app.js需要哪些元素
+echo "分析原有功能需求..."
+
+# 2. 创建功能兼容的HTML
+cat > index.html.func << 'HTML'
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -263,3 +281,156 @@
     </script>
 </body>
 </html>
+HTML
+
+# 替换原文件
+mv index.html.func index.html
+
+# 3. 更新CSS以支持功能
+echo "更新CSS支持功能..."
+cat >> styles/main.css << 'CSS'
+
+/* 垂直布局 */
+.main-content-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* 原有按钮样式恢复 */
+.btn-image-roll, .btn-image-calculate {
+    display: block;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    width: 340px;
+}
+
+.btn-image-roll:hover, .btn-image-calculate:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.roll-btn-img, .calculate-btn-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+    aspect-ratio: 1551 / 1197;
+    object-fit: contain;
+}
+
+.btn-image-roll {
+    border: 4px solid #FFD89C;
+}
+
+.btn-image-roll:hover {
+    border-color: #FF6B35;
+}
+
+.btn-image-calculate {
+    border: 4px solid #B3E5FC;
+}
+
+.btn-image-calculate:hover {
+    border-color: #0288D1;
+}
+
+/* 玩家输入行 */
+.player-input-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.player-name-input {
+    flex: 1;
+    padding: 14px 18px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    color: #666; /* 灰色文字 */
+}
+
+.player-name-input::placeholder {
+    color: #999;
+}
+
+/* 复选框样式 */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.participant-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: #FF6B35;
+}
+
+.checkmark {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 5px;
+}
+
+.participant-checkbox:checked + .checkmark {
+    background: #FF6B35;
+    border-color: #FF6B35;
+}
+
+.checkbox-text {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .dual-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-image-roll, .btn-image-calculate {
+        width: 280px;
+    }
+    
+    .player-input-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+}
+CSS
+
+echo ""
+echo "✅ 功能恢复完成！"
+echo ""
+echo "🎯 已修复："
+echo "   1. 恢复垂直布局（结果在下方）"
+echo "   2. 连接原有JavaScript功能"
+echo "   3. 玩家名默认显示 ign1-ign6（灰色）"
+echo "   4. 只保留一处硬币总和（自动计算）"
+echo "   5. 删除多余的输入和按钮"
+echo ""
+echo "🔄 请刷新浏览器测试功能"
+echo ""
+echo "🔧 如果仍有问题，请："
+echo "   1. 按F12查看控制台错误"
+echo "   2. 测试具体哪个功能不工作"
+echo "   3. 告诉我错误信息"

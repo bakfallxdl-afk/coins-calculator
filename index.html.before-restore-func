@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coins Calculator | 硬币计算器</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF6B35">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="app-header">
+            <div class="header-content">
+                <img src="assets/images/head.png" alt="Coins Calculator" class="header-image">
+            </div>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 左侧面板 -->
+            <div class="left-panel">
+                <!-- 控制面板 -->
+                <section class="control-panel card">
+                    <h2>设置 Settings</h2>
+                    
+                    <div class="input-group">
+                        <label for="playerCount">
+                            <span class="en">Player Count / 玩家人数:</span>
+                        </label>
+                        <select id="playerCount">
+                            <option value="4">4 Players (4人)</option>
+                            <option value="5">5 Players (5人)</option>
+                            <option value="6">6 Players (6人)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Pouch输入区域 -->
+                    <div class="input-group">
+                        <label>
+                            <span class="en">Pouch Values / Pouch数值:</span>
+                        </label>
+                        <div class="pouch-inputs">
+                            <div class="pouch-item">
+                                <div class="pouch-icon">
+                                    <img src="assets/images/pouch4.png" alt="pouch1" class="pouch-img">
+                                    <span>pouch1:</span>
+                                </div>
+                                <input type="number" id="pouch1" class="pouch-input" value="0" min="0" data-index="0">
+                            </div>
+                            <div class="pouch-item">
+                                <div class="pouch-icon">
+                                    <img src="assets/images/pouch4.png" alt="pouch2" class="pouch-img">
+                                    <span>pouch2:</span>
+                                </div>
+                                <input type="number" id="pouch2" class="pouch-input" value="0" min="0" data-index="1">
+                            </div>
+                            <div class="pouch-item">
+                                <div class="pouch-icon">
+                                    <img src="assets/images/pouch4.png" alt="pouch3" class="pouch-img">
+                                    <span>pouch3:</span>
+                                </div>
+                                <input type="number" id="pouch3" class="pouch-input" value="0" min="0" data-index="2">
+                            </div>
+                            <div class="pouch-item">
+                                <div class="pouch-icon">
+                                    <img src="assets/images/pouch4.png" alt="pouch4" class="pouch-img">
+                                    <span>pouch4:</span>
+                                </div>
+                                <input type="number" id="pouch4" class="pouch-input" value="0" min="0" data-index="3">
+                            </div>
+                        </div>
+                        <div class="pouch-summary">
+                            <span>Pouch总和: </span>
+                            <strong id="pouchTotal">0</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="totalCoins">
+                            <span class="en">Total Coins / 硬币总数:</span>
+                        </label>
+                        <div class="input-with-buttons">
+                            <input type="number" id="totalCoins" value="0" min="0" readonly>
+                            <div class="quick-buttons">
+                                <button class="quick-btn" data-amount="1000">1K</button>
+                                <button class="quick-btn" data-amount="5000">5K</button>
+                                <button class="quick-btn" data-amount="10000">10K</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 玩家管理区域 - 新表格布局 -->
+                <section class="player-management card">
+                    <h2>Player Management / 玩家管理</h2>
+                    
+                    <!-- 玩家名输入框 - 表格布局 -->
+                    <div class="input-group">
+                        <label>
+                            <span class="en">Player Names / 玩家名字:</span>
+                        </label>
+                        <div class="player-table-container">
+                            <!-- 表头 -->
+                            <div class="table-header">
+                                <div class="col-name">玩家名称</div>
+                                <div class="col-checkbox">参与Roll点</div>
+                            </div>
+                            
+                            <!-- 玩家行 -->
+                            <div class="player-row">
+                                <input type="text" id="player1" value="玩家1" placeholder="输入玩家名">
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="player-row">
+                                <input type="text" id="player2" value="玩家2" placeholder="输入玩家名">
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="player-row">
+                                <input type="text" id="player3" value="玩家3" placeholder="输入玩家名">
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="player-row">
+                                <input type="text" id="player4" value="玩家4" placeholder="输入玩家名">
+                                <input type="checkbox" checked>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Roll点区域 - 双按钮横向 -->
+                    <div class="roll-section">
+                        <h3>Random Roll / 随机Roll点 & Calculate / 计算分配</h3>
+                        
+                        <div class="dual-buttons">
+                            <button id="startRoll" class="btn-roll">
+                                <img src="assets/images/startroll.png" alt="开始Roll点">
+                            </button>
+                            
+                            <button id="startCalculate" class="btn-calculate">
+                                <img src="assets/images/startcalculate.png" alt="计算分配">
+                            </button>
+                        </div>
+                        
+                        <div id="rollResults" class="roll-results">
+                            <!-- 结果区域 -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- 右侧：结果面板 -->
+            <div class="right-panel">
+                <section class="results-panel card">
+                    <h2>Results / 分配结果</h2>
+                    <div class="table-container">
+                        <table id="resultsTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Player / 玩家</th>
+                                    <th>Base / 基础</th>
+                                    <th>Deduction / 扣减</th>
+                                    <th>Actual / 实际</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsBody">
+                                <!-- 结果行 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="summary">
+                        <div class="summary-item">
+                            <span>Total / 总数:</span>
+                            <strong id="totalDisplay">0</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Remainder / 余数:</span>
+                            <strong id="remainderDisplay">0</strong>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="scripts/app.js"></script>
+</body>
+</html>

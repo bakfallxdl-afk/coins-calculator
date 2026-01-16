@@ -7,53 +7,51 @@ class CoinsCalculatorApp {
         
         this.state = {
             playerCount: 4,
-            totalCoins: 100,
-            playerNames: ['Player 1', 'Player 2', 'Player 3', 'Player 4'],
-            deductions: [0, 0, 0, 0],
+            totalCoins: 0,
+            pouchValues: [0, 0, 0, 0],
+            playerNames: ['', '', '', '', '', ''],
+            deductions: [0, 0, 0, 0, 0, 0],
             participants: [true, true, true, true, false, false]
         };
         
         this.init();
-	this.storage = storageManager;
     }
 
-    /**
-     * 初始化应用
-     */
     init() {
         this.cacheElements();
         this.bindEvents();
         this.renderInitialState();
+        this.updatePouchTotal();
         this.updateResults();
         console.log('Coins Calculator PWA 已启动');
     }
 
-    /**
-     * 缓存DOM元素
-     */
     cacheElements() {
         this.elements = {
             playerCount: document.getElementById('playerCount'),
             totalCoins: document.getElementById('totalCoins'),
-            playerNames: document.getElementById('playerNames'),
             calculateBtn: document.getElementById('calculate'),
-            rollPlayersBtn: document.getElementById('rollPlayers'),
             startRollBtn: document.getElementById('startRoll'),
             quickButtons: document.querySelectorAll('.quick-btn'),
             resultsBody: document.getElementById('resultsBody'),
             totalDisplay: document.getElementById('totalDisplay'),
             remainderDisplay: document.getElementById('remainderDisplay'),
             participantCheckboxes: document.getElementById('participantCheckboxes'),
-            rollResults: document.getElementById('rollResults')
+            rollResults: document.getElementById('rollResults'),
+            pouchInputs: document.querySelectorAll('.pouch-input'),
+            pouchTotal: document.getElementById('pouchTotal'),
+            playerNameInputs: document.getElementById('playerNameInputs'),
+            saveSettingsBtn: document.getElementById('saveSettings'),
+            exportDataBtn: document.getElementById('exportData'),
+            importDataInput: document.getElementById('importData'),
+            saveCurrentBtn: document.getElementById('saveCurrent'),
+            clearHistoryBtn: document.getElementById('clearHistory'),
+            historyList: document.getElementById('historyList')
         };
     }
 
-    /**
-     * 绑定事件监听器
-     */
     bindEvents() {
         this.elements.calculateBtn.addEventListener('click', () => this.updateResults());
-        this.elements.rollPlayersBtn.addEventListener('click', () => this.randomizePlayerOrder());
         this.elements.startRollBtn.addEventListener('click', () => this.performRoll());
         
         this.elements.playerCount.addEventListener('change', (e) => {
@@ -62,82 +60,133 @@ class CoinsCalculatorApp {
             this.updateResults();
         });
         
-        this.elements.totalCoins.addEventListener('input', (e) => {
-            this.state.totalCoins = parseInt(e.target.value) || 0;
-            this.updateResults();
-        });
-        
-        this.elements.playerNames.addEventListener('input', (e) => {
-            const names = this.calculator.parsePlayerOrder(e.target.value);
-            this.state.playerNames = names.slice(0, this.state.playerCount);
-            this.updateResults();
+        this.elements.pouchInputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                const value = parseInt(e.target.value) || 0;
+                this.state.pouchValues[index] = value;
+                this.updatePouchTotal();
+            });
         });
         
         this.elements.quickButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const amount = parseInt(e.target.dataset.amount);
-                this.elements.totalCoins.value = amount;
-                this.state.totalCoins = amount;
-                this.updateResults();
+                this.setTotalAndDistribute(amount);
             });
         });
     }
 
-    /**
-     * 渲染初始状态
-     */
     renderInitialState() {
-        this.elements.playerNames.value = this.state.playerNames.join(', ');
         this.updatePlayerCount();
         this.elements.totalDisplay.textContent = this.state.totalCoins;
+        
+        this.elements.pouchInputs.forEach((input, index) => {
+            input.value = this.state.pouchValues[index];
+        });
     }
 
-    /**
-     * 更新玩家数量
-     */
-    updatePlayerCount() {
-        const playerCount = this.state.playerCount;
-        const currentNames = this.state.playerNames;
+    updatePouchTotal() {
+        const total = this.state.pouchValues.reduce((sum, value) => sum + value, 0);
+        this.state.totalCoins = total;
         
-        if (currentNames.length < playerCount) {
-            for (let i = currentNames.length; i < playerCount; i++) {
-                this.state.playerNames.push(`Player ${i + 1}`);
-            }
-        } else if (currentNames.length > playerCount) {
-            this.state.playerNames = currentNames.slice(0, playerCount);
+        this.elements.totalCoins.value = total;
+        this.elements.pouchTotal.textContent = total;
+        this.elements.totalDisplay.textContent = total;
+        
+        this.updateResults();
+    }
+
+    setTotalAndDistribute(totalAmount) {
+        const baseValue = Math.floor(totalAmount / 4);
+        const remainder = totalAmount % 4;
+        
+        const newPouchValues = [0, 0, 0, 0];
+        for (let i = 0; i < 4; i++) {
+            newPouchValues[i] = baseValue + (i < remainder ? 1 : 0);
         }
         
-        this.state.deductions = new Array(playerCount).fill(0);
+        this.state.pouchValues = newPouchValues;
+        
+        this.elements.pouchInputs.forEach((input, index) => {
+            input.value = newPouchValues[index];
+        });
+        
+        this.updatePouchTotal();
+    }
+
+    updatePlayerCount() {
+        const playerCount = this.state.playerCount;
+        
+        // 更新参与者状态
         this.state.participants = new Array(6).fill(false);
         for (let i = 0; i < playerCount; i++) {
             this.state.participants[i] = true;
         }
         
-        this.elements.playerNames.value = this.state.playerNames.join(', ');
+        // 更新扣减数组
+        this.state.deductions = new Array(playerCount).fill(0);
+        
+        // 更新玩家名输入框
+        this.updatePlayerNameInputs();
+        
+        // 更新参与者复选框
         this.updateParticipantCheckboxes();
+        
+        // 更新结果
+        this.updateResults();
     }
 
-    /**
-     * 更新参与者复选框
-     */
+    updatePlayerNameInputs() {
+        const playerCount = this.state.playerCount;
+        let html = '';
+        
+        for (let i = 0; i < playerCount; i++) {
+            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
+            html += `
+                <div class="player-name-item">
+                    <label for="playerName${i}">Player ${i + 1}:</label>
+                    <input type="text" 
+                           id="playerName${i}" 
+                           class="player-name-input"
+                           data-index="${i}"
+                           value=""
+                           placeholder="ign${i + 1}">
+                </div>
+            `;
+        }
+        
+        this.elements.playerNameInputs.innerHTML = html;
+        
+        // 绑定玩家名输入事件
+        this.bindPlayerNameInputs();
+    }
+
+    bindPlayerNameInputs() {
+        const playerNameInputs = this.elements.playerNameInputs.querySelectorAll('.player-name-input');
+        
+        playerNameInputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                const value = e.target.value.trim();
+                this.state.playerNames[index] = value || `ign${index + 1}`;
+                this.updateResults();
+            });
+        });
+    }
+
     updateParticipantCheckboxes() {
         const playerCount = this.state.playerCount;
         let html = '';
         
-        for (let i = 0; i < 6; i++) {
-            const playerName = i < this.state.playerNames.length 
-                ? this.state.playerNames[i] 
-                : `Player ${i + 1}`;
-            
-            const isParticipant = this.state.participants[i] && i < playerCount;
-            const isDisabled = i >= playerCount;
+        for (let i = 0; i < playerCount; i++) {
+            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
             
             html += `
                 <label class="checkbox-item">
                     <input type="checkbox" 
                            data-index="${i}"
-                           ${isParticipant ? 'checked' : ''}
-                           ${isDisabled ? 'disabled' : ''}>
+                           ${this.state.participants[i] ? 'checked' : ''}>
                     <span>${playerName}</span>
                 </label>
             `;
@@ -147,9 +196,6 @@ class CoinsCalculatorApp {
         this.bindCheckboxEvents();
     }
 
-    /**
-     * 绑定复选框事件
-     */
     bindCheckboxEvents() {
         const checkboxes = this.elements.participantCheckboxes.querySelectorAll('input[type="checkbox"]');
         
@@ -161,26 +207,12 @@ class CoinsCalculatorApp {
         });
     }
 
-    /**
-     * 随机排序玩家
-     */
-    randomizePlayerOrder() {
-        const shuffledNames = this.rollManager.shufflePlayers(this.state.playerNames);
-        this.state.playerNames = shuffledNames;
-        this.elements.playerNames.value = shuffledNames.join(', ');
-        this.updateResults();
-        this.showNotification('玩家顺序已随机打乱！', 'success');
-    }
-
-    /**
-     * 执行Roll点
-     */
     performRoll() {
         try {
             const players = [];
             for (let i = 0; i < this.state.playerCount; i++) {
                 players.push({
-                    name: this.state.playerNames[i],
+                    name: this.state.playerNames[i] || `ign${i + 1}`,
                     checked: this.state.participants[i]
                 });
             }
@@ -189,14 +221,20 @@ class CoinsCalculatorApp {
             const resultsHTML = this.rollManager.generateResultsHTML(rollResults);
             this.elements.rollResults.innerHTML = resultsHTML;
             
+            // Roll点后按点数排序玩家名
             const sortedNames = rollResults
                 .map(p => p.name)
-                .concat(this.state.playerNames.filter(name => 
-                    !rollResults.some(r => r.name === name)
+                .concat(this.state.playerNames.filter((name, index) => 
+                    !rollResults.some(r => r.name === name && this.state.participants[index])
                 ));
             
-            this.state.playerNames = sortedNames;
-            this.elements.playerNames.value = sortedNames.join(', ');
+            // 更新玩家名
+            for (let i = 0; i < sortedNames.length && i < this.state.playerCount; i++) {
+                this.state.playerNames[i] = sortedNames[i];
+            }
+            
+            // 更新UI
+            this.updatePlayerNameInputs();
             this.updateResults();
             
             this.showNotification('Roll点完成！玩家顺序已更新。', 'success');
@@ -206,9 +244,6 @@ class CoinsCalculatorApp {
         }
     }
 
-    /**
-     * 更新计算结果
-     */
     updateResults() {
         const playerCount = this.state.playerCount;
         const total = this.state.totalCoins;
@@ -217,7 +252,7 @@ class CoinsCalculatorApp {
         const actualGains = this.calculator.adjustAllocationSmartly(
             total, 
             playerCount, 
-            this.state.deductions
+            this.state.deductions.slice(0, playerCount)
         );
         
         this.updateResultsTable(baseAllocation, actualGains);
@@ -225,15 +260,12 @@ class CoinsCalculatorApp {
         this.elements.remainderDisplay.textContent = baseAllocation.remainder;
     }
 
-    /**
-     * 更新结果表格
-     */
     updateResultsTable(baseAllocation, actualGains) {
         const { baseAllocations, playerCount } = baseAllocation;
         let html = '';
         
         for (let i = 0; i < playerCount; i++) {
-            const playerName = this.state.playerNames[i] || `Player ${i + 1}`;
+            const playerName = this.state.playerNames[i] || `ign${i + 1}`;
             const baseGain = baseAllocations[i];
             const deduction = this.state.deductions[i] || 0;
             const actualGain = actualGains[i];
@@ -260,9 +292,6 @@ class CoinsCalculatorApp {
         this.bindDeductionInputs();
     }
 
-    /**
-     * 绑定扣减输入事件
-     */
     bindDeductionInputs() {
         const deductionInputs = this.elements.resultsBody.querySelectorAll('.deduction-input');
         
@@ -284,9 +313,6 @@ class CoinsCalculatorApp {
         });
     }
 
-    /**
-     * 显示通知
-     */
     showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
