@@ -35,7 +35,6 @@
             <!-- 控制面板 -->
             <section class="control-panel card">
                 <h2>⚙️ 设置 Settings</h2>
-                
                 <div class="input-group">
                     <label for="playerCount">
                         <span class="en">Player Count / 玩家人数:</span>
@@ -73,6 +72,31 @@ Enter player names, separated by commas"></textarea>
                     <button id="rollPlayers" class="btn-secondary">🎲 Randomize Order / 随机排序</button>
                     <button id="calculate" class="btn-primary">📊 Calculate / 计算分配</button>
                 </div>
+                <!-- 主题选择 -->
+                <section class="theme-panel card">
+                    <h2>🎨 主题设置</h2>
+                    <div id="themeSelector"></div>
+                </section>
+
+                <!-- 历史记录 -->
+                <section class="history-panel card">
+                    <h2>📜 历史记录</h2>
+                    <div class="button-group">
+                        <button id="saveCurrent" class="btn-secondary">💾 保存当前计算</button>
+                        <button id="clearHistory" class="btn-secondary">🗑️ 清空历史</button>
+                    </div>
+                    <div id="historyList" class="history-list">
+                    <!-- 历史记录将在这里显示 -->
+                    </div>
+                </section>
+                <div class="data-actions">
+                    <button id="saveSettings" class="btn-secondary">💾 保存设置</button>
+                    <button id="exportData" class="btn-secondary">📤 导出数据</button>
+    <label class="btn-secondary file-input-label">
+        📥 导入数据
+        <input type="file" id="importData" accept=".json" style="display: none;">
+    </label>
+</div>
             </section>
 
             <!-- 结果表格 -->
@@ -142,10 +166,13 @@ Enter player names, separated by commas"></textarea>
         </footer>
     </div>
 
-    <!-- JavaScript 文件 -->
+    <!-- 更新后的script部分 -->
     <script src="scripts/calculator.js"></script>
     <script src="scripts/roll.js"></script>
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/theme.js"></script>
     <script src="scripts/app.js"></script>
+    <script src="scripts/update.js"></script>
     
     <!-- PWA Service Worker 注册 -->
     <script>
