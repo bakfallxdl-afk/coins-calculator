@@ -107,23 +107,26 @@ class CoinsCalculatorApp {
     }
 
     updatePlayerCount() {
-        const playerCount = this.state.playerCount;
-        
-        // 更新参与者状态
-        this.state.participants = new Array(6).fill(false);
-        for (let i = 0; i < playerCount; i++) {
-            this.state.participants[i] = true;
-        }
-        
-        // 更新扣减数组
-        this.state.deductions = new Array(playerCount).fill(0);
-        
-        // 更新玩家名输入框 - 保持现有值
-        this.updatePlayerNameInputs();
-        
-        // 更新结果
-        this.updateResults();
+    const playerCount = this.state.playerCount;
+    
+    // 更新参与者状态
+    this.state.participants = new Array(6).fill(false);
+    for (let i = 0; i < playerCount; i++) {
+        this.state.participants[i] = true;
     }
+    
+    // 更新扣减数组
+    this.state.deductions = new Array(playerCount).fill(0);
+    
+    // 重置Results显示顺序
+    this.state.resultsDisplayOrder = null;
+    
+    // 更新玩家名输入框 - 保持现有值
+    this.updatePlayerNameInputs();
+    
+    // 更新结果
+    this.updateResults();
+}
 
     updatePlayerNameInputs() {
         const playerCount = this.state.playerCount;
