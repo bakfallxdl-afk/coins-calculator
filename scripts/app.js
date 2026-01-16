@@ -426,4 +426,126 @@ class CoinsCalculatorApp {
         // 移除最后的逗号和空格
         copyText = copyText.replace(/, $/, '');
         
-        navigator.clipboard.writeText(copyText).then(()
+        navigator.clipboard.writeText(copyText).then(() => {
+            this.showNotification('结果已复制到剪贴板: ' + copyText, 'success');
+        }).catch(err => {
+            console.error('复制失败:', err);
+            this.showNotification('复制失败，请手动选择文本复制', 'error');
+        });
+    }
+
+    copyHistoryToClipboard(index) {
+        if (index >= 0 && index < this.history.length) {
+            const entry = this.history[index];
+            navigator.clipboard.writeText(entry.content).then(() => {
+                this.showNotification('历史记录已复制到剪贴板', 'success');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                this.showNotification('复制失败', 'error');
+            });
+        }
+    }
+
+    // ========== 通知系统 ==========
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <span>${message}</span>
+            <button class="notification-close">&times;</button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        notification.querySelector('.notification-close').addEventListener('click', () => {
+            notification.remove();
+        });
+        
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 4000);
+    }
+}
+
+// ========== 添加通知样式 ==========
+const notificationStyles = `
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 10px;
+        color: white;
+        z-index: 1000;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 300px;
+        max-width: 400px;
+        animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .notification-success {
+        background: linear-gradient(135deg, rgba(72, 187, 120, 0.9) 0%, rgba(56, 161, 105, 0.9) 100%);
+    }
+    
+    .notification-error {
+        background: linear-gradient(135deg, rgba(245, 101, 101, 0.9) 0%, rgba(197, 48, 48, 0.9) 100%);
+    }
+    
+    .notification-info {
+        background: linear-gradient(135deg, rgba(66, 153, 225, 0.9) 0%, rgba(49, 130, 206, 0.9) 100%);
+    }
+    
+    .notification-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        margin-left: 15px;
+        padding: 0 5px;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+    
+    .notification-close:hover {
+        opacity: 1;
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .notification {
+            left: 20px;
+            right: 20px;
+            max-width: none;
+        }
+    }
+`;
+
+// 添加样式到页面
+const styleSheet = document.createElement('style');
+styleSheet.textContent = notificationStyles;
+document.head.appendChild(styleSheet);
+
+// ========== 初始化应用 ==========
+document.addEventListener('DOMContentLoaded', () => {
+    const app = new CoinsCalculatorApp();
+    window.app = app;
+    console.log('Coins Calculator 已加载完成');
+});
