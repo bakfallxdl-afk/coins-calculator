@@ -23,11 +23,10 @@
 
 html {
     font-size: 16px;
-    scroll-behavior: smooth;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
     color: var(--dark-color);
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -49,12 +48,6 @@ body {
     box-shadow: var(--shadow);
     margin-bottom: 25px;
     border: 1px solid var(--border-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
 }
 
 .card h2 {
@@ -311,21 +304,62 @@ body {
     overflow-y: auto;
 }
 
-.roll-item {
-    padding: 10px;
-    margin: 5px 0;
+.roll-results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.roll-result-item {
+    padding: 12px 15px;
     background: white;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 15px;
+    transition: transform 0.2s ease;
+}
+
+.roll-result-item:hover {
+    transform: translateX(5px);
+}
+
+.roll-result-item.rank-first {
+    border-left: 4px solid gold;
+    background: linear-gradient(135deg, #fff9db 0%, #ffec99 100%);
+}
+
+.roll-result-item.rank-second {
+    border-left: 4px solid silver;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.roll-result-item.rank-third {
+    border-left: 4px solid #cd7f32;
+    background: linear-gradient(135deg, #f8f0e3 0%, #e7ccad 100%);
 }
 
 .roll-rank {
     font-weight: bold;
     color: var(--primary-dark);
-    min-width: 30px;
+    min-width: 40px;
+    font-size: 1.1rem;
+}
+
+.roll-player {
+    flex: 1;
+    font-weight: 500;
+}
+
+.roll-value {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+.roll-emoji {
+    font-size: 1.2rem;
 }
 
 /* 页脚 */
@@ -394,10 +428,6 @@ body {
 
 /* 平板设备 */
 @media (min-width: 769px) and (max-width: 1024px) {
-    .container {
-        padding: 0 20px;
-    }
-    
     .checkbox-group {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -411,18 +441,4 @@ body {
 
 .card {
     animation: fadeIn 0.5s ease-out;
-}
-
-/* 打印样式 */
-@media print {
-    .button-group,
-    .app-footer,
-    .roll-panel {
-        display: none !important;
-    }
-    
-    .card {
-        box-shadow: none !important;
-        border: 1px solid #ccc !important;
-    }
 }

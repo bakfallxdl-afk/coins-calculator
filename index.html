@@ -1,175 +1,159 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2299.77">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coins Calculator / 硬币计算器</title>
+    
+    <!-- PWA 配置 -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- 样式 -->
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <!-- 图标 -->
+    <link rel="icon" type="image/png" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    
+    <!-- 移动端主题色 -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="zh-CN"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Coins Calculator / 硬币计算器&lt;/title&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- PWA 配置 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="manifest" href="manifest.json"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 样式 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="stylesheet" href="styles/main.css"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 图标 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="icon" type="image/png" href="assets/icons/icon-192.png"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="apple-touch-icon" href="assets/icons/icon-192.png"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 移动端主题色 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="theme-color" content="#667eea"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="apple-mobile-web-app-capable" content="yes"&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- 头部 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;header class="app-header"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="header-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h1&gt;🪙 Coins Calculator&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="subtitle"&gt;硬币计算器&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="made-by"&gt;Made by @bakfall&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- 主内容区 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;main class="main-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- 控制面板 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;section class="control-panel card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2&gt;⚙️ 设置 Settings&lt;/h2&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="input-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;label for="playerCount"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="en"&gt;Player Count / 玩家人数:&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;select id="playerCount"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;option value="4"&gt;4 Players (4人)&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;option value="5"&gt;5 Players (5人)&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;option value="6"&gt;6 Players (6人)&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="input-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;label for="totalCoins"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="en"&gt;Total Coins / 硬币总数:&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="input-with-buttons"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="number" id="totalCoins" value="100" min="0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="quick-buttons"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;button class="quick-btn" data-amount="50"&gt;50&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;button class="quick-btn" data-amount="100"&gt;100&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;button class="quick-btn" data-amount="200"&gt;200&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="input-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;label for="playerNames"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="en"&gt;Player Names / 玩家名字:&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;textarea id="playerNames" rows="3" placeholder="输入玩家名字，用逗号分隔</p>
-<p class="p1">Enter player names, separated by commas"&gt;&lt;/textarea&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="button-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button id="rollPlayers" class="btn-secondary"&gt;🎲 Randomize Order / 随机排序&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button id="calculate" class="btn-primary"&gt;📊 Calculate / 计算分配&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- 结果表格 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;section class="results-panel card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2&gt;📊 Results / 分配结果&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="table-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;table id="resultsTable"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;thead&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;th&gt;#&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;th&gt;Player / 玩家&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;th&gt;Base / 基础&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;th&gt;Deduction / 扣减&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;th&gt;Actual / 实际&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/thead&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;tbody id="resultsBody"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;!-- 结果将在这里动态生成 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/tbody&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/table&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="summary"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="summary-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span&gt;Total / 总数:&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;strong id="totalDisplay"&gt;100&lt;/strong&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="summary-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span&gt;Remainder / 余数:&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;strong id="remainderDisplay"&gt;0&lt;/strong&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- Roll点区域 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;section class="roll-panel card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2&gt;🎲 Random Roll / 随机Roll点&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="roll-controls"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="input-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="en"&gt;Participants / 参与者:&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div id="participantCheckboxes" class="checkbox-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;!-- 复选框将在这里动态生成 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                    </span></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="button-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button id="startRoll" class="btn-secondary"&gt;🔄 Roll Dice / 开始Roll点&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                    </span></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div id="rollResults" class="roll-results"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;!-- Roll点结果将在这里显示 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/main&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- 页脚 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;footer class="app-footer"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="footer-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p&gt;Coins Calculator PWA v1.0&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="instructions"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>💡 提示：可以添加到主屏幕使用 | Tip: Can be added to home screen</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/footer&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- JavaScript 文件 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="scripts/calculator.js"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="scripts/roll.js"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="scripts/app.js"&gt;&lt;/script&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- PWA Service Worker 注册 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if ('serviceWorker' in navigator) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>navigator.serviceWorker.register('service-worker.js')</p>
-<p class="p1"><span class="Apple-converted-space">                </span>.then(() =&gt; console.log('Service Worker 已注册'))</p>
-<p class="p1"><span class="Apple-converted-space">                </span>.catch(err =&gt; console.log('Service Worker 注册失败:', err));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>🪙 Coins Calculator</h1>
+                <p class="subtitle">硬币计算器</p>
+                <p class="made-by">Made by @bakfall</p>
+            </div>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 控制面板 -->
+            <section class="control-panel card">
+                <h2>⚙️ 设置 Settings</h2>
+                
+                <div class="input-group">
+                    <label for="playerCount">
+                        <span class="en">Player Count / 玩家人数:</span>
+                    </label>
+                    <select id="playerCount">
+                        <option value="4">4 Players (4人)</option>
+                        <option value="5">5 Players (5人)</option>
+                        <option value="6">6 Players (6人)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="totalCoins">
+                        <span class="en">Total Coins / 硬币总数:</span>
+                    </label>
+                    <div class="input-with-buttons">
+                        <input type="number" id="totalCoins" value="100" min="0">
+                        <div class="quick-buttons">
+                            <button class="quick-btn" data-amount="50">50</button>
+                            <button class="quick-btn" data-amount="100">100</button>
+                            <button class="quick-btn" data-amount="200">200</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="playerNames">
+                        <span class="en">Player Names / 玩家名字:</span>
+                    </label>
+                    <textarea id="playerNames" rows="3" placeholder="输入玩家名字，用逗号分隔
+Enter player names, separated by commas"></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button id="rollPlayers" class="btn-secondary">🎲 Randomize Order / 随机排序</button>
+                    <button id="calculate" class="btn-primary">📊 Calculate / 计算分配</button>
+                </div>
+            </section>
+
+            <!-- 结果表格 -->
+            <section class="results-panel card">
+                <h2>📊 Results / 分配结果</h2>
+                <div class="table-container">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Player / 玩家</th>
+                                <th>Base / 基础</th>
+                                <th>Deduction / 扣减</th>
+                                <th>Actual / 实际</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            <!-- 结果将在这里动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="summary">
+                    <div class="summary-item">
+                        <span>Total / 总数:</span>
+                        <strong id="totalDisplay">100</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Remainder / 余数:</span>
+                        <strong id="remainderDisplay">0</strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Roll点区域 -->
+            <section class="roll-panel card">
+                <h2>🎲 Random Roll / 随机Roll点</h2>
+                <div class="roll-controls">
+                    <div class="input-group">
+                        <label>
+                            <span class="en">Participants / 参与者:</span>
+                        </label>
+                        <div id="participantCheckboxes" class="checkbox-group">
+                            <!-- 复选框将在这里动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="startRoll" class="btn-secondary">🔄 Roll Dice / 开始Roll点</button>
+                    </div>
+                    
+                    <div id="rollResults" class="roll-results">
+                        <!-- Roll点结果将在这里显示 -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>Coins Calculator PWA v1.0</p>
+                <p class="instructions">
+                    💡 提示：可以添加到主屏幕使用 | Tip: Can be added to home screen
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript 文件 -->
+    <script src="scripts/calculator.js"></script>
+    <script src="scripts/roll.js"></script>
+    <script src="scripts/app.js"></script>
+    
+    <!-- PWA Service Worker 注册 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(() => console.log('Service Worker 已注册'))
+                .catch(err => console.log('Service Worker 注册失败:', err));
+        }
+    </script>
 </body>
 </html>
