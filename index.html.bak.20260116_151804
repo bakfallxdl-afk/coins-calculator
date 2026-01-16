@@ -118,35 +118,11 @@
                             <span class="en">Player Names / 玩家名字:</span>
                         </label>
                         <div id="playerNameInputs" class="player-name-inputs">
-                        <div id="playerNameInputs" class="player-name-inputs">
-                            <!-- 表头 -->
-                            <div class="player-table-header">
-                                <div class="header-name">玩家名称</div>
-                                <div class="header-checkbox">参与Roll点</div>
-                            </div>
-                            <!-- 玩家行 -->
-                        <h3>Random Roll / 随机Roll点 & Calculate / 计算分配</h3>
-                        
-                        <div class="dual-buttons-horizontal">
-                            <button id="startRoll" class="btn-roll-horizontal">
-                                <img src="assets/images/startroll.png" alt="开始Roll点" class="btn-img">
-                            </button>
-                            
-                            <button id="startCalculate" class="btn-calculate-horizontal">
-                                <img src="assets/images/startcalculate.png" alt="计算分配" class="btn-img">
-                            </button>
+                            <!-- 动态生成 -->
                         </div>
-                        
-                        <div id="rollResults" class="roll-results">
-                            <!-- 结果区域 -->
-                        </div>                            <div class="player-row">
-                                <input type="text" class="player-input" id="player4" value="玩家4" placeholder="输入玩家名">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" class="player-checkbox" data-player-id="player4" checked>
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                        </div>                    <!-- Roll点区域 -->
+                    </div>
+                    
+                    <!-- Roll点区域 -->
                     <div class="roll-section">
                         <h3>Random Roll / 随机Roll点</h3>
                         
@@ -211,6 +187,6 @@
     <!-- JavaScript -->
     <script src="scripts/calculator.js"></script>
     <script src="scripts/roll.js"></script>
-    <script src="scripts/new-layout-simple.js"></script>    <script src="scripts/fix-dynamic-players.js"></script>    <script src="scripts/fill-participants.js"></script>    <script src="scripts/simple-sync.js"></script>    <script src="scripts/participant-fix.js"></script>    <script src="scripts/participant-sync-fixed.js"></script>    <script src="scripts/app.js"></script>
+    <script src="scripts/fix-dynamic-players.js"></script>    <script src="scripts/fill-participants.js"></script>    <script src="scripts/simple-sync.js"></script>    <script src="scripts/participant-fix.js"></script>    <script src="scripts/participant-sync-fixed.js"></script>    <script src="scripts/app.js"></script>
     <script src="scripts/simple-new-layout.js"></script></body>
 </html>
