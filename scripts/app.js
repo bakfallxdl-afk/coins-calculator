@@ -24,13 +24,197 @@ class CoinsCalculatorApp {
     init() {
         this.cacheElements();
         this.bindEvents();
+	this.initInstructions();
         this.renderInitialState();
         this.updatePouchTotal();
         this.updateResults();
         this.updateHistoryDisplay();
         console.log('Coins Calculator PWA 已启动');
     }
+    // 在 class 内部添加这些方法
 
+initInstructions() {
+    // 创建说明内容 - 优化后的版本
+    const instructionsHTML = `
+        <div class="instructions-grid">
+            <!-- 左侧列：使用方法和扣减规则 -->
+            <div class="instructions-column">
+                <!-- 使用方法 -->
+                <div class="instruction-section">
+                    <h3><span class="emoji">📖</span> How to Use / 使用方法</h3>
+                    <ul class="steps-list">
+                        <li class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Enter Numbers / 输入数字</h4>
+                                <p>Select player count (4-6) & enter pouch values</p>
+                                <p style="opacity:0.8;">选择玩家人数 (4-6人) & 输入pouch数值</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Click Roll / 点Roll点</h4>
+                                <p>Players join roll for ranking (higher roll = better)</p>
+                                <p style="opacity:0.8;">玩家参与Roll点排名 (点数越高越靠前)</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Check Participants / 勾选参与者</h4>
+                                <p>Unchecked players auto-last in ranking</p>
+                                <p style="opacity:0.8;">未勾选的玩家自动排最后</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Enter Deductions / 填扣减</h4>
+                                <p>Enter DC/Death/Helmet etc. in deduction column</p>
+                                <p style="opacity:0.8;">在扣减列填写断线/死亡/拾头盔等</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Click Calculate / 点计算</h4>
+                                <p>System auto-calculates final distribution</p>
+                                <p style="opacity:0.8;">系统自动计算最终分配结果</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 扣减规则 -->
+                <div class="instruction-section">
+                    <h3><span class="emoji">📋</span> Deduction Rules / 扣减规则</h3>
+                    <div class="rules-grid">
+                        <div class="rule-item">
+                            <span class="rule-emoji">🚫</span>
+                            <div class="rule-content">
+                                <div class="rule-title">DC / 断线</div>
+                                <div class="rule-desc">Disconnection during raid</div>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <span class="rule-emoji">💀</span>
+                            <div class="rule-content">
+                                <div class="rule-title">Death (no res)</div>
+                                <div class="rule-desc">死亡(无法复活)</div>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <span class="rule-emoji">⛑️</span>
+                            <div class="rule-content">
+                                <div class="rule-title">Helmet pick-up</div>
+                                <div class="rule-desc">拾取头盔</div>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <span class="rule-emoji">📝</span>
+                            <div class="rule-content">
+                                <div class="rule-title">Other / 其他</div>
+                                <div class="rule-desc">Custom deductions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧列：重要规则和示例 -->
+            <div class="instructions-column">
+                <!-- 重要规则 -->
+                <div class="instruction-section">
+                    <h3><span class="emoji">⚖️</span> Key Rules / 重要规则</h3>
+                    <div class="key-rules-list">
+                        <div class="key-rule-item">
+                            <span class="key-rule-emoji">✅</span>
+                            <div class="key-rule-content">
+                                <strong>Join Roll / 参与Roll点</strong>
+                                <p>Rank by points, higher = more coins<br>按点数排名，越高获得越多</p>
+                            </div>
+                        </div>
+                        <div class="key-rule-item">
+                            <span class="key-rule-emoji">❌</span>
+                            <div class="key-rule-content">
+                                <strong>Skip Roll / 不参与</strong>
+                                <p>Auto-last in ranking<br>自动排在最后</p>
+                            </div>
+                        </div>
+                        <div class="key-rule-item">
+                            <span class="key-rule-emoji">⚖️</span>
+                            <div class="key-rule-content">
+                                <strong>After Deductions / 扣减后</strong>
+                                <p>System redistributes, total unchanged<br>系统重新分配，总数不变</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                '<!-- 示例 -->
+<div class="instruction-section">
+    <h3><span class="emoji">📊</span> Example / 示例</h3>
+    <div class="example-box">
+        <div class="example-header">
+            <span>4 players, 100 coins</span>
+            <span>4人, 100硬币</span>
+        </div>
+        <div class="example-detail">
+            <!-- Players -->
+            <div class="example-row">
+                <span class="example-label-en">Players:</span>
+                <span class="example-label-zh">玩家:</span>
+                <span class="example-value">A, B, C, D</span>
+            </div>
+            <!-- Roll -->
+            <div class="example-row">
+                <span class="example-label-en">Roll:</span>
+                <span class="example-label-zh">Roll点:</span>
+                <span class="example-value">A,B,C join, D skips</span>
+            </div>
+            <!-- Ranking -->
+            <div class="example-row">
+                <span class="example-label-en">Ranking:</span>
+                <span class="example-label-zh">排名:</span>
+                <span class="example-value">A > B > C > D<br>(D auto-last)</span>
+            </div>
+            <!-- DC -->
+            <div class="example-row highlight">
+                <span class="example-label-en">A DC:</span>
+                <span class="example-label-zh">A断线:</span>
+                <span class="example-value">-5 coins</span>
+            </div>
+            <!-- Result -->
+            <div class="example-row result">
+                <span class="example-label-en">Result:</span>
+                <span class="example-label-zh">结果:</span>
+                <span class="example-value">System rebalances → Total remains 100</span>
+            </div>
+        </div>
+    </div>
+</div>'
+                </div>
+            </div>
+        </div>
+    `;
+    
+    const content = document.getElementById('instructionsContent');
+    if (content) {
+        content.innerHTML = instructionsHTML;
+    }
+    
+    // 绑定切换事件
+    const toggle = document.getElementById('instructionsToggle');
+    if (toggle) {
+        toggle.addEventListener('click', () => {
+            toggle.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+        });
+        
+
+    }
+}
     cacheElements() {
         this.elements = {
             playerCount: document.getElementById('playerCount'),

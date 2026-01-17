@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PinkBean Timer - 粉色主题组队计时器</title>
+    <link rel="stylesheet" href="styles/pinkbeantimer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 房间设置界面 -->
+    <div class="room-setup" id="roomSetup">
+        <div class="setup-container">
+            <div class="setup-header">
+                <!-- 背景图片 -->
+            </div>
+            <div class="setup-content">
+                <div class="setup-card">
+                    <div class="setup-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h2 class="setup-card-title">PinkBean 组队计时器</h2>
+                    <p class="setup-card-desc">创建或加入一个房间，与队友同步12个计时器，提升PinkBean挑战效率</p>
+                    
+                    <div class="room-input-group">
+                        <input type="text" id="roomCodeInput" class="room-input" placeholder="输入或生成房间代码" maxlength="6">
+                        <button id="joinRoomBtn" class="room-btn">
+                            <span class="btn-text">加入房间</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="room-options">
+                        <button id="generateCodeBtn" class="room-btn secondary">
+                            <i class="fas fa-plus-circle"></i>
+                            <span class="btn-text">生成房间代码</span>
+                        </button>
+                    </div>
+                    
+                    <div class="setup-info">
+                        <h3 class="info-title">
+                            <i class="fas fa-info-circle"></i>
+                            <span>使用说明</span>
+                        </h3>
+                        <ul class="info-list">
+                            <li><strong>生成房间代码</strong>：点击按钮生成6位代码</li>
+                            <li><strong>加入房间</strong>：输入代码点击"加入房间"或按Enter键</li>
+                            <li><strong>Zombie计时器</strong>：120秒冷却，单击开始/暂停，双击重置</li>
+                            <li><strong>DR计时器</strong>：60秒冷却，单击开始/暂停，双击重置</li>
+                            <li><strong>RESS计时器</strong>：30分钟冷却，共5个</li>
+                            <li><strong>TL计时器</strong>：20分钟冷却，共5个</li>
+                            <li>所有计时器会与房间内所有成员同步</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="setup-footer">
+                <p>PinkBean Timer v1.0 • 单击开始/暂停 • 双击重置 • 自动同步队友进度</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 计时器主界面 -->
+    <div class="timer-page" id="timerPage">
+        <div class="timer-container">
+            <!-- 顶部信息栏 -->
+            <div class="timer-header">
+                <div class="room-info">
+                    <span class="room-label">房间:</span>
+                    <span id="currentRoomCode" class="room-code">------</span>
+                    <span id="roomStatus" class="room-status">准备中</span>
+                </div>
+                <div class="header-controls">
+                    <button id="showInstructionsBtn" class="control-btn">
+                        <i class="fas fa-question-circle"></i>
+                        <span>说明</span>
+                    </button>
+                    <button id="leaveRoomBtn" class="control-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>离开</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 计时器网格 -->
+            <div class="timer-grid" id="timerGrid">
+                <!-- 计时器将通过JS动态生成 -->
+            </div>
+
+            <!-- 底部状态栏 -->
+            <div class="timer-footer">
+                <div class="footer-text">
+                    <span class="footer-label">房间代码:</span>
+                    <span id="footerRoomCode" class="footer-room-code">------</span>
+                    <span class="footer-divider">•</span>
+                    <span class="footer-instruction">单击开始/暂停 • 双击重置 • 计时器同步所有队友</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 说明弹窗 -->
+    <div class="modal" id="instructionsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">PinkBean Timer 使用说明</h2>
+                <button class="modal-close" id="closeInstructionsBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="instruction-section">
+                    <h3 class="instruction-title">
+                        <i class="fas fa-play-circle"></i>
+                        <span>基本操作</span>
+                    </h3>
+                    <ul class="instruction-list">
+                        <li><strong>生成房间代码</strong>：点击"生成房间代码"按钮获得6位随机代码</li>
+                        <li><strong>加入房间</strong>：输入6位代码后点击"加入房间"或按Enter键</li>
+                        <li><strong>开始计时</strong>：单击任意计时器开始倒计时</li>
+                        <li><strong>暂停计时</strong>：再次单击暂停计时</li>
+                        <li><strong>重置计时</strong>：双击计时器重置为初始时间</li>
+                        <li><strong>房间同步</strong>：所有操作会实时同步给房间内所有成员</li>
+                    </ul>
+                </div>
+                
+                <div class="instruction-section">
+                    <h3 class="instruction-title">
+                        <i class="fas fa-list-ol"></i>
+                        <span>计时器说明</span>
+                    </h3>
+                    <ul class="instruction-list">
+                        <li><strong>Zombie</strong>：120秒冷却时间（大尺寸显示）</li>
+                        <li><strong>DR</strong>：60秒冷却时间（大尺寸显示）</li>
+                        <li><strong>RESS #1-5</strong>：每个30分钟冷却时间（粉色系）</li>
+                        <li><strong>TL #1-4</strong>：每个20分钟冷却时间（紫色系）</li>
+                        <li>计时器完成时会显示绿色并闪烁提示</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/pinkbeantimer.js"></script>
+</body>
+</html>

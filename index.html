@@ -1,250 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- 应用信息 -->
-    <title>Coins Calculator | 硬币计算器</title>
-    <meta name="description" content="智能硬币分配计算器 | Smart coins distribution calculator">
-    
-    <!-- PWA配置 -->
-    <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="CoinsCalc">
-    
-    <!-- 苹果图标 -->
-    <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="assets/images/web-app-manifest-192x192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/web-app-manifest-192x192.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="assets/images/web-app-manifest-192x192.png">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="assets/images/favicon-96x96.png">
-    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
-    
-    <!-- Windows -->
-    <meta name="msapplication-TileImage" content="assets/images/web-app-manifest-144x144.png">
-    <meta name="msapplication-TileColor" content="#FF6B35">
-    <meta name="msapplication-config" content="browserconfig.xml">
-    <meta name="application-name" content="Coins Calculator">
-    
-    <!-- 主题颜色 -->
-    <meta name="theme-color" content="#FF6B35" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+    <title>Boss Assistant</title>
     
     <!-- 样式 -->
-    <link rel="stylesheet" href="styles/main.css?v=1768578081">
+    <link rel="stylesheet" href="styles/parent.css">
     
-    <!-- PWA Service Worker 注册 -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(registration => {
-                        console.log('ServiceWorker 注册成功: ', registration.scope);
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker 注册失败: ', err);
-                    });
-            });
-            
-            // 监听beforeinstallprompt事件
-            let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                console.log('PWA可以安装到桌面');
-                
-                // 可以在这里显示安装按钮
-                // showInstallPromotion();
-            });
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
         }
-    </script>
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: white;
+            line-height: 1.6;
+            padding: 20px;
+        }
+    </style>
 </head>
-<html lang="zh-CN">
 <body>
-    <div class="container">
-        <!-- 头部 -->
-        <header class="app-header">
-            <div class="header-content">
-                <img src="assets/images/head.png" alt="Coins Calculator" class="header-image">
+    <div class="parent-container">
+        <!-- 主内容区 - 只有4个按钮 -->
+        <main class="parent-main">
+            <div class="tools-grid">
+                <!-- Pinkbean计时器 -->
+                <a href="pinkbeantimer.html" class="tool-card pinkbean-card" id="pinkbeanTimer">
+                    <img src="assets/images/pinkbeantimer.png" alt="Pinkbean Timer" class="card-image" loading="lazy">
+                    <div class="card-content">
+                        <h3 class="tool-title">PinkbeanTimer</h3>
+                    </div>
+                </a>
+
+                <!-- Horntail计时器 -->
+                <a href="horntailtimer.html" class="tool-card horntail-card" id="horntailTimer">
+                    <img src="assets/images/horntailtimer.png" alt="Horntail Timer" class="card-image" loading="lazy">
+                    <div class="card-content">
+                        <h3 class="tool-title">Horntail Timer</h3>
+                    </div>
+                </a>
+
+                <!-- Auf计时器 -->
+                <a href="auf_timer.html" class="tool-card auf-card" id="aufTimer">
+                    <img src="assets/images/auftimer.png" alt="Auf Timer" class="card-image" loading="lazy">
+                    <div class="card-content">
+                        <h3 class="tool-title">Auf Timer</h3>
+                    </div>
+                </a>
+
+                <!-- Auf硬币计算器 -->
+                <a href="coins_calculator.html" class="tool-card coins-card" id="coinsCalculator">
+                    <img src="assets/images/aufcoinscalculator.png" alt="Auf Coins Calculator" class="card-image" loading="lazy">
+                    <div class="card-content">
+                        <h3 class="tool-title">Auf Coins Calculator</h3>
+                    </div>
+                </a>
             </div>
-        </header>
-
-        <!-- 主内容区 - 全纵向布局 -->
-        <main class="main-content-vertical">
-            <!-- 控制面板 -->
-            <section class="control-panel card">
-                <h2>设置 Settings</h2>
-                
-                <!-- 玩家数量选择 -->
-                <div class="input-group">
-                    <label for="playerCount">
-                        <span class="en">Player Count / 玩家人数:</span>
-                    </label>
-                    <select id="playerCount">
-                        <option value="4">4 Players (4人)</option>
-                        <option value="5">5 Players (5人)</option>
-                        <option value="6">6 Players (6人)</option>
-                    </select>
-                </div>
-                
-                <!-- Pouch输入区域 -->
-                <div class="input-group">
-                    <label>
-                        <span class="en">Pouch Values / Pouch数值:</span>
-                    </label>
-                    <div class="pouch-inputs">
-                        <div class="pouch-item">
-                            <div class="pouch-icon">
-                                <img src="assets/images/pouch4.png" alt="pouch1" class="pouch-img">
-                                <span>pouch1:</span>
-                            </div>
-                            <input type="number" id="pouch1" class="pouch-input" value="0" min="0" data-index="0">
-                        </div>
-                        <div class="pouch-item">
-                            <div class="pouch-icon">
-                                <img src="assets/images/pouch4.png" alt="pouch2" class="pouch-img">
-                                <span>pouch2:</span>
-                            </div>
-                            <input type="number" id="pouch2" class="pouch-input" value="0" min="0" data-index="1">
-                        </div>
-                        <div class="pouch-item">
-                            <div class="pouch-icon">
-                                <img src="assets/images/pouch4.png" alt="pouch3" class="pouch-img">
-                                <span>pouch3:</span>
-                            </div>
-                            <input type="number" id="pouch3" class="pouch-input" value="0" min="0" data-index="2">
-                        </div>
-                        <div class="pouch-item">
-                            <div class="pouch-icon">
-                                <img src="assets/images/pouch4.png" alt="pouch4" class="pouch-img">
-                                <span>pouch4:</span>
-                            </div>
-                            <input type="number" id="pouch4" class="pouch-input" value="0" min="0" data-index="3">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 总硬币数 -->
-                <div class="input-group">
-                    <label for="totalCoins">
-                        <span class="en">Total Coins / 硬币总数:</span>
-                    </label>
-                    <!-- 替换这个旧的输入框 -->
-                    <!-- <input type="number" id="totalCoins" value="0" min="0" readonly> -->
-
-                    <!-- 改为这个新的显示方式 -->
-                    <div class="coins-total-display">
-                        <span class="coins-total-label">硬币总数 / Total Coins</span>
-                        <div class="coins-total-value" id="totalCoins">0</div>
-                    </div>
-                </div>
-                
-            </section>
-            
-            <!-- 玩家管理区域 -->
-            <section class="player-management card">
-                <h2>Player Management / 玩家管理</h2>
-                
-                <!-- 玩家名输入框 -->
-               <div class="input-group">
-                <label>
-                    <span class="en">Player Names / 玩家名字:</span>
-                </label>
-                    <div id="playerNameInputs" class="player-name-inputs-vertical">
-                        <!-- JavaScript会动态填充 -->
-                    </div>
-                </div>
-                
-                <!-- Roll点区域 -->
-                <div class="roll-section">
-                    <h3>Random Roll / 随机Roll点</h3>
-                    
-                    
-                    <!-- Roll点按钮 -->
-                    <div class="button-group-row">
-                        <button id="startRoll" class="btn-image-roll">
-                            <img src="assets/images/startroll.png" alt="Start Roll" class="roll-btn-img">
-                        </button>
-                        <button id="calculate" class="btn-image-calculate">
-                            <img src="assets/images/startcalculate.png" alt="Calculate" class="calculate-btn-img">
-                        </button>
-                    </div>
-                    
-                    <!-- Roll点结果 -->
-                    <div id="rollResults" class="roll-results">
-                        <!-- 结果区域 -->
-                    </div>
-                </div>
-            </section>
-            
-            <!-- 分配结果 -->
-            <section class="results-panel card">
-                <h2>Results / 分配结果</h2>
-                <div class="table-container">
-                    <table id="resultsTable">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Player / 玩家</th>
-                                <th>Base / 基础</th>
-                                <th>Deduction / 扣减</th>
-                                <th>Actual / 实际</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resultsBody">
-                            <!-- 会被JavaScript动态填充 -->
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="summary">
-                    <div class="summary-item">
-                        <span>Total / 总数:</span>
-                        <strong id="totalDisplay">0</strong>
-                    </div>
-                    <div class="summary-item">
-                        <span>Remainder / 余数:</span>
-                        <strong id="remainderDisplay">0</strong>
-                    </div>
-                </div>
-                <!-- 工具按钮 -->
-                <div class="utility-buttons">
-                    <button id="copyResults" class="utility-btn">
-                    📋 复制结果 <span class="en">Copy Results</span>
-                    </button>
-                    <button id="clearHistory" class="utility-btn">
-                    🗑️ 清空历史 <span class="en">Clear History</span>
-                    </button>
-                </div>
-
-            <!-- 历史记录面板 -->
-            <div class="history-panel card">
-                    <h3>📜 分配历史 <span class="en">Distribution History</span></h3>
-                <div id="historyList" class="history-list">
-                    <!-- 历史记录将动态显示在这里 -->
-                </div>
-            </div>
-            </section>
         </main>
+
+        <!-- 页脚 -->
+        <footer class="parent-footer">
+            <div class="footer-content">
+                <p class="footer-text">Boss Assistant • made by @bakfall</p>
+                <p class="footer-version">v1.0.0</p>
+            </div>
+        </footer>
     </div>
 
     <!-- JavaScript -->
-    <script src="scripts/calculator.js?v=1768578081"></script>
-    <script src="scripts/roll.js?v=1768578081"></script>
-    <script src="scripts/app.js?v=1768578081"></script>
-    
-    <!-- PWA Service Worker 注册 -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(() => console.log('Service Worker 已注册'))
-                .catch(err => console.log('Service Worker 注册失败:', err));
-        }
-    </script>
+    <script src="scripts/parent.js"></script>
 </body>
 </html>

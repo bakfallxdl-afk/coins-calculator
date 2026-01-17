@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Horntail Timer | 暗黑龙王计时器</title>
+    <link rel="stylesheet" href="styles/horntailtimer.css">
+</head>
+<body>
+    <!-- 房间设置界面 -->
+    <div id="roomSetup" class="room-setup">
+        <div class="setup-container">
+            <div class="setup-header">
+
+            </div>
+            
+            <div class="setup-content">
+                <div class="setup-card">
+                    <div class="setup-icon">🐲</div>
+                    <h3 class="setup-card-title">房间设置 | Room Setup</h3>
+                    <p class="setup-card-desc">输入相同房间号与队友同步计时 | Enter same room code to sync with teammates</p>
+                    
+                    <div class="room-input-group">
+                        <input type="text" id="roomCode" class="room-input" 
+                               placeholder="如：1234 | e.g.: 1234" maxlength="6">
+                        <button id="joinRoom" class="room-btn">
+                            <span class="btn-text">加入房间 | Join Room</span>
+                        </button>
+                    </div>
+                    
+                    <div class="room-options">
+                        <button id="createRoom" class="option-btn">
+                            <span class="btn-text">快速创建 | Quick Create</span>
+                        </button>
+                        <button id="howToUse" class="option-btn secondary">
+                            <span class="btn-text">使用说明 | How to Use</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="setup-info">
+                    <h4 class="info-title">💡 使用提示 | Usage Tips</h4>
+                    <ul class="info-list">
+                        <li>输入相同房间号与队友同步计时 | Enter same room code to sync with teammates</li>
+                        <li>房间号可以是4-6位数字或字母 | Room code can be 4-6 digits or letters</li>
+                        <li>建议使用简单易记的数字 | Suggest using simple memorable numbers</li>
+                        <li>所有操作会实时同步到队友 | All operations sync in real-time</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="setup-footer">
+                <p class="footer-text">单击开始/暂停 | Single click: Start/Pause • 双击重置 | Double click: Reset</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 计时器主界面 -->
+    <div id="timerPage" class="timer-page">
+        <div class="timer-container">
+            <!-- 头部 -->
+            <header class="timer-header">
+                <div class="room-info">
+                    <span class="room-label">房间 | Room:</span>
+                    <span class="room-code" id="currentRoom">---</span>
+                    <span class="room-status">
+                        <span>🟢 已连接 | Connected</span>
+                    </span>
+                </div>
+                <div class="header-controls">
+                    <button id="leaveRoom" class="control-btn">
+                        <span class="btn-icon">🚪</span>
+                        <span class="btn-text">离开 | Leave</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 12个圆形计时器 - 使用网格布局 -->
+            <main class="timer-grid">
+                <!-- 每个计时器放在独立的网格项中 -->
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerLASED1" data-timer="laSed1">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeLASED1">180</div>
+                                <div class="circle-label">LA SED#1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerLASED2" data-timer="laSed2">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeLASED2">180</div>
+                                <div class="circle-label">LA SED#2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerLASED3" data-timer="laSed3">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeLASED3">180</div>
+                                <div class="circle-label">LA SED#3</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerLAMass" data-timer="laMass">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeLAMass">60</div>
+                                <div class="circle-label">LA MASS</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerRASED1" data-timer="raSed1">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeRASED1">180</div>
+                                <div class="circle-label">RA SED#1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerRASED2" data-timer="raSed2">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeRASED2">180</div>
+                                <div class="circle-label">RA SED#2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerRASED3" data-timer="raSed3">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeRASED3">180</div>
+                                <div class="circle-label">RA SED#3</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerRAMass" data-timer="raMass">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeRAMass">60</div>
+                                <div class="circle-label">RA MASS</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerLADP1" data-timer="laDp1">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeLADP1">300</div>
+                                <div class="circle-label">LA DP#1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerLADP2" data-timer="laDp2">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeLADP2">180</div>
+                                <div class="circle-label">LA DP#2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerMHDP1" data-timer="mhDp1">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeMHDP1">300</div>
+                                <div class="circle-label">MH DP#1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="timer-circle" id="timerMHDP2" data-timer="mhDp2">
+                        <div class="circle-mask">
+                            <div class="ripple"></div>
+                            <svg class="circle-svg" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="circle-content">
+                                <div class="circle-time" id="timeMHDP2">180</div>
+                                <div class="circle-label">MH DP#2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="timer-footer">
+                <p class="footer-text">
+                    <span class="footer-label">房间 | Room:</span>
+                    <span id="footerRoomCode" class="footer-room-code">---</span>
+                    <span class="footer-divider">•</span>
+                    <span class="footer-copyright">Horntail Timer v1.0</span>
+                    <span class="footer-divider">•</span>
+                    <span class="footer-instruction">单击开始/暂停 | 双击重置</span>
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- 使用说明弹窗 -->
+    <div id="howToUseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    📚 使用说明 | Instructions
+                </h2>
+                <button class="modal-close" id="closeHowTo">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="instruction-section">
+                    <h3 class="instruction-title">
+                        🎯 操作方法 | Operations
+                    </h3>
+                    <ul class="instruction-list">
+                        <li><strong>单击圆形</strong> - 开始/暂停计时 | <strong>Single click</strong> - Start/Pause timer</li>
+                        <li><strong>双击圆形</strong> - 重置计时器 | <strong>Double click</strong> - Reset timer</li>
+                        <li><strong>颜色说明</strong> - 橙色:冷却中，绿色:就绪 | <strong>Colors</strong> - Orange:Cooling, Green:Ready</li>
+                    </ul>
+                </div>
+                
+                <div class="instruction-section">
+                    <h3 class="instruction-title">
+                        🐲 技能说明 | Skills
+                    </h3>
+                    <ul class="instruction-list">
+                        <li><strong>LA SED#1-3</strong> - 左臂镇静技能 (3分钟) | Left Arm Sedative Skill (3min)</li>
+                        <li><strong>LA MASS</strong> - 左臂群体技能 (1分钟) | Left Arm Mass Skill (1min)</li>
+                        <li><strong>RA SED#1-3</strong> - 右臂镇静技能 (3分钟) | Right Arm Sedative Skill (3min)</li>
+                        <li><strong>RA MASS</strong> - 右臂群体技能 (1分钟) | Right Arm Mass Skill (1min)</li>
+                        <li><strong>LA DP#1</strong> - 左臂伤害防护1 (5分钟) | Left Arm Damage Protection 1 (5min)</li>
+                        <li><strong>LA DP#2</strong> - 左臂伤害防护2 (3分钟) | Left Arm Damage Protection 2 (3min)</li>
+                        <li><strong>MH DP#1</strong> - 主体伤害防护1 (5分钟) | Main Head Damage Protection 1 (5min)</li>
+                        <li><strong>MH DP#2</strong> - 主体伤害防护2 (3分钟) | Main Head Damage Protection 2 (3min)</li>
+                    </ul>
+                </div>
+                
+                <div class="instruction-section">
+                    <h3 class="instruction-title">
+                        🏠 房间功能 | Room Features
+                    </h3>
+                    <ul class="instruction-list">
+                        <li>输入相同房间号与队友同步计时 | Enter same room code to sync with teammates</li>
+                        <li>房间号可以是4-6位数字或字母 | Room code can be 4-6 digits or letters</li>
+                        <li>建议使用简单易记的数字组合 | Suggest using simple memorable numbers</li>
+                        <li>所有操作会实时同步到队友 | All operations sync in real-time</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/horntailtimer.js"></script>
+</body>
+</html>

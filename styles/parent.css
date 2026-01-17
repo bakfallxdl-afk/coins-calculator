@@ -1,0 +1,281 @@
+/* ========== 基础重置 ========== */
+:root {
+    /* 卡片颜色 */
+    --pink-bg: linear-gradient(135deg, #FF6BC9 0%, #FF8FD8 50%, #FFB3E6 100%);
+    --purple-bg: linear-gradient(135deg, #9C27B0 0%, #BA68C8 50%, #E1BEE7 100%);
+    --orange-bg: linear-gradient(135deg, #FF6B35 0%, #FF8C42 50%, #FFB38A 100%);
+    
+    /* 卡片阴影 */
+    --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    --card-shadow-hover: 0 25px 50px rgba(0, 0, 0, 0.3);
+    
+    /* 通用 */
+    --border-radius: 20px;
+}
+
+.parent-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* ========== 主内容区 ========== */
+.parent-main {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* 2x2矩阵布局 */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+/* ========== 工具卡片样式 ========== */
+.tool-card {
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    display: block;
+}
+
+/* 卡片悬停效果 */
+.tool-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: var(--card-shadow-hover);
+    border-color: white;
+}
+
+/* 卡片背景色 */
+.pinkbean-card {
+    background: var(--pink-bg);
+}
+
+.horntail-card {
+    background: var(--purple-bg);
+}
+
+.auf-card,
+.coins-card {
+    background: var(--orange-bg);
+}
+
+/* 图片 - 完全填充 */
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.tool-card:hover .card-image {
+    transform: scale(1.1);
+}
+
+/* 文字内容 - 固定在右下角 */
+.card-content {
+    position: absolute;
+    bottom: 20px;    /* 距离底部20px */
+    right: 20px;     /* 距离右边20px */
+    text-align: right; /* 文字右对齐 */
+    color: white;
+    z-index: 2;
+    max-width: 70%;  /* 限制文字宽度 */
+}
+
+/* 工具标题 - 减小字体，适合右下角 */
+.tool-title {
+    font-size: 1.2rem;  /* 桌面端适中大小 */
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.7),
+        0 0 8px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+}
+
+/* 工具描述 - 更小的字体 */
+.tool-desc {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    text-shadow: 
+        1px 1px 3px rgba(0, 0, 0, 0.7),
+        0 0 6px rgba(0, 0, 0, 0.4);
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+/* 移除状态徽章相关样式 */
+.status-badge {
+    display: none;
+}
+
+/* ========== 页脚 ========== */
+.parent-footer {
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.footer-text {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.footer-version {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: monospace;
+}
+
+/* ========== 响应式设计 - 优化手机端文字大小 ========== */
+
+/* 平板和桌面 */
+@media (min-width: 769px) {
+    .tools-grid {
+        gap: 30px;
+        padding: 20px;
+    }
+    
+    .tool-card {
+        border-width: 3px;
+    }
+    
+    .card-content {
+        bottom: 25px;
+        right: 25px;
+    }
+    
+    .tool-title {
+        font-size: 1.4rem;  /* 桌面端稍大 */
+    }
+    
+    .tool-desc {
+        font-size: 1rem;
+    }
+}
+
+/* 手机端 - 优化文字大小 */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    
+    .tools-grid {
+        gap: 15px;
+        max-width: 500px;
+        padding: 5px;
+    }
+    
+    .tool-card {
+        border-width: 2px;
+    }
+    
+    .card-content {
+        bottom: 15px;
+        right: 15px;
+        max-width: 75%;  /* 手机端文字可以稍宽 */
+    }
+    
+    /* 手机端文字更小，避免太大 */
+    .tool-title {
+        font-size: 1rem;    /* 手机端：1rem */
+    }
+    
+    .tool-desc {
+        font-size: 0.8rem;  /* 手机端：0.8rem */
+    }
+    
+    .footer-text {
+        font-size: 0.85rem;
+    }
+    
+    .footer-version {
+        font-size: 0.75rem;
+    }
+}
+
+/* 超小手机 - 文字进一步减小 */
+@media (max-width: 480px) {
+    .tools-grid {
+        gap: 12px;
+    }
+    
+    .card-content {
+        bottom: 12px;
+        right: 12px;
+        max-width: 80%;
+    }
+    
+    .tool-title {
+        font-size: 0.9rem;   /* 超小手机：0.9rem */
+    }
+    
+    .tool-desc {
+        font-size: 0.75rem;  /* 超小手机：0.75rem */
+    }
+}
+
+/* 大屏幕 - 文字稍大 */
+@media (min-width: 1200px) {
+    .card-content {
+        bottom: 30px;
+        right: 30px;
+    }
+    
+    .tool-title {
+        font-size: 1.5rem;
+    }
+    
+    .tool-desc {
+        font-size: 1.1rem;
+    }
+}
+
+/* 横屏手机优化 */
+@media (orientation: landscape) and (max-height: 500px) {
+    .tools-grid {
+        gap: 20px;
+    }
+    
+    .card-content {
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .tool-title {
+        font-size: 1.1rem;
+    }
+    
+    .tool-desc {
+        font-size: 0.9rem;
+    }
+}

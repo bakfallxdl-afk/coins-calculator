@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AUF Timer | 技能计时器</title>
+    <link rel="stylesheet" href="styles/auf_timer.css">
+    <!-- 预加载背景图片 -->
+    <link rel="preload" href="assets/images/auftimer.png" as="image">
+    <link rel="preload" href="assets/images/auftimerroom.png" as="image">
+</head>
+<body>
+    <!-- 房间设置界面 -->
+    <div id="roomSetup" class="room-setup">
+        <div class="setup-container">
+            <div class="setup-header">
+                <h1 class="setup-title">AUF TIMER</h1>
+            </div>
+            
+            <div class="setup-content">
+                <div class="setup-card">
+                    <div class="setup-icon">⏱️</div>
+                    <h3 class="setup-card-title">房间设置 | Room Setup</h3>
+                    <p class="setup-card-desc">输入相同房间号与队友同步计时 | Enter same room code to sync with teammates</p>
+                    
+                    <div class="room-input-group">
+                        <input type="text" id="roomCode" class="room-input" 
+                               placeholder="如：1234 | e.g.: 1234" maxlength="6">
+                        <button id="joinRoom" class="room-btn">
+                            <span class="btn-text">加入房间</span>
+                        </button>
+                    </div>
+                    
+                    <div class="room-options">
+                        <button id="createRoom" class="option-btn">
+                            <span class="btn-text">快速创建</span>
+                        </button>
+                        <button id="howToUse" class="option-btn secondary">
+                            <span class="btn-text">使用说明</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="setup-info">
+                    <h4 class="info-title">💡 使用提示 | Usage Tips</h4>
+                    <ul class="info-list">
+                        <li>输入相同房间号与队友同步计时 | Enter same room code to sync with teammates</li>
+                        <li>房间号可以是4-6位数字或字母 | Room code can be 4-6 digits or letters</li>
+                        <li>建议使用简单易记的数字 | Suggest using simple memorable numbers</li>
+                        <li>所有操作会实时同步到队友 | All operations sync in real-time</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="setup-footer">
+                <p class="footer-text">单击开始/暂停 | Single click: Start/Pause • 双击重置 | Double click: Reset</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 计时器主界面 -->
+    <div id="timerPage" class="timer-page">
+        <!-- 头部 -->
+        <header class="timer-header">
+            <div class="room-info">
+                <span class="room-label">房间 | Room:</span>
+                <span class="room-code" id="currentRoom">---</span>
+                <span class="room-status">
+                    <span>🟢 已连接 | Connected</span>
+                </span>
+            </div>
+            <div class="header-controls">
+                <button id="leaveRoom" class="control-btn">
+                    <span class="btn-icon">🚪</span>
+                    <span class="btn-text">离开 | Leave</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- 6个圆形计时器 -->
+        <main class="timer-grid">
+            <!-- MDR -->
+            <div class="timer-circle" id="timerMainDR" data-timer="mainDR">
+                <div class="circle-mask">
+                    <div class="ripple"></div>
+                    <svg class="circle-svg" viewBox="0 0 100 100">
+                        <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="circle-content">
+                        <div class="circle-time" id="timeMainDR">60</div>
+                        <div class="circle-label">
+                            <span>MDR</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MDP -->
+            <div class="timer-circle" id="timerMainDP" data-timer="mainDP">
+                <div class="circle-mask">
+                    <div class="ripple"></div>
+                    <svg class="circle-svg" viewBox="0 0 100 100">
+                        <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="circle-content">
+                        <div class="circle-time" id="timeMainDP">90</div>
+                        <div class="circle-label">
+                            <span>MDP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUN -->
+            <div class="timer-circle" id="timerStun" data-timer="stun">
+                <div class="circle-mask">
+                    <div class="ripple"></div>
+                    <svg class="circle-svg" viewBox="0 0 100 100">
+                        <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="circle-content">
+                        <div class="circle-time" id="timeStun">60</div>
+                        <div class="circle-label">
+                            <span>STUN</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SED -->
+            <div class="timer-circle" id="timerSED" data-timer="sed">
+                <div class="circle-mask">
+                    <div class="ripple"></div>
+                    <svg class="circle-svg" viewBox="0 0 100 100">
+                        <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="circle-content">
+                        <div class="circle-time" id="timeSed">30</div>
+                        <div class="circle-label">
+                            <span>SED</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CDP -->
+            <div class="timer-circle" id="timerCloneDP" data-timer="cloneDP">
+                <div class="circle-mask">
+                    <div class="ripple"></div>
+                    <svg class="circle-svg" viewBox="0 0 100 100">
+                        <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="circle-content">
+                        <div class="circle-time" id="timeCloneDP">60</div>
+                        <div class="circle-label">
+                            <span>CDP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CDR -->
+            <div class="timer-circle" id="timerCloneDR" data-timer="cloneDR">
+                <div class="circle-mask">
+                    <div class="ripple"></div>
+                    <svg class="circle-svg" viewBox="0 0 100 100">
+                        <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="circle-content">
+                        <div class="circle-time" id="timeCloneDR">60</div>
+                        <div class="circle-label">
+                            <span>CDR</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="timer-footer">
+            <p class="footer-text">
+                <span class="footer-label">房间 | Room:</span>
+                <span id="footerRoomCode" class="footer-room-code">---</span>
+                <span class="footer-divider">•</span>
+                <span class="footer-copyright">AUF Timer v2.0</span>
+                <span class="footer-divider">•</span>
+                <span class="footer-instruction">单击开始/暂停 | 双击重置</span>
+            </p>
+        </footer>
+    </div>
+
+    <!-- 使用说明弹窗 -->
+    <div id="howToUseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    📚 使用说明 | Instructions
+                </h2>
+                <button class="modal-close" id="closeHowTo">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="instruction-section">
+                    <h3 class="instruction-title">
+                        🎯 操作方法 | Operations
+                    </h3>
+                    <ul class="instruction-list">
+                        <li><strong>单击圆形</strong> - 开始/暂停计时 | <strong>Single click</strong> - Start/Pause timer</li>
+                        <li><strong>双击圆形</strong> - 重置计时器 | <strong>Double click</strong> - Reset timer</li>
+                        <li><strong>颜色说明</strong> - 橙色:冷却中，绿色:就绪 | <strong>Colors</strong> - Orange:Cooling, Green:Ready</li>
+                    </ul>
+                </div>
+                
+                <div class="instruction-section">
+                    <h3 class="instruction-title">
+                        ⚡ 技能说明 | Skills
+                    </h3>
+                    <ul class="instruction-list">
+                        <li>MDR - 60s</li>
+                        <li>MDP - 90s</li>
+                        <li>STUN - 60s</li>
+                        <li>SED - 30s</li>
+                        <li>CDP - 60s</li>
+                        <li>CDR - 60s</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/auf_timer.js"></script>
+</body>
+</html>
