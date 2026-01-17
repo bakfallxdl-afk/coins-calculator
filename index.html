@@ -1,17 +1,70 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coins Calculator | 硬币计算器</title>
     
-    <!-- 样式 -->
-    <link rel="stylesheet" href="styles/main.css?v=20241219">
+    <!-- 应用信息 -->
+    <title>Coins Calculator | 硬币计算器</title>
+    <meta name="description" content="智能硬币分配计算器 | Smart coins distribution calculator">
     
     <!-- PWA配置 -->
-    <link rel="manifest" href="manifest.json?v=20241219">
-    <meta name="theme-color" content="#FF6B35">
+    <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CoinsCalc">
+    
+    <!-- 苹果图标 -->
+    <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/images/web-app-manifest-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/web-app-manifest-192x192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="assets/images/web-app-manifest-192x192.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/images/favicon-96x96.png">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    
+    <!-- Windows -->
+    <meta name="msapplication-TileImage" content="assets/images/web-app-manifest-144x144.png">
+    <meta name="msapplication-TileColor" content="#FF6B35">
+    <meta name="msapplication-config" content="browserconfig.xml">
+    <meta name="application-name" content="Coins Calculator">
+    
+    <!-- 主题颜色 -->
+    <meta name="theme-color" content="#FF6B35" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+    
+    <!-- 样式 -->
+    <link rel="stylesheet" href="styles/main.css?v=1768578081">
+    
+    <!-- PWA Service Worker 注册 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker 注册成功: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker 注册失败: ', err);
+                    });
+            });
+            
+            // 监听beforeinstallprompt事件
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                console.log('PWA可以安装到桌面');
+                
+                // 可以在这里显示安装按钮
+                // showInstallPromotion();
+            });
+        }
+    </script>
 </head>
+<html lang="zh-CN">
 <body>
     <div class="container">
         <!-- 头部 -->
@@ -162,16 +215,16 @@
                 <!-- 工具按钮 -->
                 <div class="utility-buttons">
                     <button id="copyResults" class="utility-btn">
-                    📋 复制结果
+                    📋 复制结果 <span class="en">Copy Results</span>
                     </button>
                     <button id="clearHistory" class="utility-btn">
-                    🗑️ 清空历史
+                    🗑️ 清空历史 <span class="en">Clear History</span>
                     </button>
                 </div>
 
             <!-- 历史记录面板 -->
             <div class="history-panel card">
-                    <h3>📜 分配历史</h3>
+                    <h3>📜 分配历史 <span class="en">Distribution History</span></h3>
                 <div id="historyList" class="history-list">
                     <!-- 历史记录将动态显示在这里 -->
                 </div>
@@ -181,9 +234,9 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="scripts/calculator.js?v=20241219"></script>
-    <script src="scripts/roll.js?v=20241219"></script>
-    <script src="scripts/app.js?v=20241219"></script>
+    <script src="scripts/calculator.js?v=1768578081"></script>
+    <script src="scripts/roll.js?v=1768578081"></script>
+    <script src="scripts/app.js?v=1768578081"></script>
     
     <!-- PWA Service Worker 注册 -->
     <script>
