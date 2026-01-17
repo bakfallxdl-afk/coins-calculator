@@ -3,18 +3,18 @@ class HorntailTimer {
     constructor() {
         // 计时器配置 - 12个计时器
         this.timerConfig = {
-            laSed1: { duration: 180, element: 'LASED1', name: "LA SED#1", upText: "LA SED#1's up!" },
-            laSed2: { duration: 180, element: 'LASED2', name: "LA SED#2", upText: "LA SED#2's up!" },
-            laSed3: { duration: 180, element: 'LASED3', name: "LA SED#3", upText: "LA SED#3's up!" },
-            laMass: { duration: 60, element: 'LAMass', name: "LA MASS", upText: "LA MASS's up!" },
-            raSed1: { duration: 180, element: 'RASED1', name: "RA SED#1", upText: "RA SED#1's up!" },
-            raSed2: { duration: 180, element: 'RASED2', name: "RA SED#2", upText: "RA SED#2's up!" },
-            raSed3: { duration: 180, element: 'RASED3', name: "RA SED#3", upText: "RA SED#3's up!" },
-            raMass: { duration: 60, element: 'RAMass', name: "RA MASS", upText: "RA MASS's up!" },
-            laDp1: { duration: 300, element: 'LADP1', name: "LA DP#1", upText: "LA DP#1's up!" },
-            laDp2: { duration: 180, element: 'LADP2', name: "LA DP#2", upText: "LA DP#2's up!" },
-            mhDp1: { duration: 300, element: 'MHDP1', name: "MH DP#1", upText: "MH DP#1's up!" },
-            mhDp2: { duration: 180, element: 'MHDP2', name: "MH DP#2", upText: "MH DP#2's up!" }
+            'laSed1': { duration: 180, element: 'LASED1', name: "LA SED#1", upText: "LA SED#1's up!" },
+            'laSed2': { duration: 180, element: 'LASED2', name: "LA SED#2", upText: "LA SED#2's up!" },
+            'laSed3': { duration: 180, element: 'LASED3', name: "LA SED#3", upText: "LA SED#3's up!" },
+            'laMass': { duration: 60, element: 'LAMass', name: "LA MASS", upText: "LA MASS's up!" },
+            'raSed1': { duration: 180, element: 'RASED1', name: "RA SED#1", upText: "RA SED#1's up!" },
+            'raSed2': { duration: 180, element: 'RASED2', name: "RA SED#2", upText: "RA SED#2's up!" },
+            'raSed3': { duration: 180, element: 'RASED3', name: "RA SED#3", upText: "RA SED#3's up!" },
+            'raMass': { duration: 60, element: 'RAMass', name: "RA MASS", upText: "RA MASS's up!" },
+            'laDp1': { duration: 300, element: 'LADP1', name: "LA DP#1", upText: "LA DP#1's up!" },
+            'laDp2': { duration: 180, element: 'LADP2', name: "LA DP#2", upText: "LA DP#2's up!" },
+            'mhDp1': { duration: 300, element: 'MHDP1', name: "MH DP#1", upText: "MH DP#1's up!" },
+            'mhDp2': { duration: 180, element: 'MHDP2', name: "MH DP#2", upText: "MH DP#2's up!" }
         };
 
         // 初始化计时器状态
@@ -36,27 +36,28 @@ class HorntailTimer {
 
         this.init();
     }
-adjustCircleLayout() {
-    // 这个方法现在是可选的，因为CSS已经处理了布局
-    // 如果需要更精确的控制，可以在这里添加逻辑
-    const circles = document.querySelectorAll('.timer-circle');
-    const gridItems = document.querySelectorAll('.grid-item');
-    
-    if (circles.length === 0 || gridItems.length === 0) return;
-    
-    // 获取第一个网格项的尺寸
-    const gridItem = gridItems[0];
-    const itemRect = gridItem.getBoundingClientRect();
-    
-    // 使用最小尺寸确保圆形
-    const size = Math.min(itemRect.width, itemRect.height) * 0.85;
-    
-    // 设置所有圆形尺寸
-    circles.forEach(circle => {
-        circle.style.width = `${size}px`;
-        circle.style.height = `${size}px`;
-    });
-}
+
+    adjustCircleLayout() {
+        // 这个方法现在是可选的，因为CSS已经处理了布局
+        // 如果需要更精确的控制，可以在这里添加逻辑
+        const circles = document.querySelectorAll('.timer-circle');
+        const gridItems = document.querySelectorAll('.grid-item');
+        
+        if (circles.length === 0 || gridItems.length === 0) return;
+        
+        // 获取第一个网格项的尺寸
+        const gridItem = gridItems[0];
+        const itemRect = gridItem.getBoundingClientRect();
+        
+        // 使用最小尺寸确保圆形
+        const size = Math.min(itemRect.width, itemRect.height) * 0.85;
+        
+        // 设置所有圆形尺寸
+        circles.forEach(circle => {
+            circle.style.width = `${size}px`;
+            circle.style.height = `${size}px`;
+        });
+    }
 
     init() {
         console.log('Horntail Timer 初始化');
@@ -120,10 +121,10 @@ adjustCircleLayout() {
         
         // 监听窗口大小变化
         window.addEventListener('resize', () => {
-    if (window.horntailTimer) {
-        window.horntailTimer.adjustLayout();
-    }
-});
+            if (window.horntailTimer) {
+                window.horntailTimer.adjustLayout();
+            }
+        });
     }
 
     bindCircleEvents() {
@@ -259,9 +260,9 @@ adjustCircleLayout() {
             this.showNotification(`成功加入房间: ${roomCode} | Joined room: ${roomCode}`, 'success');
             this.vibrate([100, 50, 100]);
             
-             setTimeout(() => {
-        this.adjustLayout(); // 调用布局调整
-    }, 100);
+            setTimeout(() => {
+                this.adjustLayout(); // 调用布局调整
+            }, 100);
             
         }, 800);
     }
@@ -284,37 +285,47 @@ adjustCircleLayout() {
 
     // ========== 计时器功能 ==========
     startTimer(timerId) {
-        if (!this.timers[timerId]) return;
-        
-        const timer = this.timers[timerId];
-        const config = this.timerConfig[timerId];
-        
-        if (timer.completed) {
-            this.resetTimer(timerId);
-        }
-        
-        if (!timer.running) {
-            timer.running = true;
-            timer.completed = false;
-            timer.paused = false;
-            
-            timer.interval = setInterval(() => {
-                timer.remaining--;
-                
-                this.updateTimerDisplay(timerId);
-                this.updateCircularProgress(timerId, config.duration);
-                
-                if (timer.remaining <= 0) {
-                    this.completeTimer(timerId);
-                }
-                
-            }, 1000);
-            
-            this.playSound('start');
-            this.showNotification(`${config.name} 开始计时 | ${config.name} started`, 'info');
-            this.vibrate(50);
-        }
+    if (!this.timers[timerId]) return;
+    
+    const timer = this.timers[timerId];
+    const config = this.timerConfig[timerId];
+    
+    if (timer.completed) {
+        this.resetTimer(timerId);
     }
+    
+    if (!timer.running) {
+        timer.running = true;
+        timer.completed = false;
+        timer.paused = false;
+        
+        // 开始计时：立即显示进度条（dashoffset: 0）
+        const elementName = config.element;
+        const progressElement = document.querySelector(`#timer${elementName} .circle-progress`);
+        if (progressElement) {
+            progressElement.setAttribute('style', 'stroke-dashoffset: 0; stroke: #FF4D7A;');
+        }
+        
+        // 立即更新一次，确保状态正确
+        this.updateCircularProgress(timerId, config.duration);
+        
+        timer.interval = setInterval(() => {
+            timer.remaining--;
+            
+            this.updateTimerDisplay(timerId);
+            this.updateCircularProgress(timerId, config.duration);
+            
+            if (timer.remaining <= 0) {
+                this.completeTimer(timerId);
+            }
+            
+        }, 1000);
+        
+        this.playSound('start');
+        this.showNotification(`${config.name} 开始计时 | ${config.name} started`, 'info');
+        this.vibrate(50);
+    }
+}
 
     stopTimer(timerId) {
         if (!this.timers[timerId]) return;
@@ -348,42 +359,42 @@ adjustCircleLayout() {
     }
 
     updateCircularProgress(timerId, totalDuration) {
-        const timer = this.timers[timerId];
-        const config = this.timerConfig[timerId];
-        
-        const elementName = config.element;
-        const progressElement = document.querySelector(`#timer${elementName} .circle-progress`);
-        const circleElement = document.getElementById(`timer${elementName}`);
-        
-        if (!progressElement || !circleElement) {
-            console.error(`找不到元素: timer${elementName}`);
-            return;
-        }
-        
-        const circumference = 282.6;
-        
-        if (timer.completed || timer.remaining <= 0) {
-            // 计时完成 - 绿色完整圆
-            progressElement.style.strokeDashoffset = 0;
-            progressElement.style.stroke = 'var(--green-ready)';
-            progressElement.classList.add('complete');
-            circleElement.classList.add('completed');
-        } else if (timer.running || timer.paused) {
-            // 正在计时或暂停 - 根据剩余时间比例计算
-            const percentage = timer.remaining / totalDuration;
-            const dashoffset = circumference * percentage;
-            progressElement.style.strokeDashoffset = dashoffset;
-            progressElement.style.stroke = 'var(--orange-primary)';
-            progressElement.classList.remove('complete');
-            circleElement.classList.remove('completed');
-        } else {
-            // 重置状态 - 完全隐藏
-            progressElement.style.strokeDashoffset = circumference;
-            progressElement.style.stroke = 'var(--orange-primary)';
-            progressElement.classList.remove('complete');
-            circleElement.classList.remove('completed');
-        }
+    const timer = this.timers[timerId];
+    const config = this.timerConfig[timerId];
+    
+    const elementName = config.element;
+    const progressElement = document.querySelector(`#timer${elementName} .circle-progress`);
+    const circleElement = document.getElementById(`timer${elementName}`);
+    
+    if (!progressElement || !circleElement) {
+        console.error(`找不到元素: timer${elementName}`);
+        return;
     }
+    
+    const circumference = 282.6;
+    
+    // 调试信息
+    const remainingRatio = timer.remaining / totalDuration;
+    const dashoffset = circumference * (1 - remainingRatio);
+    console.log(`更新 ${timerId}: remaining=${timer.remaining}, 剩余比例=${remainingRatio}, dashoffset=${dashoffset}`);
+    
+    if (timer.completed || timer.remaining <= 0) {
+        // 计时完成 - 绿色完整圆（完全显示）
+        progressElement.setAttribute('style', 'stroke-dashoffset: 0; stroke: var(--green-ready);');
+        progressElement.classList.add('complete');
+        circleElement.classList.add('completed');
+    } else if (timer.running || timer.paused) {
+        // 正在计时或暂停 - 剩余时间越少，dashoffset越大
+        progressElement.setAttribute('style', `stroke-dashoffset: ${dashoffset}; stroke: var(--purple-primary);`);
+        progressElement.classList.remove('complete');
+        circleElement.classList.remove('completed');
+    } else {
+        // 重置状态 - 完全隐藏（dashoffset = 周长）
+        progressElement.setAttribute('style', 'stroke-dashoffset: 282.6; stroke: var(--purple-primary);');
+        progressElement.classList.remove('complete');
+        circleElement.classList.remove('completed');
+    }
+}
 
     showCompleteAnimation(timerId) {
         const config = this.timerConfig[timerId];
@@ -487,10 +498,11 @@ adjustCircleLayout() {
     }
 
     // ========== 布局调整 ==========
- adjustLayout() {
-    // 调用新的布局调整方法
-    this.adjustCircleLayout();
-}
+    adjustLayout() {
+        // 调用新的布局调整方法
+        this.adjustCircleLayout();
+    }
+    
     // 调整圆形尺寸以确保是圆形
     adjustCircleSizes() {
         const gridItems = document.querySelectorAll('.grid-item');

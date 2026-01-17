@@ -1,50 +1,44 @@
-/* ========== PinkBeanTimer - 明亮粉色主题 (基于HorntailTimer设计) ========== */
+/* ========== 基础重置 ========== */
 :root {
-    /* 明亮粉色3D渐变主题 */
-    --bg-primary: linear-gradient(135deg, #ffccff 0%, #ff99cc 100%);
-    --bg-secondary: linear-gradient(145deg, #ffb3ff, #ff80bf);
+    /* 粉色+白色主题 */
+    --bg-primary: linear-gradient(135deg, #FFF0F5 0%, #FFE4E9 100%);
+    --bg-secondary: linear-gradient(145deg, #FFF8FB, #FFEFF6);
     
     /* 粉色系主色调 */
-    --pink-primary: #ff66cc;
-    --pink-light: #ff99dd;
-    --pink-lighter: #ffccff;
-    --pink-dark: #ff3399;
-    --pink-bg: #ff99cc;
+    --pink-primary: #FF4D7A;  /* 更深的粉色 */
+    --pink-light: #FF7BA3;
+    --pink-lighter: #FFB4D1;
+    --pink-dark: #D81B60;
+    --pink-bg: #FFEAF1;
     
-    /* 紫色系 */
-    --purple-primary: #cc66ff;
-    --purple-light: #dd99ff;
-    --purple-lighter: #eeccff;
-    
-    /* 3D效果阴影 - 明亮风格 */
+    /* 3D效果阴影 */
     --shadow-3d: 
-        0 10px 20px rgba(255, 102, 204, 0.2),
-        0 6px 6px rgba(255, 102, 204, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        0 10px 20px rgba(255, 107, 157, 0.15),
+        0 6px 6px rgba(255, 107, 157, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     
     --shadow-3d-hover: 
-        0 15px 30px rgba(255, 102, 204, 0.3),
-        0 10px 10px rgba(255, 102, 204, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        0 15px 30px rgba(255, 107, 157, 0.25),
+        0 10px 10px rgba(255, 107, 157, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
     
     /* 霓虹粉色 */
-    --neon-pink: #ff33cc;
-    --neon-purple: #cc33ff;
+    --neon-pink: #FF4D8D;
+    --neon-purple: #D96BFF;
     
     /* 渐变色 */
-    --gradient-pink: linear-gradient(135deg, var(--pink-primary) 0%, var(--neon-pink) 100%);
-    --gradient-purple: linear-gradient(135deg, var(--purple-primary) 0%, var(--neon-purple) 100%);
-    --gradient-light: linear-gradient(135deg, #ffccff 0%, #ffffff 100%);
+    --gradient-pink: linear-gradient(135deg, var(--pink-primary) 0%, var(--neon-purple) 100%);
+    --gradient-light: linear-gradient(135deg, #FFEAF1 0%, #FFF0F5 100%);
     
     /* 状态色 */
-    --green-ready: #4dff88;
-    --green-ready-glow: 0 0 10px rgba(77, 255, 136, 0.5);
-    --gray-idle: #ffb3d9;
+    --green-ready: #4CAF50;  /* 更亮的绿色 */
+    --green-ready-glow: 0 0 10px rgba(76, 175, 80, 0.5);
+    --gray-idle: #CCCCCC;
     
     /* 文字色 */
-    --text-primary: #660033;
-    --text-secondary: #993366;
-    --text-light: #cc6699;
+    --text-primary: #880E4F;
+    --text-secondary: #AD1457;
+    --text-light: #C2185B;
     --text-white: #FFFFFF;
     
     /* 圆角 */
@@ -54,8 +48,8 @@
     --radius-circle: 50%;
     
     /* 边框 */
-    --border-glow: 1px solid rgba(255, 102, 204, 0.5);
-    --border-light: 1px solid rgba(255, 153, 221, 0.4);
+    --border-glow: 1px solid rgba(255, 107, 157, 0.4);
+    --border-light: 1px solid rgba(255, 143, 177, 0.3);
 }
 
 * {
@@ -73,8 +67,8 @@ html, body {
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: 
-        linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
-        url('../assets/images/pinkbeantimer.png');
+        linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+        url('/Users/xiedonglei/Downloads/coins-calculator/assets/images/pinkbeantimer.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -92,7 +86,7 @@ body {
     flex-direction: column;
 }
 
-/* 添加背景遮罩 - 轻微透明粉色 */
+/* 添加背景遮罩 */
 body::before {
     content: '';
     position: fixed;
@@ -101,8 +95,8 @@ body::before {
     right: 0;
     bottom: 0;
     background: linear-gradient(135deg, 
-        rgba(255, 204, 255, 0.7) 0%, 
-        rgba(255, 153, 204, 0.7) 100%);
+        rgba(255, 240, 245, 0.7) 0%, 
+        rgba(255, 228, 233, 0.7) 100%);
     z-index: -1;
 }
 
@@ -132,7 +126,7 @@ body::before {
     border-radius: 20px;
     box-shadow: 
         var(--shadow-3d),
-        0 0 30px rgba(255, 102, 204, 0.3);
+        0 0 30px rgba(255, 107, 157, 0.2);
     position: relative;
     z-index: 11;
     border: var(--border-glow);
@@ -142,12 +136,37 @@ body::before {
 .setup-header {
     height: 140px;
     background: 
-        url('../assets/images/pinkbeantimerroom.png') center/contain no-repeat,
-        linear-gradient(135deg, rgba(255, 153, 221, 0.9) 0%, rgba(255, 102, 204, 0.9) 100%);
+        url('/Users/xiedonglei/Downloads/coins-calculator/assets/images/pinkbeantimerroom.png') center/contain no-repeat,
+        linear-gradient(135deg, rgba(255, 234, 241, 0.9) 0%, rgba(255, 224, 233, 0.9) 100%);
     border-bottom: var(--border-light);
     position: relative;
-    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5);
-    border-radius: 20px 20px 0 0;
+    box-shadow: inset 0 0 20px rgba(255, 107, 157, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.setup-title {
+    font-size: 2.5rem;
+    color: var(--text-white);
+    font-weight: 900;
+    text-shadow: 0 2px 10px rgba(255, 107, 157, 0.5);
+    margin: 0;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--pink-primary) 0%, var(--neon-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.setup-subtitle {
+    font-size: 1.2rem;
+    color: var(--pink-dark);
+    margin-top: 8px;
+    font-weight: 600;
+    text-shadow: 0 1px 5px rgba(255, 255, 255, 0.8);
 }
 
 .setup-content {
@@ -161,7 +180,6 @@ body::before {
 .setup-icon {
     font-size: 3rem;
     margin-bottom: 16px;
-    color: var(--pink-primary);
     animation: float 3s ease-in-out infinite;
 }
 
@@ -171,7 +189,7 @@ body::before {
 }
 
 .setup-card-title {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: var(--text-primary);
     margin-bottom: 12px;
     font-weight: 700;
@@ -204,17 +222,17 @@ body::before {
     transition: all 0.3s ease;
     backdrop-filter: blur(5px);
     box-shadow: 
-        inset 0 2px 4px rgba(255, 102, 204, 0.1),
-        0 4px 8px rgba(255, 102, 204, 0.2);
+        inset 0 2px 4px rgba(255, 107, 157, 0.1),
+        0 4px 8px rgba(255, 107, 157, 0.15);
 }
 
 .room-input:focus {
     outline: none;
     border-color: var(--neon-pink);
     box-shadow: 
-        0 0 0 3px rgba(255, 102, 204, 0.3),
-        0 0 20px rgba(255, 102, 204, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        0 0 0 3px rgba(255, 107, 157, 0.2),
+        0 0 20px rgba(255, 107, 157, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
 }
 
@@ -234,14 +252,10 @@ body::before {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid rgba(255, 255, 255, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.4);
     box-shadow: 
-        0 4px 15px rgba(255, 102, 204, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-.room-btn i {
-    margin-left: 8px;
+        0 4px 15px rgba(255, 107, 157, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .room-btn:active {
@@ -249,11 +263,11 @@ body::before {
 }
 
 .room-btn:hover {
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.02);
     box-shadow: 
-        0 6px 25px rgba(255, 102, 204, 0.5),
-        0 0 15px rgba(255, 102, 204, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        0 6px 25px rgba(255, 107, 157, 0.4),
+        0 0 15px rgba(255, 107, 157, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .btn-text {
@@ -269,7 +283,7 @@ body::before {
 .option-btn {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, rgba(255, 102, 204, 0.3), rgba(204, 102, 255, 0.3));
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(217, 107, 255, 0.2));
     border: none;
     border-radius: var(--radius-md);
     font-size: 1rem;
@@ -285,18 +299,14 @@ body::before {
     border: var(--border-light);
     backdrop-filter: blur(5px);
     box-shadow: 
-        0 4px 12px rgba(255, 102, 204, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-.option-btn i {
-    margin-right: 8px;
+        0 4px 12px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .option-btn.secondary {
     background: rgba(255, 255, 255, 0.8);
     color: var(--text-secondary);
-    border: 2px solid rgba(255, 153, 221, 0.6);
+    border: 2px solid rgba(255, 143, 177, 0.5);
 }
 
 .option-btn:active {
@@ -305,15 +315,15 @@ body::before {
 
 .option-btn:hover {
     transform: translateY(-2px);
-    background: linear-gradient(135deg, rgba(255, 102, 204, 0.4), rgba(204, 102, 255, 0.4));
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.3), rgba(217, 107, 255, 0.3));
     border-color: var(--pink-light);
-    box-shadow: 0 4px 12px rgba(255, 102, 204, 0.2);
+    box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
 }
 
 .setup-info {
     margin-top: 24px;
     padding: 20px;
-    background: rgba(255, 102, 204, 0.1);
+    background: rgba(255, 107, 157, 0.1);
     border-radius: var(--radius-md);
     border: var(--border-light);
     backdrop-filter: blur(5px);
@@ -358,8 +368,7 @@ body::before {
     font-size: 0.9rem;
     line-height: 1.4;
     border-top: var(--border-light);
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 0 0 20px 20px;
+    background: rgba(255, 234, 241, 0.8);
 }
 
 /* ========== 计时器主界面 ========== */
@@ -387,8 +396,8 @@ body::before {
     border-radius: var(--radius-lg);
     box-shadow: 
         var(--shadow-3d),
-        0 0 40px rgba(255, 102, 204, 0.3);
-    backdrop-filter: blur(10px);
+        0 0 40px rgba(255, 107, 157, 0.2);
+    backdrop-filter: blur(15px);
     border: var(--border-glow);
     overflow: hidden;
 }
@@ -397,7 +406,7 @@ body::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255, 153, 221, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     padding: 8px 12px;
     border-radius: var(--radius-lg);
     margin: 8px;
@@ -415,13 +424,8 @@ body::before {
     flex-wrap: wrap;
 }
 
-.header-controls {
-    display: flex;
-    gap: 8px;
-}
-
 .room-label {
-    color: var(--text-white);
+    color: var(--text-secondary);
     font-weight: 600;
     white-space: nowrap;
     font-size: 0.9rem;
@@ -436,7 +440,7 @@ body::before {
     font-size: 1rem;
     min-width: 60px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(255, 102, 204, 0.3);
+    box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
 }
 
 .room-status {
@@ -447,12 +451,12 @@ body::before {
 
 .control-btn {
     padding: 6px 12px;
-    background: rgba(255, 255, 255, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(255, 143, 177, 0.5);
     border-radius: var(--radius-md);
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--text-white);
+    color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -462,17 +466,13 @@ body::before {
     flex-shrink: 0;
 }
 
-.control-btn i {
-    font-size: 0.9rem;
-}
-
 .control-btn:active {
     transform: scale(0.95);
 }
 
 .control-btn:hover {
-    border-color: var(--text-white);
-    background: rgba(255, 255, 255, 0.3);
+    border-color: var(--pink-primary);
+    color: var(--pink-primary);
 }
 
 /* ========== 计时器网格 ========== */
@@ -506,43 +506,20 @@ body::before {
     user-select: none;
     border-radius: 50%;
     overflow: hidden;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid rgba(255, 153, 221, 0.6);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 240, 245, 0.9));
+    border: 2px solid rgba(255, 107, 157, 0.3);
     backdrop-filter: blur(5px);
     box-shadow: 
         var(--shadow-3d),
-        0 0 15px rgba(255, 102, 204, 0.2);
+        0 0 15px rgba(255, 107, 157, 0.15),
+        inset 0 0 20px rgba(255, 107, 157, 0.1);
 }
 
-/* 前两个计时器（Zombie和DR）特殊样式 */
-.timer-circle.large {
-    background: linear-gradient(135deg, 
-        rgba(255, 204, 255, 0.95), 
-        rgba(255, 153, 221, 0.95));
-    border-width: 3px;
-    border-color: var(--pink-primary);
-}
-
-/* RESS计时器 - 粉色系 */
-.timer-circle.ress {
-    border-color: var(--pink-light);
-    background: linear-gradient(135deg, 
-        rgba(255, 240, 245, 0.95), 
-        rgba(255, 224, 240, 0.95));
-}
-
-/* TL计时器 - 紫色系 */
-.timer-circle.tl {
-    border-color: var(--purple-light);
-    background: linear-gradient(135deg, 
-        rgba(245, 240, 255, 0.95), 
-        rgba(235, 224, 255, 0.95));
-}
-
+/* 水波纹效果 */
 .ripple {
     position: absolute;
     top: 50%;
@@ -550,7 +527,7 @@ body::before {
     width: 0;
     height: 0;
     border-radius: 50%;
-    background: rgba(255, 102, 204, 0.3);
+    background: rgba(255, 107, 157, 0.3);
     transform: translate(-50%, -50%);
     opacity: 0;
     z-index: 1;
@@ -579,6 +556,10 @@ body::before {
 
 .timer-circle.completed {
     animation: pulse 0.5s ease;
+    box-shadow: 
+        0 0 20px rgba(76, 175, 80, 0.4),
+        0 0 40px rgba(76, 175, 80, 0.2),
+        inset 0 0 30px rgba(76, 175, 80, 0.1);
 }
 
 @keyframes pulse {
@@ -587,6 +568,23 @@ body::before {
     100% { transform: scale(1); }
 }
 
+/* 环状进度条容器 */
+.circle-mask {
+    position: relative;
+    width: 85%;
+    height: 85%;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 240, 245, 0.95));
+    box-shadow: 
+        inset 0 0 15px rgba(255, 107, 157, 0.1),
+        inset 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+/* SVG圆形 */
 .circle-svg {
     width: 100%;
     height: 100%;
@@ -594,43 +592,43 @@ body::before {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 1;
 }
 
+/* 背景圆环 - 粉色主题 */
 .circle-bg {
     fill: none;
-    stroke: rgba(255, 153, 221, 0.3);
-    stroke-width: 8;
+    stroke: rgba(255, 107, 157, 0.2);
+    stroke-width: 8px;
+    stroke-dasharray: 282.6;
+    stroke-dashoffset: 0;
 }
 
+/* 进度圆环 - 霓虹粉色 */
 .circle-progress {
     fill: none;
-    stroke: var(--pink-primary);
-    stroke-width: 8;
+    stroke: var(--pink-primary); /* 使用变量 */
+    stroke-width: 10px; /* 加粗 */
     stroke-linecap: round;
     stroke-dasharray: 282.6;
-    stroke-dashoffset: 282.6;
-    transition: stroke-dashoffset 0.3s linear, stroke 0.3s ease;
+    stroke-dashoffset: 282.6; /* 初始完全隐藏 */
+    transition: stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: 
+        drop-shadow(0 0 5px rgba(255, 77, 122, 0.7))
+        drop-shadow(0 0 10px rgba(255, 77, 122, 0.4));
+    z-index: 2;
 }
 
-/* 大计时器进度条颜色 */
-.timer-circle.large .circle-progress {
-    stroke: var(--pink-primary);
-}
-
-/* RESS计时器进度条颜色 */
-.timer-circle.ress .circle-progress {
-    stroke: var(--pink-primary);
-}
-
-/* TL计时器进度条颜色 */
-.timer-circle.tl .circle-progress {
-    stroke: var(--purple-primary);
-}
-
+/* 进度条完成状态 - 绿色 */
 .circle-progress.complete {
     stroke: var(--green-ready);
+    stroke-width: 12px;
+    filter: 
+        drop-shadow(0 0 8px rgba(76, 175, 80, 0.8))
+        drop-shadow(0 0 15px rgba(76, 175, 80, 0.5));
 }
 
+/* 计时器内容 */
 .circle-content {
     position: absolute;
     top: 0;
@@ -642,58 +640,100 @@ body::before {
     align-items: center;
     justify-content: center;
     pointer-events: none;
-    z-index: 2;
+    z-index: 3;
+    background: radial-gradient(circle at center, 
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0.8) 70%,
+        rgba(255, 240, 245, 0.85) 100%);
+    border-radius: 50%;
+    padding: 20%;
 }
 
+/* 时间显示 */
 .circle-time {
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
     font-weight: 900;
     color: var(--text-primary);
     line-height: 1;
     margin-bottom: 2px;
     font-variant-numeric: tabular-nums;
-}
-
-/* 大计时器时间字体 */
-.timer-circle.large .circle-time {
-    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
-    color: var(--pink-primary);
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
+    letter-spacing: -0.5px;
 }
 
 .circle-time.complete {
     color: var(--green-ready);
     animation: textPulse 1s ease infinite;
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
 }
 
 @keyframes textPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
 }
 
+/* 技能标签 */
 .circle-label {
     font-size: clamp(0.65rem, 1.2vw, 0.8rem);
     font-weight: 700;
-    color: var(--text-secondary);
+    color: var(--pink-dark);
     letter-spacing: 0.5px;
     text-align: center;
-    padding: 0 2px;
+    padding: 2px 6px;
+    background: rgba(255, 107, 157, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 107, 157, 0.3);
+    margin-top: 2px;
+    backdrop-filter: blur(5px);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
 }
 
-/* 大计时器标签 */
-.timer-circle.large .circle-label {
-    font-size: clamp(0.75rem, 1.5vw, 0.95rem);
-    color: var(--pink-primary);
-    font-weight: 800;
+/* 计时器完成时的整体效果 */
+.timer-circle.completed .circle-mask {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(255, 240, 245, 0.98));
+    box-shadow: 
+        inset 0 0 20px rgba(76, 175, 80, 0.2),
+        inset 0 0 5px rgba(255, 255, 255, 0.3);
 }
 
-/* RESS计时器标签 */
-.timer-circle.ress .circle-label {
-    color: var(--pink-primary);
+.timer-circle.completed .circle-label {
+    color: var(--green-ready);
+    background: rgba(76, 175, 80, 0.1);
+    border-color: rgba(76, 175, 80, 0.4);
+    animation: labelPulse 2s ease infinite;
 }
 
-/* TL计时器标签 */
-.timer-circle.tl .circle-label {
-    color: var(--purple-primary);
+@keyframes labelPulse {
+    0%, 100% { 
+        opacity: 1;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+    }
+    50% { 
+        opacity: 0.8;
+        box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    }
+}
+
+/* 计时器激活状态 */
+.timer-circle:not(.completed):hover .circle-mask {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(255, 224, 233, 0.9));
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+}
+
+.timer-circle:not(.completed):hover .circle-progress {
+    stroke: var(--neon-pink);
+    filter: drop-shadow(0 0 5px rgba(255, 107, 157, 0.6));
 }
 
 .timer-footer {
@@ -702,7 +742,7 @@ body::before {
     color: var(--text-secondary);
     font-weight: 500;
     font-size: 0.85rem;
-    background: rgba(255, 153, 221, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-3d);
     margin: 8px;
@@ -728,23 +768,20 @@ body::before {
 
 .footer-label {
     font-weight: 600;
-    color: var(--text-white);
 }
 
 .footer-room-code {
     font-weight: 700;
-    color: var(--text-white);
+    color: var(--pink-primary);
 }
 
 .footer-divider {
-    opacity: 0.7;
-    color: var(--text-white);
+    opacity: 0.5;
 }
 
 .footer-instruction {
     font-size: 0.75rem;
     opacity: 0.9;
-    color: var(--text-white);
 }
 
 /* ========== 弹窗样式 ========== */
@@ -754,7 +791,7 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 204, 255, 0.9);
+    background: rgba(0, 0, 0, 0.6);
     display: none;
     justify-content: center;
     align-items: center;
@@ -764,7 +801,7 @@ body::before {
 }
 
 .modal-content {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 240, 245, 0.98) 100%);
+    background: rgba(255, 255, 255, 0.98);
     border-radius: var(--radius-lg);
     max-width: 500px;
     width: 100%;
@@ -772,7 +809,7 @@ body::before {
     overflow-y: auto;
     box-shadow: 
         var(--shadow-3d),
-        0 0 40px rgba(255, 102, 204, 0.4);
+        0 0 40px rgba(255, 107, 157, 0.3);
     border: var(--border-glow);
     position: relative;
     backdrop-filter: blur(10px);
@@ -784,7 +821,7 @@ body::before {
     align-items: center;
     padding: 20px;
     border-bottom: var(--border-light);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.98);
     position: sticky;
     top: 0;
     z-index: 2;
@@ -800,8 +837,8 @@ body::before {
 }
 
 .modal-close {
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 107, 157, 0.3);
     font-size: 1.5rem;
     color: var(--text-secondary);
     cursor: pointer;
@@ -813,7 +850,7 @@ body::before {
 }
 
 .modal-close:hover {
-    background: rgba(255, 102, 204, 0.3);
+    background: rgba(255, 107, 157, 0.2);
     color: var(--text-primary);
 }
 
@@ -824,10 +861,10 @@ body::before {
 
 .instruction-section {
     margin-bottom: 25px;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 240, 245, 0.5);
     border-radius: var(--radius-md);
     padding: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 224, 233, 0.5);
 }
 
 .instruction-section:last-child {
@@ -842,7 +879,7 @@ body::before {
     display: flex;
     align-items: center;
     gap: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(255, 224, 233, 0.5);
     padding-bottom: 8px;
 }
 
@@ -859,7 +896,7 @@ body::before {
     line-height: 1.6;
     position: relative;
     padding-left: 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(255, 224, 233, 0.3);
 }
 
 .instruction-list li:last-child {
@@ -870,71 +907,14 @@ body::before {
     content: '•';
     position: absolute;
     left: 8px;
-    color: var(--pink-light);
+    color: var(--pink-primary);
     font-size: 1.5rem;
     top: 6px;
 }
 
 .instruction-list li strong {
-    color: var(--pink-primary);
+    color: var(--pink-dark);
     font-weight: 700;
-}
-
-/* ========== 通知样式 ========== */
-.notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    color: white;
-    z-index: 1000;
-    box-shadow: var(--shadow-3d);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-width: 200px;
-    max-width: 300px;
-    animation: slideIn 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-.notification-success {
-    background: linear-gradient(135deg, rgba(77, 255, 136, 0.9) 0%, rgba(56, 142, 60, 0.9) 100%);
-}
-
-.notification-error {
-    background: linear-gradient(135deg, rgba(255, 102, 204, 0.9) 0%, rgba(204, 51, 102, 0.9) 100%);
-}
-
-.notification-info {
-    background: linear-gradient(135deg, rgba(204, 102, 255, 0.9) 0%, rgba(153, 51, 204, 0.9) 100%);
-}
-
-.notification-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-    margin-left: 10px;
-    padding: 0 5px;
-    opacity: 0.8;
-}
-
-.notification-close:hover {
-    opacity: 1;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
 }
 
 /* ========== 响应式设计 ========== */
@@ -977,16 +957,8 @@ body::before {
         font-size: clamp(1.1rem, 1.8vw, 1.4rem);
     }
     
-    .timer-circle.large .circle-time {
-        font-size: clamp(1.3rem, 2.2vw, 1.6rem);
-    }
-    
     .circle-label {
         font-size: clamp(0.6rem, 1vw, 0.75rem);
-    }
-    
-    .timer-circle.large .circle-label {
-        font-size: clamp(0.7rem, 1.2vw, 0.85rem);
     }
     
     /* 弹窗响应式 */
@@ -1020,13 +992,20 @@ body::before {
         font-size: 0.9rem;
         padding: 8px 0 8px 20px;
     }
+    
+    /* 标题响应式 */
+    .setup-title {
+        font-size: 2rem;
+    }
+    
+    .setup-subtitle {
+        font-size: 1rem;
+    }
 }
 
 /* 超小手机（iPhone SE等） */
 @media (max-width: 375px) and (max-height: 667px) {
     .timer-grid {
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(6, 1fr);
         gap: 2px;
         padding: 2px;
         height: calc(100vh - 100px);
@@ -1048,16 +1027,8 @@ body::before {
         font-size: clamp(1rem, 1.6vw, 1.2rem);
     }
     
-    .timer-circle.large .circle-time {
-        font-size: clamp(1.2rem, 1.8vw, 1.4rem);
-    }
-    
     .circle-label {
         font-size: clamp(0.55rem, 0.9vw, 0.7rem);
-    }
-    
-    .timer-circle.large .circle-label {
-        font-size: clamp(0.65rem, 1vw, 0.75rem);
     }
     
     .timer-circle {
@@ -1065,6 +1036,14 @@ body::before {
         left: 1%;
         width: 98%;
         height: 98%;
+    }
+    
+    .setup-title {
+        font-size: 1.8rem;
+    }
+    
+    .setup-subtitle {
+        font-size: 0.9rem;
     }
 }
 
@@ -1092,6 +1071,63 @@ body::before {
         left: 3%;
         width: 94%;
         height: 94%;
+    }
+}
+
+/* ========== 通知样式 ========== */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: white;
+    z-index: 1000;
+    box-shadow: var(--shadow-3d);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 200px;
+    max-width: 300px;
+    animation: slideIn 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.notification-success {
+    background: linear-gradient(135deg, rgba(102, 187, 106, 0.9) 0%, rgba(76, 175, 80, 0.9) 100%);
+}
+
+.notification-error {
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.9) 0%, rgba(231, 84, 128, 0.9) 100%);
+}
+
+.notification-info {
+    background: linear-gradient(135deg, rgba(33, 150, 243, 0.9) 0%, rgba(25, 118, 210, 0.9) 100%);
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 0 5px;
+    opacity: 0.8;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
     }
 }
 

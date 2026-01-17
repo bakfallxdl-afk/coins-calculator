@@ -1,584 +1,674 @@
-// PinkBean Timer - 主要功能实现 (基于HorntailTimer设计)
-
-// 计时器配置 - 按照HorntailTimer的模式
-const TIMER_CONFIG = [
-    // 主要计时器 - 大尺寸
-    { id: 'zombie', label: 'Zombie', duration: 120, type: 'large', color: '#ff66cc' },
-    { id: 'dr', label: 'DR', duration: 60, type: 'large', color: '#ff66cc' },
-    
-    // RESS 计时器组 - 粉色系
-    { id: 'ress1', label: 'RESS #1', duration: 1800, type: 'ress', color: '#ff66cc' },
-    { id: 'ress2', label: 'RESS #2', duration: 1800, type: 'ress', color: '#ff66cc' },
-    { id: 'ress3', label: 'RESS #3', duration: 1800, type: 'ress', color: '#ff66cc' },
-    { id: 'ress4', label: 'RESS #4', duration: 1800, type: 'ress', color: '#ff66cc' },
-    { id: 'ress5', label: 'RESS #5', duration: 1800, type: 'ress', color: '#ff66cc' },
-    
-    // TL 计时器组 - 紫色系
-    { id: 'tl1', label: 'TL #1', duration: 1200, type: 'tl', color: '#cc66ff' },
-    { id: 'tl2', label: 'TL #2', duration: 1200, type: 'tl', color: '#cc66ff' },
-    { id: 'tl3', label: 'TL #3', duration: 1200, type: 'tl', color: '#cc66ff' },
-    { id: 'tl4', label: 'TL #4', duration: 1200, type: 'tl', color: '#cc66ff' }
-];
-
-// 全局状态
-let currentRoomCode = '';
-let timers = {};
-let isInRoom = false;
-let roomInterval = null;
-
-// 双击检测
-let lastClickTime = 0;
-const DOUBLE_CLICK_DELAY = 300; // 300ms内为双击
-
-// DOM元素
-const roomSetup = document.getElementById('roomSetup');
-const timerPage = document.getElementById('timerPage');
-const roomCodeInput = document.getElementById('roomCodeInput');
-const joinRoomBtn = document.getElementById('joinRoomBtn');
-const createRoomBtn = document.getElementById('createRoomBtn');
-const quickStartBtn = document.getElementById('quickStartBtn');
-const currentRoomCodeEl = document.getElementById('currentRoomCode');
-const footerRoomCodeEl = document.getElementById('footerRoomCode');
-const roomStatusEl = document.getElementById('roomStatus');
-const timerGrid = document.getElementById('timerGrid');
-const showInstructionsBtn = document.getElementById('showInstructionsBtn');
-const leaveRoomBtn = document.getElementById('leaveRoomBtn');
-const instructionsModal = document.getElementById('instructionsModal');
-const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
-
-// 初始化函数
-function init() {
-    setupEventListeners();
-    // 不再自动加载上次房间
-    generateTimerElements();
-    updateUI();
-}
-
-// 设置事件监听器
-function setupEventListeners() {
-    // 房间设置按钮
-    joinRoomBtn.addEventListener('click', joinRoom);
-    createRoomBtn.addEventListener('click', generateAndFillRoomCode); // 改为生成代码填充
-    quickStartBtn.addEventListener('click', quickStart);
-    
-    // 房间代码输入框回车键支持
-    roomCodeInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            joinRoom();
-        }
-    });
-    
-    // 计时器页面按钮
-    showInstructionsBtn.addEventListener('click', showInstructions);
-    leaveRoomBtn.addEventListener('click', leaveRoom);
-    closeInstructionsBtn.addEventListener('click', hideInstructions);
-    
-    // 点击弹窗外部关闭
-    instructionsModal.addEventListener('click', function(e) {
-        if (e.target === instructionsModal) {
-            hideInstructions();
-        }
-    });
-}
-
-// 生成并填充房间代码到输入框
-function generateAndFillRoomCode() {
-    const roomCode = generateRoomCode();
-    roomCodeInput.value = roomCode;
-    roomCodeInput.focus();
-    roomCodeInput.select();
-    showNotification('房间代码已生成，点击"加入房间"或按Enter键', 'info');
-}
-
-// 生成计时器元素 - 恢复简单网格
-function generateTimerElements() {
-    timerGrid.innerHTML = '';
-    
-    TIMER_CONFIG.forEach((config, index) => {
-        const gridItem = document.createElement('div');
-        gridItem.className = 'grid-item';
-        gridItem.id = `timer-${config.id}`;
-        
-        // 添加类型class
-        let circleClass = config.type;
-        if (index < 2) { // Zombie和DR
-            circleClass += ' large';
-        }
-        
-        gridItem.innerHTML = `
-            <div class="timer-circle ${circleClass}" data-timer-id="${config.id}">
-                <div class="ripple"></div>
-                <svg class="circle-svg" viewBox="0 0 100 100">
-                    <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
-                    <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
-                </svg>
-                <div class="circle-content">
-                    <div class="circle-time" id="time-${config.id}">${formatTime(config.duration)}</div>
-                    <div class="circle-label">${config.label}</div>
-                </div>
-            </div>
-        `;
-        
-        timerGrid.appendChild(gridItem);
-        
-        // 添加点击事件 - 支持单击开始/暂停，双击重置
-        const timerCircle = gridItem.querySelector('.timer-circle');
-        timerCircle.addEventListener('click', handleTimerClick(config.id));
-    });
-}
-
-// 加入房间
-function joinRoom() {
-    const roomCode = roomCodeInput.value.trim().toUpperCase();
-    
-    if (!roomCode) {
-        showNotification('请输入房间代码', 'error');
-        roomCodeInput.focus();
-        return;
-    }
-    
-    if (roomCode.length !== 6) {
-        showNotification('房间代码必须是6位', 'error');
-        return;
-    }
-    
-    currentRoomCode = roomCode;
-    isInRoom = true;
-    
-    // 从本地存储加载计时器状态
-    loadRoomState(roomCode);
-    
-    // 显示通知
-    showNotification(`已加入房间: ${roomCode}`, 'success');
-    
-    // 切换到计时器页面
-    switchToTimerPage();
-    
-    // 更新房间状态
-    updateRoomStatus();
-}
-
-// 快速开始（单人模式）
-function quickStart() {
-    const roomCode = generateRoomCode();
-    currentRoomCode = roomCode;
-    isInRoom = true;
-    
-    // 初始化计时器状态
-    initTimers();
-    
-    // 保存到本地存储
-    saveToLocalStorage();
-    
-    // 显示通知
-    showNotification(`快速开始: ${roomCode}`, 'info');
-    
-    // 切换到计时器页面
-    switchToTimerPage();
-    
-    // 更新房间状态
-    updateRoomStatus();
-}
-
-// 初始化计时器状态
-function initTimers() {
-    timers = {};
-    TIMER_CONFIG.forEach(config => {
-        timers[config.id] = {
-            id: config.id,
-            label: config.label,
-            duration: config.duration,
-            remaining: config.duration,
-            isRunning: false,
-            startTime: null,
-            interval: null,
-            type: config.type
+// ========== Pinkbean计时器核心逻辑 ==========
+class PinkbeanTimer {
+    constructor() {
+        // 计时器配置 - 12个计时器
+        this.timerConfig = {
+            'zombie': { duration: 120, element: 'Zombie', name: "Zombie", upText: "Zombie's up!" },
+            'dr': { duration: 60, element: 'DR', name: "DR", upText: "DR's up!" },
+            'ress1': { duration: 1800, element: 'RESS1', name: "RESS #1", upText: "RESS #1's up!" },
+            'ress2': { duration: 1800, element: 'RESS2', name: "RESS #2", upText: "RESS #2's up!" },
+            'ress3': { duration: 1800, element: 'RESS3', name: "RESS #3", upText: "RESS #3's up!" },
+            'ress4': { duration: 1800, element: 'RESS4', name: "RESS #4", upText: "RESS #4's up!" },
+            'ress5': { duration: 1800, element: 'RESS5', name: "RESS #5", upText: "RESS #5's up!" },
+            'tl1': { duration: 1200, element: 'TL1', name: "TL #1", upText: "TL #1's up!" },
+            'tl2': { duration: 1200, element: 'TL2', name: "TL #2", upText: "TL #2's up!" },
+            'tl3': { duration: 1200, element: 'TL3', name: "TL #3", upText: "TL #3's up!" },
+            'tl4': { duration: 1200, element: 'TL4', name: "TL #4", upText: "TL #4's up!" },
+            'tl5': { duration: 1200, element: 'TL5', name: "TL #5", upText: "TL #5's up!" }
         };
-    });
-}
 
-// 处理计时器点击事件 - 单击开始/暂停，双击重置
-function handleTimerClick(timerId) {
-    return function(event) {
-        const currentTime = Date.now();
-        const timeDiff = currentTime - lastClickTime;
-        
-        if (timeDiff < DOUBLE_CLICK_DELAY && timeDiff > 0) {
-            // 双击 - 重置计时器
-            resetTimer(timerId);
-        } else {
-            // 单击 - 开始/暂停
-            toggleTimer(timerId);
-        }
-        
-        lastClickTime = currentTime;
-    };
-}
+        // 初始化计时器状态
+        this.timers = {};
+        Object.keys(this.timerConfig).forEach(timerId => {
+            this.timers[timerId] = {
+                remaining: this.timerConfig[timerId].duration,
+                running: false,
+                completed: false,
+                interval: null,
+                paused: false
+            };
+        });
 
-// 切换计时器状态 - 单击：开始/暂停
-function toggleTimer(timerId) {
-    if (!timers[timerId]) return;
-    
-    const timer = timers[timerId];
-    const timerElement = document.getElementById(`timer-${timerId}`);
-    const timeElement = document.getElementById(`time-${timerId}`);
-    const progressElement = timerElement.querySelector('.circle-progress');
-    
-    if (timer.isRunning) {
-        // 暂停计时器
-        clearInterval(timer.interval);
-        timer.isRunning = false;
-        
-        // 更新UI
-        timeElement.classList.remove('complete');
-        progressElement.classList.remove('complete');
-        
-        // 移除活动状态
-        timerElement.querySelector('.timer-circle').classList.remove('active');
-        
-        showNotification(`${timer.label} 已暂停`, 'info');
-    } else {
-        // 开始计时器
-        timer.isRunning = true;
-        timer.startTime = Date.now() - ((timer.duration - timer.remaining) * 1000);
-        
-        // 添加活动状态
-        timerElement.querySelector('.timer-circle').classList.add('active');
-        
-        // 开始倒计时
-        timer.interval = setInterval(() => {
-            const elapsed = Math.floor((Date.now() - timer.startTime) / 1000);
-            timer.remaining = Math.max(0, timer.duration - elapsed);
-            
-            // 更新显示时间
-            timeElement.textContent = formatTime(timer.remaining);
-            
-            // 更新进度圆环
-            const progress = (timer.remaining / timer.duration) * 100;
-            updateProgressCircle(progressElement, progress);
-            
-            // 检查是否完成
-            if (timer.remaining <= 0) {
-                timerComplete(timerId);
-            }
-        }, 100);
-        
-        showNotification(`${timer.label} 已开始`, 'success');
+        this.roomCode = null;
+        this.clickTimeout = null;
+        this.clickCount = 0;
+        this.vibrationSupported = 'vibrate' in navigator;
+
+        this.init();
     }
-    
-    // 保存状态
-    saveToLocalStorage();
-}
 
-// 重置计时器 - 双击：重置
-function resetTimer(timerId) {
-    if (!timers[timerId]) return;
-    
-    const timer = timers[timerId];
-    const timerElement = document.getElementById(`timer-${timerId}`);
-    const timeElement = document.getElementById(`time-${timerId}`);
-    const progressElement = timerElement.querySelector('.circle-progress');
-    
-    // 停止计时器
-    if (timer.isRunning) {
-        clearInterval(timer.interval);
-        timer.isRunning = false;
+    adjustCircleLayout() {
+        const circles = document.querySelectorAll('.timer-circle');
+        const gridItems = document.querySelectorAll('.grid-item');
+        
+        if (circles.length === 0 || gridItems.length === 0) return;
+        
+        const gridItem = gridItems[0];
+        const itemRect = gridItem.getBoundingClientRect();
+        const size = Math.min(itemRect.width, itemRect.height) * 0.85;
+        
+        circles.forEach(circle => {
+            circle.style.width = `${size}px`;
+            circle.style.height = `${size}px`;
+        });
     }
-    
-    // 重置状态
-    timer.startTime = null;
-    timer.remaining = timer.duration;
-    
-    // 更新UI
-    timeElement.textContent = formatTime(timer.duration);
-    timeElement.classList.remove('complete');
-    progressElement.classList.remove('complete');
-    updateProgressCircle(progressElement, 100);
-    
-    // 移除活动状态
-    timerElement.querySelector('.timer-circle').classList.remove('active');
-    
-    showNotification(`${timer.label} 已重置`, 'info');
-    
-    // 保存状态
-    saveToLocalStorage();
-}
 
-// 计时器完成
-function timerComplete(timerId) {
-    const timer = timers[timerId];
-    const timerElement = document.getElementById(`timer-${timerId}`);
-    const timeElement = document.getElementById(`time-${timerId}`);
-    const progressElement = timerElement.querySelector('.circle-progress');
-    
-    // 停止计时器
-    clearInterval(timer.interval);
-    timer.isRunning = false;
-    
-    // 更新UI
-    timeElement.textContent = '完成!';
-    timeElement.classList.add('complete');
-    progressElement.classList.add('complete');
-    updateProgressCircle(progressElement, 0);
-    
-    // 添加完成动画
-    timerElement.querySelector('.timer-circle').classList.add('completed');
-    setTimeout(() => {
-        timerElement.querySelector('.timer-circle').classList.remove('completed');
-    }, 500);
-    
-    // 显示通知（只对重要计时器）
-    if (timerId === 'zombie' || timerId === 'dr') {
-        showNotification(`${timer.label} 冷却完成!`, 'success');
-    }
-    
-    // 保存状态
-    saveToLocalStorage();
-}
-
-// 更新进度圆环
-function updateProgressCircle(element, percent) {
-    const circumference = 282.6; // 2 * π * 45
-    const offset = circumference - (percent / 100) * circumference;
-    element.style.strokeDashoffset = offset;
-}
-
-// 格式化时间显示
-function formatTime(seconds) {
-    if (seconds >= 3600) {
-        const hours = Math.floor(seconds / 3600);
-        const mins = Math.floor((seconds % 3600) / 60);
-        return `${hours}:${mins.toString().padStart(2, '0')}`;
-    } else if (seconds >= 60) {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-    } else {
-        return seconds.toString().padStart(2, '0');
-    }
-}
-
-// 生成房间代码
-function generateRoomCode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let code = '';
-    for (let i = 0; i < 6; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return code;
-}
-
-// 切换到计时器页面
-function switchToTimerPage() {
-    roomSetup.style.display = 'none';
-    timerPage.style.display = 'flex';
-    
-    // 更新房间代码显示
-    currentRoomCodeEl.textContent = currentRoomCode;
-    footerRoomCodeEl.textContent = currentRoomCode;
-    
-    // 开始房间状态同步（模拟）
-    if (roomInterval) clearInterval(roomInterval);
-    roomInterval = setInterval(updateRoomStatus, 5000);
-}
-
-// 离开房间
-function leaveRoom() {
-    if (confirm('确定要离开房间吗？所有计时器进度将被保存。')) {
-        // 停止所有计时器
-        Object.values(timers).forEach(timer => {
-            if (timer.isRunning) {
-                clearInterval(timer.interval);
-            }
+    init() {
+        console.log('Pinkbean Timer 初始化');
+        this.cacheElements();
+        this.bindEvents();
+        
+        // 初始化所有计时器的进度条
+        Object.keys(this.timers).forEach(timerId => {
+            this.updateCircularProgress(timerId, this.timerConfig[timerId].duration);
         });
         
-        // 清除房间间隔
-        if (roomInterval) {
-            clearInterval(roomInterval);
-            roomInterval = null;
-        }
-        
-        // 重置状态
-        currentRoomCode = '';
-        isInRoom = false;
-        
-        // 切换到房间设置页面
-        timerPage.style.display = 'none';
-        roomSetup.style.display = 'flex';
-        
-        // 清空输入框
-        roomCodeInput.value = '';
-        
-        // 显示通知
-        showNotification('已离开房间', 'info');
+        setTimeout(() => {
+            this.adjustCircleSizes();
+        }, 100);
     }
-}
 
-// 更新房间状态
-function updateRoomStatus() {
-    if (!isInRoom) return;
-    
-    // 计算活跃计时器数量
-    const activeTimers = Object.values(timers).filter(t => t.isRunning).length;
-    
-    if (activeTimers > 0) {
-        roomStatusEl.textContent = `${activeTimers} 个计时器运行中`;
-        roomStatusEl.style.color = '#4dff88';
-    } else {
-        roomStatusEl.textContent = '准备中';
-        roomStatusEl.style.color = '#4dff88';
+    cacheElements() {
+        // 房间设置界面
+        this.roomSetup = document.getElementById('roomSetup');
+        this.timerPage = document.getElementById('timerPage');
+        this.roomCodeInput = document.getElementById('roomCode');
+        this.joinRoomBtn = document.getElementById('joinRoom');
+        this.createRoomBtn = document.getElementById('createRoom');
+        this.howToUseBtn = document.getElementById('howToUse');
+        
+        // 计时器界面
+        this.currentRoom = document.getElementById('currentRoom');
+        this.leaveRoomBtn = document.getElementById('leaveRoom');
+        this.footerRoomCode = document.getElementById('footerRoomCode');
+        
+        // 弹窗
+        this.howToUseModal = document.getElementById('howToUseModal');
+        this.closeHowTo = document.getElementById('closeHowTo');
     }
-}
 
-// 显示说明弹窗
-function showInstructions() {
-    instructionsModal.style.display = 'flex';
-}
+    bindEvents() {
+        // 房间设置事件
+        this.joinRoomBtn.addEventListener('click', () => this.joinRoom());
+        this.createRoomBtn.addEventListener('click', () => this.createRoom());
+        this.howToUseBtn.addEventListener('click', () => this.showHowToUse());
+        
+        this.roomCodeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.joinRoom();
+        });
 
-// 隐藏说明弹窗
-function hideInstructions() {
-    instructionsModal.style.display = 'none';
-}
+        // 计时器控制事件
+        this.leaveRoomBtn.addEventListener('click', () => this.leaveRoom());
 
-// 显示通知
-function showNotification(message, type = 'info') {
-    // 移除现有通知
-    const existingNotification = document.querySelector('.notification');
-    if (existingNotification) {
-        existingNotification.remove();
+        // 弹窗事件
+        this.closeHowTo.addEventListener('click', () => this.hideHowToUse());
+        
+        this.howToUseModal.addEventListener('click', (e) => {
+            if (e.target === this.howToUseModal) {
+                this.hideHowToUse();
+            }
+        });
+
+        // 为圆形计时器绑定事件
+        this.bindCircleEvents();
+        
+        window.addEventListener('resize', () => {
+            if (window.pinkbeanTimer) {
+                window.pinkbeanTimer.adjustLayout();
+            }
+        });
     }
-    
-    // 创建新通知
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-        <span>${message}</span>
-        <button class="notification-close">&times;</button>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // 添加关闭事件
-    notification.querySelector('.notification-close').addEventListener('click', () => {
-        notification.remove();
-    });
-    
-    // 自动移除
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
-        }
-    }, 3000);
-}
 
-// 加载房间状态（模拟）
-function loadRoomState(roomCode) {
-    // 这里应该从服务器获取房间状态
-    // 现在只是从本地存储加载
-    initTimers();
-    const savedState = localStorage.getItem(`pinkbean_room_${roomCode}`);
-    
-    if (savedState) {
-        try {
-            const state = JSON.parse(savedState);
-            // 应用保存的状态
-            Object.keys(state).forEach(timerId => {
-                if (timers[timerId] && state[timerId]) {
-                    const savedTimer = state[timerId];
-                    const timer = timers[timerId];
-                    
-                    // 恢复计时器状态
-                    if (savedTimer.isRunning && savedTimer.startTime) {
-                        const elapsed = Math.floor((Date.now() - savedTimer.startTime) / 1000);
-                        timer.remaining = Math.max(0, timer.duration - elapsed);
-                        
-                        if (timer.remaining > 0) {
-                            // 重新开始计时器
-                            toggleTimer(timerId);
-                        } else {
-                            // 计时器已完成
-                            timer.remaining = 0;
-                            timer.isRunning = false;
-                        }
-                    } else {
-                        timer.remaining = savedTimer.remaining || timer.duration;
-                        timer.isRunning = false;
-                    }
-                    
-                    // 更新UI
-                    updateTimerUI(timerId);
-                }
+    bindCircleEvents() {
+        console.log('绑定圆形计时器事件...');
+        
+        document.querySelectorAll('.timer-circle').forEach(circle => {
+            circle.addEventListener('click', (e) => {
+                this.handleCircleClick(circle);
             });
-        } catch (e) {
-            console.error('加载房间状态失败:', e);
+            
+            circle.addEventListener('touchstart', () => {
+                circle.classList.add('active');
+            }, { passive: true });
+            
+            circle.addEventListener('touchend', () => {
+                setTimeout(() => {
+                    circle.classList.remove('active');
+                }, 600);
+            }, { passive: true });
+        });
+    }
+
+    handleCircleClick(circleElement) {
+        const timerId = circleElement.dataset.timer;
+        if (!timerId) return;
+        
+        circleElement.classList.add('active');
+        setTimeout(() => {
+            circleElement.classList.remove('active');
+        }, 600);
+        
+        this.vibrate(50);
+        
+        this.clickCount++;
+        
+        if (this.clickCount === 1) {
+            this.clickTimeout = setTimeout(() => {
+                this.handleSingleClick(timerId);
+                this.clickCount = 0;
+            }, 250);
+        } else if (this.clickCount === 2) {
+            clearTimeout(this.clickTimeout);
+            this.handleDoubleClick(timerId);
+            this.clickCount = 0;
         }
-    } else {
-        // 如果没有保存的状态，初始化计时器
-        initTimers();
+    }
+
+    vibrate(duration) {
+        if (this.vibrationSupported) {
+            try {
+                navigator.vibrate(duration);
+            } catch (e) {
+                console.log('震动失败:', e);
+            }
+        }
+    }
+
+    handleSingleClick(timerId) {
+        const timer = this.timers[timerId];
+        const config = this.timerConfig[timerId];
+        
+        if (timer.completed) {
+            this.resetTimer(timerId);
+            this.startTimer(timerId);
+        } else if (timer.running) {
+            this.pauseTimer(timerId);
+        } else if (timer.paused) {
+            this.resumeTimer(timerId);
+        } else {
+            this.startTimer(timerId);
+        }
+    }
+
+    handleDoubleClick(timerId) {
+        this.vibrate([50, 30, 50]);
+        this.resetTimer(timerId);
+        this.showNotification(`${this.timerConfig[timerId].name} 已重置 | Reset`, 'info');
+    }
+
+    // ========== 房间功能 ==========
+    createRoom() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let roomCode = '';
+        for (let i = 0; i < 4; i++) {
+            roomCode += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        
+        this.roomCodeInput.value = roomCode;
+        this.showNotification(`已创建房间: ${roomCode} | Created room: ${roomCode}`, 'success');
+        this.roomCodeInput.focus();
+        this.vibrate(100);
+    }
+
+    joinRoom() {
+        const roomCode = this.roomCodeInput.value.trim().toUpperCase();
+        
+        if (!roomCode.match(/^[A-Za-z0-9]{4,6}$/)) {
+            this.showNotification('请输入4-6位数字或字母作为房间号 | Please enter 4-6 digits/letters as room code', 'error');
+            this.roomCodeInput.focus();
+            this.vibrate([100, 50, 100]);
+            return;
+        }
+
+        this.vibrate(100);
+        this.connectToRoom(roomCode);
+    }
+
+    connectToRoom(roomCode) {
+        this.joinRoomBtn.textContent = '连接中... | Connecting...';
+        this.joinRoomBtn.disabled = true;
+
+        setTimeout(() => {
+            this.roomCode = roomCode;
+            
+            this.currentRoom.textContent = roomCode;
+            this.footerRoomCode.textContent = roomCode;
+            
+            this.roomSetup.style.display = 'none';
+            this.timerPage.style.display = 'block';
+            
+            this.joinRoomBtn.textContent = '加入房间';
+            this.joinRoomBtn.disabled = false;
+            
+            this.showNotification(`成功加入房间: ${roomCode} | Joined room: ${roomCode}`, 'success');
+            this.vibrate([100, 50, 100]);
+            
+            setTimeout(() => {
+                this.adjustLayout();
+            }, 100);
+            
+        }, 800);
+    }
+
+    leaveRoom() {
+        const confirmMsg = '确定要离开当前房间吗？ | Are you sure you want to leave the room?';
+        
+        if (confirm(confirmMsg)) {
+            this.resetAllTimers();
+            
+            this.timerPage.style.display = 'none';
+            this.roomSetup.style.display = 'flex';
+            
+            this.roomCodeInput.value = '';
+            
+            this.showNotification('已离开房间 | Left the room', 'info');
+            this.vibrate(100);
+        }
+    }
+
+    // ========== 计时器功能 ==========
+    startTimer(timerId) {
+    if (!this.timers[timerId]) return;
+    
+    const timer = this.timers[timerId];
+    const config = this.timerConfig[timerId];
+    
+    if (timer.completed) {
+        this.resetTimer(timerId);
+    }
+    
+    if (!timer.running) {
+        timer.running = true;
+        timer.completed = false;
+        timer.paused = false;
+        
+        // 开始计时：立即显示进度条（dashoffset: 0）
+        const elementName = config.element;
+        const progressElement = document.querySelector(`#timer${elementName} .circle-progress`);
+        if (progressElement) {
+            progressElement.setAttribute('style', 'stroke-dashoffset: 0; stroke: #FF4D7A;');
+        }
+        
+        // 立即更新一次，确保状态正确
+        this.updateCircularProgress(timerId, config.duration);
+        
+        timer.interval = setInterval(() => {
+            timer.remaining--;
+            
+            this.updateTimerDisplay(timerId);
+            this.updateCircularProgress(timerId, config.duration);
+            
+            if (timer.remaining <= 0) {
+                this.completeTimer(timerId);
+            }
+            
+        }, 1000);
+        
+        this.playSound('start');
+        this.showNotification(`${config.name} 开始计时 | ${config.name} started`, 'info');
+        this.vibrate(50);
     }
 }
 
-// 更新计时器UI
-function updateTimerUI(timerId) {
-    const timer = timers[timerId];
-    if (!timer) return;
+    stopTimer(timerId) {
+        if (!this.timers[timerId]) return;
+        
+        const timer = this.timers[timerId];
+        if (timer.interval) {
+            clearInterval(timer.interval);
+            timer.interval = null;
+        }
+        timer.running = false;
+    }
+
+    completeTimer(timerId) {
+        if (!this.timers[timerId]) return;
+        
+        const timer = this.timers[timerId];
+        const config = this.timerConfig[timerId];
+        
+        this.stopTimer(timerId);
+        timer.completed = true;
+        timer.running = false;
+        timer.paused = false;
+        
+        this.showCompleteAnimation(timerId);
+        this.playBeepSound();
+        this.showNotification(config.upText, 'success');
+        this.vibrate([100, 50, 100]);
+        
+        this.updateTimerDisplay(timerId);
+        this.updateCircularProgress(timerId, config.duration);
+    }
+
+    // ========== 进度条功能 - 和AUF Timer完全一样的逻辑 ==========
+    updateCircularProgress(timerId, totalDuration) {
+    const timer = this.timers[timerId];
+    const config = this.timerConfig[timerId];
     
-    const timeElement = document.getElementById(`time-${timerId}`);
-    const timerElement = document.getElementById(`timer-${timerId}`);
-    const progressElement = timerElement?.querySelector('.circle-progress');
+    const elementName = config.element;
+    const progressElement = document.querySelector(`#timer${elementName} .circle-progress`);
+    const circleElement = document.getElementById(`timer${elementName}`);
     
-    if (!timeElement || !progressElement) return;
+    if (!progressElement || !circleElement) {
+        console.error(`找不到元素: timer${elementName}`);
+        return;
+    }
     
-    timeElement.textContent = formatTime(timer.remaining);
+    const circumference = 282.6;
     
-    const progress = (timer.remaining / timer.duration) * 100;
-    updateProgressCircle(progressElement, progress);
+    // 调试信息
+    const remainingRatio = timer.remaining / totalDuration;
+    const dashoffset = circumference * (1 - remainingRatio);
+    console.log(`更新 ${timerId}: remaining=${timer.remaining}, 剩余比例=${remainingRatio}, dashoffset=${dashoffset}`);
     
-    if (timer.remaining <= 0) {
-        timeElement.classList.add('complete');
+    if (timer.completed || timer.remaining <= 0) {
+        // 计时完成 - 绿色完整圆（完全显示）
+        progressElement.setAttribute('style', 'stroke-dashoffset: 0; stroke: #4CAF50;');
         progressElement.classList.add('complete');
-    } else {
-        timeElement.classList.remove('complete');
+        circleElement.classList.add('completed');
+    } else if (timer.running || timer.paused) {
+        // 正在计时或暂停 - 剩余时间越少，dashoffset越大
+        progressElement.setAttribute('style', `stroke-dashoffset: ${dashoffset}; stroke: #FF4D7A;`);
         progressElement.classList.remove('complete');
+        circleElement.classList.remove('completed');
+    } else {
+        // 重置状态 - 完全隐藏（dashoffset = 周长）
+        progressElement.setAttribute('style', 'stroke-dashoffset: 282.6; stroke: #FF4D7A;');
+        progressElement.classList.remove('complete');
+        circleElement.classList.remove('completed');
     }
 }
 
-// 保存到本地存储
-function saveToLocalStorage() {
-    if (!currentRoomCode) return;
-    
-    // 准备保存的状态
-    const stateToSave = {};
-    Object.keys(timers).forEach(timerId => {
-        const timer = timers[timerId];
-        stateToSave[timerId] = {
-            isRunning: timer.isRunning,
-            startTime: timer.startTime,
-            remaining: timer.remaining
-        };
-    });
-    
-    // 保存到本地存储
-    localStorage.setItem(`pinkbean_room_${currentRoomCode}`, JSON.stringify(stateToSave));
-    localStorage.setItem('pinkbean_last_room', currentRoomCode);
-}
-
-// 更新UI
-function updateUI() {
-    // 初始化后更新所有计时器UI
-    TIMER_CONFIG.forEach(config => {
-        if (timers[config.id]) {
-            updateTimerUI(config.id);
+    showCompleteAnimation(timerId) {
+        const config = this.timerConfig[timerId];
+        const circle = document.getElementById(`timer${config.element}`);
+        if (circle) {
+            circle.classList.add('completed');
+            setTimeout(() => {
+                circle.classList.remove('completed');
+            }, 1000);
         }
-    });
+    }
+
+    resetTimer(timerId) {
+        if (!this.timers[timerId]) return;
+        
+        const timer = this.timers[timerId];
+        const config = this.timerConfig[timerId];
+        
+        this.stopTimer(timerId);
+        timer.remaining = config.duration;
+        timer.completed = false;
+        timer.paused = false;
+        
+        this.updateTimerDisplay(timerId);
+        this.updateCircularProgress(timerId, config.duration);
+        
+        this.playSound('reset');
+    }
+
+    pauseTimer(timerId) {
+        if (this.timers[timerId] && this.timers[timerId].running) {
+            const timer = this.timers[timerId];
+            const config = this.timerConfig[timerId];
+            
+            if (timer.interval) {
+                clearInterval(timer.interval);
+                timer.interval = null;
+            }
+            
+            timer.running = false;
+            timer.paused = true;
+            
+            this.showNotification(`${config.name} 已暂停 | ${config.name} paused`, 'info');
+            this.vibrate(50);
+        }
+    }
+
+    resumeTimer(timerId) {
+        if (!this.timers[timerId] || this.timers[timerId].running) return;
+        
+        const timer = this.timers[timerId];
+        const config = this.timerConfig[timerId];
+        
+        timer.running = true;
+        timer.paused = false;
+        
+        timer.interval = setInterval(() => {
+            timer.remaining--;
+            
+            this.updateTimerDisplay(timerId);
+            this.updateCircularProgress(timerId, config.duration);
+            
+            if (timer.remaining <= 0) {
+                this.completeTimer(timerId);
+            }
+            
+        }, 1000);
+        
+        this.showNotification(`${config.name} 继续计时 | ${config.name} resumed`, 'info');
+        this.vibrate(50);
+    }
+
+    updateTimerDisplay(timerId) {
+        const timer = this.timers[timerId];
+        const config = this.timerConfig[timerId];
+        const element = document.getElementById(`time${config.element}`);
+        
+        if (element) {
+            if (timer.completed) {
+                element.textContent = 'UP!';
+                element.classList.add('complete');
+            } else {
+                if (config.duration >= 60) {
+                    const minutes = Math.floor(timer.remaining / 60);
+                    const seconds = timer.remaining % 60;
+                    element.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                } else {
+                    element.textContent = timer.remaining;
+                }
+                element.classList.remove('complete');
+            }
+        }
+    }
+
+    resetAllTimers() {
+        Object.keys(this.timers).forEach(timerId => {
+            this.resetTimer(timerId);
+        });
+    }
+
+    // ========== 布局调整 ==========
+    adjustLayout() {
+        this.adjustCircleLayout();
+    }
+    
+    adjustCircleSizes() {
+        const gridItems = document.querySelectorAll('.grid-item');
+        const circles = document.querySelectorAll('.timer-circle');
+        
+        if (gridItems.length === 0 || circles.length === 0) return;
+        
+        const gridItem = gridItems[0];
+        const itemRect = gridItem.getBoundingClientRect();
+        const size = Math.min(itemRect.width, itemRect.height) * 0.85;
+        
+        circles.forEach(circle => {
+            circle.style.width = `${size}px`;
+            circle.style.height = `${size}px`;
+        });
+    }
+
+    // ========== 音频功能 ==========
+    playBeepSound() {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 800 + (i * 100);
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.08);
+                }, i * 150);
+            }
+        } catch (e) {
+            console.log('音频播放失败:', e);
+        }
+    }
+
+    playSound(type) {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            let frequency = 600;
+            let duration = 0.1;
+            
+            if (type === 'reset') {
+                frequency = 500;
+                duration = 0.15;
+            }
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + duration);
+        } catch (e) {
+            // 静默失败
+        }
+    }
+
+    // ========== 辅助功能 ==========
+    showHowToUse() {
+        this.howToUseModal.style.display = 'flex';
+        this.vibrate(50);
+    }
+
+    hideHowToUse() {
+        this.howToUseModal.style.display = 'none';
+    }
+
+    showNotification(message, type = 'info') {
+        const existing = document.querySelector('.notification');
+        if (existing) existing.remove();
+        
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <span>${message}</span>
+            <button class="notification-close">&times;</button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        notification.querySelector('.notification-close').addEventListener('click', () => {
+            notification.remove();
+        });
+        
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 2000);
+        
+        this.addNotificationStyles();
+    }
+
+    addNotificationStyles() {
+        if (!document.querySelector('#notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                .notification {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    color: white;
+                    z-index: 1000;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    min-width: 200px;
+                    max-width: 300px;
+                    animation: slideIn 0.3s ease;
+                    backdrop-filter: blur(10px);
+                }
+                .notification-success {
+                    background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+                }
+                .notification-error {
+                    background: linear-gradient(135deg, #FF6B9D 0%, #E75480 100%);
+                }
+                .notification-info {
+                    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+                }
+                .notification-close {
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 20px;
+                    cursor: pointer;
+                    margin-left: 10px;
+                    padding: 0 5px;
+                    opacity: 0.8;
+                }
+                .notification-close:hover {
+                    opacity: 1;
+                }
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                @media (max-width: 768px) {
+                    .notification {
+                        left: 20px;
+                        right: 20px;
+                        max-width: none;
+                        top: 10px;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
 }
 
-// 页面加载时初始化
-document.addEventListener('DOMContentLoaded', init);
-
-// 页面卸载时保存状态
-window.addEventListener('beforeunload', () => {
-    if (isInRoom) {
-        saveToLocalStorage();
+// ========== 初始化应用 ==========
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        const pinkbeanTimer = new PinkbeanTimer();
+        window.pinkbeanTimer = pinkbeanTimer;
+    } catch (error) {
+        console.error('Pinkbean Timer 初始化失败:', error);
+        alert('页面加载失败，请刷新重试。 | Page load failed, please refresh and try again.');
     }
 });
