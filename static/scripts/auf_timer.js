@@ -22,6 +22,7 @@ class AufTimer {
         };
 
         this.roomCode = null;
+        this.socket = null;  // WebSocket连接
         
         // 双击检测
         this.clickTimeout = null;
@@ -37,7 +38,6 @@ class AufTimer {
         console.log('AUF Timer 初始化');
         this.cacheElements();
         this.bindEvents();
-	
         
         // 初始化所有计时器的进度条
         Object.keys(this.timers).forEach(timerId => {
@@ -219,33 +219,119 @@ class AufTimer {
     }
 
     connectToRoom(roomCode) {
+        const self = this;
+        const roomCodeInput = roomCode || this.roomCodeInput.value.trim().toUpperCase();
+        
+        if (!roomCodeInput.match(/^[A-Za-z0-9]{4,6}$/)) {
+            this.showNotification('请输入4-6位数字或字母作为房间号 | Please enter 4-6 digits/letters as room code', 'error');
+            this.roomCodeInput.focus();
+            this.vibrate([100, 50, 100]);
+            return;
+        }
+        
+        // 关闭现有连接
+        if (this.socket) {
+            this.socket.close();
+        }
+        
+        // 创建WebSocket连接
+        this.socket = new WebSocket('ws://localhost:8765');
+        
         this.joinRoomBtn.textContent = '连接中... | Connecting...';
         this.joinRoomBtn.disabled = true;
-
-        setTimeout(() => {
-            this.roomCode = roomCode;
+        
+        this.socket.onopen = function() {
+            console.log('WebSocket连接已建立');
             
-            this.currentRoom.textContent = roomCode;
-            this.footerRoomCode.textContent = roomCode;
+            // 发送加入房间消息
+            self.socket.send(JSON.stringify({
+                type: 'join_room',
+                roomCode: roomCodeInput,
+                clientType: 'timer'
+            }));
+        };
+        
+        this.socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
             
-            this.roomSetup.style.display = 'none';
-            this.timerPage.style.display = 'block';
-            
-            this.joinRoomBtn.textContent = '加入房间';
-            this.joinRoomBtn.disabled = false;
-            
-            this.showNotification(`成功加入房间: ${roomCode} | Joined room: ${roomCode}`, 'success');
-            this.vibrate([100, 50, 100]);
-            
-            // 页面显示后调整布局
-            setTimeout(() => {
-                this.adjustLayout();
-            }, 100);
-            
-        }, 800);
+            if (data.type === 'room_joined') {
+                // 成功加入房间
+                self.roomCode = roomCodeInput;
+                self.currentRoom.textContent = roomCodeInput;
+                self.footerRoomCode.textContent = roomCodeInput;
+                
+                self.roomSetup.style.display = 'none';
+                self.timerPage.style.display = 'block';
+                
+                self.joinRoomBtn.textContent = '加入房间';
+                self.joinRoomBtn.disabled = false;
+                
+                self.showNotification(`成功加入房间: ${roomCodeInput} | Joined room: ${roomCodeInput}`, 'success');
+                self.vibrate([100, 50, 100]);
+                
+                setTimeout(() => {
+                    self.adjustLayout();
+                }, 100);
+                
+            } else if (data.type === 'timer_sync') {
+                // 接收到其他用户的操作同步
+                const timerId = data.timerId;
+                const action = data.action;
+                const timerData = data.data;
+                
+                if (data.from === 'server') {
+                    // 更新本地计时器状态（不触发重复发送）
+                    self.timers[timerId].remaining = timerData.remaining;
+                    self.timers[timerId].running = timerData.running;
+                    self.timers[timerId].completed = timerData.completed;
+                    
+                    // 更新UI
+                    self.updateTimerDisplay(timerId);
+                    self.updateCircularProgress(timerId, self.timerConfig[timerId].duration);
+                    
+                    // 根据状态停止或启动本地计时器
+                    if (timerData.running && !self.timers[timerId].interval) {
+                        self.timers[timerId].interval = setInterval(() => {
+                            self.timers[timerId].remaining--;
+                            self.updateTimerDisplay(timerId);
+                            self.updateCircularProgress(timerId, self.timerConfig[timerId].duration);
+                            if (self.timers[timerId].remaining <= 0) {
+                                self.completeTimer(timerId);
+                            }
+                        }, 1000);
+                    } else if (!timerData.running && self.timers[timerId].interval) {
+                        clearInterval(self.timers[timerId].interval);
+                        self.timers[timerId].interval = null;
+                    }
+                }
+            }
+        };
+        
+        this.socket.onerror = function(error) {
+            console.error('WebSocket错误:', error);
+            self.showNotification('连接服务器失败，请检查网络 | Connection failed', 'error');
+            self.joinRoomBtn.textContent = '加入房间';
+            self.joinRoomBtn.disabled = false;
+        };
+        
+        this.socket.onclose = function() {
+            console.log('WebSocket连接关闭');
+        };
     }
 
     leaveRoom() {
+        // 关闭WebSocket连接
+        if (this.socket) {
+            if (this.roomCode) {
+                this.socket.send(JSON.stringify({
+                    type: 'leave_room',
+                    roomCode: this.roomCode
+                }));
+            }
+            this.socket.close();
+            this.socket = null;
+        }
+        
         const confirmMsg = '确定要离开当前房间吗？ | Are you sure you want to leave the room?';
         
         if (confirm(confirmMsg)) {
@@ -291,6 +377,21 @@ class AufTimer {
             
             this.playSound('start');
             this.showNotification(`${config.name} 开始计时 | ${config.name} started`, 'info');
+            
+            // 发送同步消息到服务器
+            if (this.socket && this.socket.readyState === WebSocket.OPEN && this.roomCode) {
+                this.socket.send(JSON.stringify({
+                    type: 'timer_action',
+                    roomCode: this.roomCode,
+                    timerId: timerId,
+                    action: 'start',
+                    data: {
+                        duration: config.duration,
+                        remaining: timer.remaining
+                    }
+                }));
+            }
+            
             this.vibrate(50);
         }
     }
@@ -389,6 +490,19 @@ class AufTimer {
         this.updateTimerDisplay(timerId);
         this.updateCircularProgress(timerId, config.duration);
         
+        // 发送同步消息到服务器
+        if (this.socket && this.socket.readyState === WebSocket.OPEN && this.roomCode) {
+            this.socket.send(JSON.stringify({
+                type: 'timer_action',
+                roomCode: this.roomCode,
+                timerId: timerId,
+                action: 'reset',
+                data: {
+                    duration: config.duration
+                }
+            }));
+        }
+        
         this.playSound('reset');
     }
 
@@ -406,6 +520,17 @@ class AufTimer {
             timer.paused = true;
             
             this.showNotification(`${config.name} 已暂停 | ${config.name} paused`, 'info');
+            
+            // 发送同步消息到服务器
+            if (this.socket && this.socket.readyState === WebSocket.OPEN && this.roomCode) {
+                this.socket.send(JSON.stringify({
+                    type: 'timer_action',
+                    roomCode: this.roomCode,
+                    timerId: timerId,
+                    action: 'pause'
+                }));
+            }
+            
             this.vibrate(50);
         }
     }
